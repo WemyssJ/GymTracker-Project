@@ -1,1 +1,3514 @@
-test
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-title" content="GymTracker">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACrElEQVR4nO3dQU7bQABAUVJ1z6JiwRl6Cw7eW/QYvUMXSAgFfgiJPR5p3tshFo5nvsbYE5nT49PzA3zmx9EfgHmJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJg/TzqAP/+vP3/Y//Xn4f9UnmNMP4nMb/j7ez035PIg8zjc/oy8qFM//ytyuYanyGxnHNua3cx2zjMy6O689qzT4mHB93K6RBcXw39tUWjznHx8pBEgdJHCRxkMRBEgdJHKQNdmVn2D/k1bZzce/K8fFpzGrPr+ax+VzcFUcdWx/j7TEXt8cx1eby4naaixvjmG1zeWX7zYW7FZI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SIe9vOVLdvwPZ+UgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SPNuvC31no85dxmtHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkG6M45r99KX23A+031zcvnJcPp4yRtppLu66rNRRlTHeHnNx798cH4+tjKNsPhcbfE1QDfPYdi7crZDEQRIHSRwkcZDEQRIHaVAc373/Xu3ZyZzjY+UgjYvj+thXWzZeTTg+Q1cOG/2XzTY+oy8rNvovm2p8To9PzyOP9+bsjRSyODPD+BwWB/Nzt0ISB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEH6DwJ7gb2mFKkrAAAAAElFTkSuQmCC">
+<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACrElEQVR4nO3dQU7bQABAUVJ1z6JiwRl6Cw7eW/QYvUMXSAgFfgiJPR5p3tshFo5nvsbYE5nT49PzA3zmx9EfgHmJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJg/TzqAP/+vP3/Y//Xn4f9UnmNMP4nMb/j7ez035PIg8zjc/oy8qFM//ytyuYanyGxnHNua3cx2zjMy6O689qzT4mHB93K6RBcXw39tUWjznHx8pBEgdJHCRxkMRBEgdJHKQNdmVn2D/k1bZzce/K8fFpzGrPr+ax+VzcFUcdWx/j7TEXt8cx1eby4naaixvjmG1zeWX7zYW7FZI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SIe9vOVLdvwPZ+UgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SPNuvC31no85dxmtHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkG6M45r99KX23A+031zcvnJcPp4yRtppLu66rNRRlTHeHnNx798cH4+tjKNsPhcbfE1QDfPYdi7crZDEQRIHSRwkcZDEQRIHaVAc373/Xu3ZyZzjY+UgjYvj+thXWzZeTTg+Q1cOG/2XzTY+oy8rNvovm2p8To9PzyOP9+bsjRSyODPD+BwWB/Nzt0ISB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEH6DwJ7gb2mFKkrAAAAAElFTkSuQmCC">
+<title>GymTracker</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --bg:#0f1519;
+    --panel:#182229;
+    --panel-2:#202c34;
+    --line:#2f4049;
+    --text:#e8f2f5;
+    --muted:#7d94a1;
+    --amber:#22d3ee;
+    --amber-dim:#123842;
+    --accent-ink:#062329;
+    --faint:#52697a;
+    --green:#3fa34d;
+    --green-bg:#1c3020;
+    --red:#d9534f;
+    --red-bg:#331d1c;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html{overflow-x:hidden;width:100%;overscroll-behavior-x:none;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  body{padding-bottom:40px;overflow-x:hidden;max-width:100vw;position:relative;}
+
+  header.top{
+    position:sticky;top:0;z-index:20;background:var(--bg);
+    padding:14px 16px 0 16px;border-bottom:1px solid var(--line);
+  }
+  h1{
+    font-size:22px;font-weight:800;letter-spacing:-0.02em;margin:0 0 12px 0;
+    font-stretch:condensed;
+  }
+  h1 span{color:var(--amber);}
+  h1 .version-stamp{
+    color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;
+    vertical-align:middle;
+  }
+
+  nav.tabs{display:flex;gap:2px;}
+  nav.tabs button{
+    flex:1;padding:10px 4px;background:none;border:none;color:var(--muted);
+    font-size:13px;font-weight:700;letter-spacing:0.02em;cursor:pointer;
+    border-bottom:3px solid transparent;
+  }
+  nav.tabs button.active{color:var(--text);border-bottom-color:var(--amber);}
+  nav.tabs button.settings-tab{flex:0 0 auto;font-size:17px;padding:10px 10px;}
+  .due-dot{
+    display:inline-block;width:6px;height:6px;border-radius:50%;
+    background:var(--green);margin-left:3px;vertical-align:middle;
+  }
+
+  .header-actions{display:flex;gap:8px;padding:10px 0;}
+  .icon-btn{
+    background:var(--panel);border:1px solid var(--line);color:var(--text);
+    border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;
+  }
+  .push-btn{flex:1;border-color:var(--amber-dim);color:var(--amber);}
+  .push-btn:disabled{opacity:0.6;}
+  .backup-btn{flex:1;color:var(--text);}
+  .backup-btn:disabled{opacity:0.6;}
+  .danger-btn{border-color:#5a2320;color:var(--red);}
+  .danger-btn:active{background:var(--red-bg);}
+
+  .modal-overlay{
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;
+    align-items:flex-end;justify-content:center;
+  }
+  .modal-box{
+    background:var(--panel);border:1px solid var(--line);border-radius:16px 16px 0 0;
+    padding:20px 18px 28px 18px;width:100%;max-width:520px;
+  }
+  .modal-box h2{font-size:17px;font-weight:800;margin:0 0 14px 0;}
+  .confirm-message{font-size:14.5px;line-height:1.55;color:var(--text);margin:0 0 4px 0;}
+  .modal-box label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:12px 0 5px 0;}
+  .modal-box input{
+    width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
+    border-radius:8px;padding:10px;font-size:14px;
+  }
+  .modal-box .hint{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.5;}
+  .modal-actions{display:flex;gap:10px;margin-top:18px;}
+  .modal-actions button{flex:1;padding:12px;border-radius:8px;border:none;font-size:14px;font-weight:700;cursor:pointer;}
+  .btn-secondary{background:var(--panel-2);color:var(--text);}
+  .btn-primary{background:var(--amber);color:var(--accent-ink);}
+  .quick-link{
+    display:block;text-align:center;background:var(--amber-dim);color:var(--amber);
+    border-radius:8px;padding:11px;font-size:13.5px;font-weight:700;text-decoration:none;
+    margin-top:14px;
+  }
+
+  .modal-header-row{display:flex;align-items:center;justify-content:space-between;}
+  .modal-header-row h2{margin:0;}
+  .help-btn{
+    width:26px;height:26px;border-radius:50%;border:1px solid var(--line);
+    background:var(--panel-2);color:var(--muted);font-size:13px;font-weight:800;
+    cursor:pointer;line-height:1;padding:0;
+  }
+  .help-panel{
+    background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
+    padding:12px 12px;margin-top:12px;
+  }
+  .help-panel p{font-size:12px;line-height:1.5;color:var(--muted);margin:0 0 10px 0;}
+  .help-panel p:last-child{margin-bottom:0;}
+  .help-panel strong{color:var(--text);}
+  .help-panel em{color:var(--amber);font-style:normal;}
+
+  .subtabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+  .subtabs button{
+    padding:8px 14px;border-radius:20px;border:1px solid var(--line);background:var(--panel);
+    color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;
+  }
+  .subtabs button.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
+
+  .chart-legend{display:flex;gap:16px;margin-bottom:12px;}
+  .legend-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:700;}
+  .swatch{width:10px;height:10px;border-radius:3px;display:inline-block;}
+
+  #progressCanvas{width:100%;display:block;background:var(--panel);
+    border:1px solid var(--line);border-radius:12px;}
+
+  main{padding:16px;max-width:520px;margin:0 auto;overflow-x:hidden;}
+
+  .stat-strip{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
+  .stat-card{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;padding:8px 12px;min-width:0;
+  }
+  .stat-card .ex-name{font-size:11px;color:var(--muted);font-weight:600;
+    overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
+  .stat-card .row{display:flex;justify-content:space-between;font-size:12px;line-height:1.5;}
+  .stat-card .who{color:var(--muted);}
+  .stat-card .val{font-weight:700;}
+  .stat-card .best .val{color:var(--amber);}
+
+  .section-label{
+    font-size:13px;font-weight:800;color:var(--muted);margin:22px 0 10px 0;
+    letter-spacing:0.02em;
+  }
+  .section-label:first-child{margin-top:0;}
+  .section-label.collapsible{cursor:pointer;user-select:none;}
+  .section-label.collapsible span{display:inline-block;width:12px;color:var(--amber);}
+
+  form#logForm{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;}
+
+  .date-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .date-row label{font-size:13px;color:var(--muted);font-weight:600;}
+  .date-row input[type=date]{
+    flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
+    border-radius:8px;padding:8px 10px;font-size:15px;
+  }
+
+  .exercise-block{border-top:1px solid var(--line);padding:12px 0;}
+  .exercise-block:first-of-type{border-top:none;padding-top:0;}
+  .exercise-title{font-size:14px;font-weight:700;margin-bottom:8px;}
+
+  .people-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .person-col .p-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px;}
+  .person-col input[type=number]{
+    width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
+    border-radius:8px;padding:9px 10px;font-size:15px;margin-bottom:6px;
+  }
+  .person-col input[type=text]{
+    width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
+    border-radius:8px;padding:7px 10px;font-size:12px;
+  }
+  input::placeholder{color:var(--faint);}
+
+  .p-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px;}
+  .p-label.sam{color:#ff6fa5;}
+  .p-label.joe{color:#4fa8e0;}
+  .who-sam{color:#ff6fa5;font-weight:700;}
+  .who-joe{color:#4fa8e0;font-weight:700;}
+  .set-row{display:flex;gap:6px;margin-bottom:2px;}
+  .set-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
+  .set-label{font-size:9px;color:var(--muted);text-align:center;font-weight:700;letter-spacing:0.02em;}
+  .mini-box{
+    background:var(--panel-2);border:1px solid var(--line);
+    border-radius:8px;padding:2px;
+  }
+  .mini-box input{
+    width:100%;text-align:center;background:transparent;border:none;
+    color:var(--text);padding:6px 2px;font-size:13px;
+  }
+  .mini-box input:focus{outline:none;}
+  .reps-box input{font-size:11px;color:var(--muted);}
+  .mini-box input.prefilled{color:var(--muted);}
+  .reps-box input.prefilled{color:var(--faint);}
+
+  button#saveBtn{
+    width:100%;margin-top:16px;padding:14px;border:none;border-radius:10px;
+    background:var(--amber);color:var(--accent-ink);font-size:15px;font-weight:800;
+    letter-spacing:0.01em;cursor:pointer;
+  }
+  button#saveBtn:active{opacity:0.85;}
+
+  #toast{
+    position:fixed;left:16px;right:16px;bottom:20px;z-index:50;
+    background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,0.4);
+    display:none;max-width:520px;margin:0 auto;
+  }
+  #toast.pr{border-color:var(--green);}
+  #toast.reg{border-color:var(--red);}
+
+  .history{margin-top:8px;}
+  .history-row{
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    padding:10px 12px;margin-bottom:8px;
+  }
+  .history-row .hdate-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .history-row .hdate{font-size:12px;font-weight:700;color:var(--muted);}
+  .delete-btn{
+    background:none;border:none;color:var(--muted);font-size:14px;
+    padding:2px 6px;cursor:pointer;line-height:1;
+  }
+  .delete-btn:active{color:var(--red);}
+  .hex{display:flex;justify-content:space-between;font-size:12.5px;padding:2px 0;}
+  .hex .name{color:var(--muted);flex:1;}
+  .hex .vals{display:flex;gap:10px;}
+  .hex .vals span{min-width:56px;text-align:right;}
+  .hex-sets{font-size:10.5px;color:var(--faint);padding:0 0 6px 0;margin-top:-2px;}
+  .hex-sets .who-sam, .hex-sets .who-joe{font-size:10.5px;}
+  .pr-val{color:var(--green);font-weight:800;}
+  .reg-val{color:var(--red);font-weight:800;}
+  .empty{color:var(--muted);font-size:12.5px;padding:6px 2px;}
+
+  .loading{color:var(--muted);font-size:13px;padding:20px 2px;}
+
+  .person-row{
+    display:flex;align-items:center;gap:10px;background:var(--panel);
+    border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;
+  }
+  .color-swatch-input{
+    width:36px;height:36px;border:none;border-radius:8px;padding:0;
+    background:none;cursor:pointer;flex-shrink:0;
+  }
+  .color-swatch-input::-webkit-color-swatch-wrapper{padding:0;}
+  .color-swatch-input::-webkit-color-swatch{border:none;border-radius:8px;}
+  .person-name-input{
+    flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
+    border-radius:8px;padding:9px 10px;font-size:14px;min-width:0;
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.0.0</span></h1>
+  <nav class="tabs" id="tabs"></nav>
+  <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
+</header>
+
+<main>
+  <div id="dayView">
+    <div class="section-label collapsible" onclick="toggleStatsCollapsed()">
+      <span id="statsToggleIcon">▾</span> Personal Bests
+    </div>
+    <div class="stat-strip" id="statStrip"></div>
+
+    <div class="section-label collapsible" onclick="toggleFormCollapsed()">
+      <span id="formToggleIcon">▾</span> Log today's session
+    </div>
+    <form id="logForm"></form>
+
+    <div class="section-label collapsible" onclick="toggleHistoryCollapsed()">
+      <span id="historyToggleIcon">▾</span> Recent sessions
+    </div>
+    <div class="history" id="history"><div class="loading">Loading…</div></div>
+  </div>
+
+  <div id="progressView" style="display:none;">
+    <nav class="subtabs" id="progressSubTabs"></nav>
+    <nav class="subtabs" id="progressExerciseTabs"></nav>
+    <div class="chart-legend" id="chartLegend"></div>
+    <canvas id="progressCanvas" height="300"></canvas>
+    <p style="font-size:11.5px;color:var(--muted);margin-top:10px;">Line shows weight (kg) logged each session over time.</p>
+  </div>
+
+  <div id="settingsView" style="display:none;">
+    <div class="section-label collapsible" onclick="toggleThemeCollapsed()">
+      <span id="themeToggleIcon">▾</span> Theme
+    </div>
+    <div id="themeSettingsBody">
+      <nav class="subtabs" id="themePresets"></nav>
+      <div id="customThemeControls" style="display:none;gap:16px;align-items:center;margin-top:8px;">
+        <div>
+          <div class="set-label" style="margin-bottom:4px;">BACKGROUND</div>
+          <input type="color" id="customBgInput" class="color-swatch-input" oninput="handleCustomThemeChange()">
+        </div>
+        <div>
+          <div class="set-label" style="margin-bottom:4px;">ACCENT</div>
+          <input type="color" id="customAccentInput" class="color-swatch-input" oninput="handleCustomThemeChange()">
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label collapsible" style="margin-top:26px;" onclick="togglePeopleCollapsed()">
+      <span id="peopleToggleIcon">▾</span> People
+    </div>
+    <div id="peopleSettingsBody">
+      <div id="peopleList"></div>
+      <button type="button" class="icon-btn" id="addPersonBtn" onclick="addPerson()" style="width:100%;margin-top:10px;">+ Add person</button>
+      <p style="font-size:11.5px;color:var(--muted);margin-top:14px;line-height:1.5;">
+        Add or remove people to use this solo or as a group. Removing someone just hides them going forward — their past logged data stays saved and reappears if you re-add them.
+      </p>
+    </div>
+
+    <div class="section-label collapsible" style="margin-top:26px;" onclick="toggleExerciseCollapsed()">
+      <span id="exerciseToggleIcon">▾</span> Exercises
+    </div>
+    <div id="exerciseSettingsBody">
+      <div id="exerciseSettingsContainer"></div>
+      <p style="font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5;">
+        Add, rename, or remove exercises per day. Renaming carries past data forward with it; removing just hides an exercise — its history reappears if you re-add one with the exact same name.
+      </p>
+    </div>
+
+    <div class="section-label collapsible" style="margin-top:26px;" onclick="toggleBackupCollapsed()">
+      <span id="backupToggleIcon">▾</span> Backup &amp; Sync
+    </div>
+    <div id="backupSettingsBody">
+      <button type="button" class="icon-btn" style="width:100%;margin-bottom:8px;" onclick="openSettings()">⚙ Configure GitHub</button>
+      <div class="header-actions" style="padding:0 0 8px 0;">
+        <button id="pushBtn" class="icon-btn push-btn" onclick="pushToGithub()">⤴ Push to GitHub</button>
+        <button id="pullBtn" class="icon-btn push-btn" onclick="pullFromGithub()">⤵ Load from GitHub</button>
+      </div>
+      <div class="header-actions" style="padding:0 0 18px 0;">
+        <button id="exportBtn" class="icon-btn backup-btn" onclick="exportExcel()">⤓ Backup (Excel)</button>
+        <button id="importBtn" class="icon-btn backup-btn" onclick="document.getElementById('importFileInput').click()">⤒ Restore (Excel)</button>
+      </div>
+      <button type="button" class="icon-btn danger-btn" style="width:100%;" onclick="deleteAllData()">🗑 Delete All Data</button>
+      <p style="font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5;">
+        Deleting all data wipes every session, person, and exercise on this device permanently. It can't be undone — back up first if you're not sure.
+      </p>
+    </div>
+  </div>
+</main>
+
+<div id="toast"></div>
+
+<div id="welcomeOverlay" class="modal-overlay">
+  <div class="modal-box">
+    <h2>👋 Looks like you're new here</h2>
+    <p class="confirm-message" style="margin-bottom:16px;">If you have existing data, import it now — or just start fresh.</p>
+    <div class="modal-actions" style="flex-direction:column;gap:10px;">
+      <button type="button" class="btn-primary" style="width:100%;" onclick="handleWelcomeExcel()">Import from Excel</button>
+      <button type="button" class="btn-primary" style="width:100%;" onclick="handleWelcomeGithub()">Import from GitHub</button>
+      <button type="button" class="btn-secondary" style="width:100%;" onclick="closeWelcome()">Start fresh</button>
+    </div>
+  </div>
+</div>
+
+<div id="confirmOverlay" class="modal-overlay">
+  <div class="modal-box">
+    <p id="confirmMessage" class="confirm-message"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" id="confirmCancelBtn">Cancel</button>
+      <button type="button" class="btn-primary" id="confirmOkBtn">OK</button>
+    </div>
+  </div>
+</div>
+
+<div id="settingsOverlay" class="modal-overlay">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h2><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align:-2px;margin-right:6px;" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub Backup</h2>
+      <button type="button" class="help-btn" onclick="toggleGithubHelp()">?</button>
+    </div>
+    <div id="githubHelp" class="help-panel" style="display:none;">
+      <p><strong>Personal access token</strong> — proves it's you. Tap "Generate a token" above and GitHub makes one for you; just copy it back here. Doing it manually instead? It's under GitHub → Settings → Developer settings → Personal access tokens.</p>
+      <p><strong>Repo (owner/name)</strong> — which repository to save into, written as <em>yourusername/reponame</em>. Look at the address bar when you're viewing the repo on GitHub: github.com/<em>this part</em>.</p>
+      <p><strong>File path</strong> — just a filename, e.g. <em>GymLog.json</em>. It doesn't need to exist yet — the first push creates it.</p>
+      <p><strong>Branch</strong> — almost always <em>main</em>. If unsure, open the repo on GitHub and check the branch name shown on its homepage.</p>
+    </div>
+    <a class="quick-link" id="quickTokenLink" href="#" target="_blank" rel="noopener">Generate a token on GitHub →</a>
+    <label for="ghToken">Personal access token</label>
+    <input type="password" id="ghToken" placeholder="github_pat_...">
+    <label for="ghRepo">Repo (owner/name)</label>
+    <input type="text" id="ghRepo" placeholder="yourname/gym-log">
+    <label for="ghPath">File path in repo</label>
+    <input type="text" id="ghPath" placeholder="GymLog.json">
+    <label for="ghBranch">Branch</label>
+    <input type="text" id="ghBranch" placeholder="main">
+    <p class="hint">Tap "Generate a token" — it opens GitHub with the right access already selected (full repo access, since that's the type this quick link can pre-fill). Click "Generate token" there, then copy it back here. Prefer something narrower? Create a fine-grained token yourself instead, scoped to just one repo with "Contents: Read and write" only. Either way, the token is stored solely on this phone.</p>
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeSettings()">Cancel</button>
+      <button class="btn-primary" onclick="handleSaveSettings()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CONFIG = {
+  "push": {
+    "label": "Push",
+    "key": "gymtracker:push",
+    "exercises": [
+      "Bench Press",
+      "Incline Press",
+      "Overhead Press",
+      "Dumbbell Press",
+      "Lateral Raise",
+      "Tricep Push"
+    ],
+    "seedHistory": [
+      {
+        "date": "2026-04-23",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Incline Press": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 6,
+            "samNote": "2x",
+            "joeWt": 12,
+            "joeNote": "2x"
+          },
+          "Tricep Push": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-05",
+        "entries": {
+          "Bench Press": {
+            "samWt": 32.5,
+            "samNote": "2r",
+            "joeWt": 47.5,
+            "joeNote": "5r"
+          },
+          "Incline Press": {
+            "samWt": 27.5,
+            "samNote": "3r",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 8,
+            "samNote": "2x",
+            "joeWt": 12,
+            "joeNote": "2x"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 23.8,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-12",
+        "entries": {
+          "Bench Press": {
+            "samWt": 32.5,
+            "samNote": "3r",
+            "joeWt": 50,
+            "joeNote": "5r"
+          },
+          "Incline Press": {
+            "samWt": 27.5,
+            "samNote": "3r",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 3r",
+            "joeWt": 14,
+            "joeNote": "2x, 4r"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 26.1,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-23",
+        "entries": {
+          "Bench Press": {
+            "samWt": 32.5,
+            "samNote": "3r",
+            "joeWt": 50,
+            "joeNote": "5r"
+          },
+          "Incline Press": {
+            "samWt": 27.5,
+            "samNote": "3r",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 3r",
+            "joeWt": 14,
+            "joeNote": "2x, 4r"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 26.1,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-28",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 52.5,
+            "joeNote": "4r"
+          },
+          "Incline Press": {
+            "samWt": 27.5,
+            "samNote": "3r",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 14,
+            "joeNote": "2x, 6r"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 26.1,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-04",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 52.5,
+            "joeNote": "4r"
+          },
+          "Incline Press": {
+            "samWt": 27.5,
+            "samNote": "3r",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 14,
+            "joeNote": "2x, 6r"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 28.4,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-15",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 55,
+            "joeNote": "3r, 2 spot"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 28.4,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-22",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 55,
+            "joeNote": "5,3,4"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 28.4,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-06",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 55,
+            "joeNote": "5,3,4"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 28.4,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-20",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 57.5,
+            "joeNote": "55kg (7,5) then 57.5kg (3)"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 30.6,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-29",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 57.5,
+            "joeNote": "57.5kg (4,4), 55kg (4)"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 30.6,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-08-09",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 57.5,
+            "joeNote": "57.5kg (4,4), 55kg (4)"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 30.6,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-08-23",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 55,
+            "joeNote": "4,5,3"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 30.6,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-09-03",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": "3,3,2"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 30.6,
+            "joeNote": ""
+          }
+        }
+      }
+    ]
+  },
+  "pull": {
+    "label": "Pull",
+    "key": "gymtracker:pull",
+    "exercises": [
+      "Deadlift",
+      "Pull ups",
+      "Weighted Row",
+      "Head Pull",
+      "Bicep Curl",
+      "Hammer Curl"
+    ],
+    "seedHistory": [
+      {
+        "date": "2026-04-29",
+        "entries": {
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": ""
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 14,
+            "samNote": "bar",
+            "joeWt": 14,
+            "joeNote": "2x"
+          },
+          "Weighted Row": {
+            "samWt": 18,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-11",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": ""
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 11.5,
+            "samNote": "",
+            "joeWt": 14,
+            "joeNote": "2x"
+          },
+          "Weighted Row": {
+            "samWt": 20.3,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": null,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-25",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": "3r, w"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 14,
+            "joeNote": "2x"
+          },
+          "Weighted Row": {
+            "samWt": 20.3,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-05-31",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": "3r, w"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 14,
+            "joeNote": "2x"
+          },
+          "Weighted Row": {
+            "samWt": 20.3,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-06-08",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 80,
+            "joeNote": "3r"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": "3r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 14,
+            "joeNote": "2x"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-06-17",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 70,
+            "joeNote": "5r"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": "3r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-06-29",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 60,
+            "joeNote": "5r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 15,
+            "joeNote": "5r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-07-08",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 60,
+            "joeNote": "5r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 15,
+            "joeNote": "5r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-07-22",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 60,
+            "joeNote": "5r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 15,
+            "joeNote": "5r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-08-03",
+        "entries": {
+          "Deadlift": {
+            "samWt": 30,
+            "samNote": "3r",
+            "joeWt": 50,
+            "joeNote": "6r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 15,
+            "joeNote": "5r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-08-12",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "2r",
+            "joeWt": 50,
+            "joeNote": "6r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 20,
+            "joeNote": ""
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-08-26",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "2r",
+            "joeWt": 50,
+            "joeNote": "6r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 20,
+            "joeNote": ""
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-09-06",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "2r",
+            "joeWt": 50,
+            "joeNote": "6r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": null,
+            "joeNote": "5 muscle ups"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      }
+    ]
+  },
+  "leg": {
+    "label": "Leg",
+    "key": "gymtracker:leg",
+    "exercises": [
+      "Squat",
+      "Hip Thrust",
+      "Leg Press",
+      "Lunges",
+      "Prone Leg Curl",
+      "Calf Raises"
+    ],
+    "seedHistory": [
+      {
+        "date": "2026-04-27",
+        "entries": {
+          "Squat": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": "(ditto: same as squat)"
+          },
+          "Lunges": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": "(ditto: same as squat)"
+          },
+          "Calf Raises": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": "(ditto: same as squat)"
+          }
+        }
+      },
+      {
+        "date": "2026-05-06",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "4r",
+            "joeWt": 60,
+            "joeNote": "5r"
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "3r",
+            "joeWt": 70,
+            "joeNote": "10r"
+          },
+          "Lunges": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 40,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-13",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "4r",
+            "joeWt": 60,
+            "joeNote": "5r"
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "3r",
+            "joeWt": 70,
+            "joeNote": "10r"
+          },
+          "Lunges": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 40,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-27",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "5r",
+            "joeWt": 60,
+            "joeNote": "7r"
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 40,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-01",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "5r",
+            "joeWt": 60,
+            "joeNote": "7r"
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-10",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-18",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": "10r"
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-02",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 80,
+            "samNote": "",
+            "joeWt": 80,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-13",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 80,
+            "samNote": "",
+            "joeWt": 80,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-27",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 80,
+            "samNote": "",
+            "joeWt": 80,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-08-03",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 80,
+            "samNote": "",
+            "joeWt": 80,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-08-31",
+        "entries": {
+          "Squat": {
+            "samWt": 62.5,
+            "samNote": "",
+            "joeWt": 62.5,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 80,
+            "samNote": "",
+            "joeWt": 80,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      }
+    ]
+  }
+};
+let activeTab = "push";
+let progressSubTab = "push";
+let progressExercise = null;
+let cache = {}; // { push: [session, ...], pull: [...], leg: [...] }
+const TAB_ORDER = [...Object.keys(CONFIG), "progress", "settings"];
+
+const PEOPLE_KEY = "gymtracker:people";
+const DEFAULT_PEOPLE = [
+  { id: "sam", name: "Sam", color: "#ff6fa5" },
+  { id: "joe", name: "Joe", color: "#4fa8e0" }
+];
+const COLOR_PALETTE = ["#ff6fa5", "#4fa8e0", "#e3a72e", "#3fa34d", "#9b7fe0", "#e0715f", "#5fc7c7", "#d9c25f"];
+let people = [];
+
+function loadPeople(){
+  try{
+    const raw = localStorage.getItem(PEOPLE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length) return parsed;
+    }
+  }catch(e){
+    console.error("Couldn't read people config", e);
+  }
+  return DEFAULT_PEOPLE.map(p => ({ ...p }));
+}
+
+function savePeople(){
+  try{
+    localStorage.setItem(PEOPLE_KEY, JSON.stringify(people));
+  }catch(e){
+    console.error("Couldn't save people config", e);
+    showToast("Couldn't save — storage may be full or blocked");
+  }
+}
+
+function nextPersonId(){
+  let n = people.length + 1;
+  while(people.some(p => p.id === "person" + n)) n++;
+  return "person" + n;
+}
+
+function nextColor(){
+  const used = new Set(people.map(p => p.color));
+  const free = COLOR_PALETTE.find(c => !used.has(c));
+  return free || COLOR_PALETTE[people.length % COLOR_PALETTE.length];
+}
+
+// ---- Theme system ----
+
+const THEMES = {
+  coolSteel: { name: "Cool Steel", bg: "#0f1519", accent: "#22d3ee" },
+  chalkIron: { name: "Chalk & Iron", bg: "#181614", accent: "#e3a72e" },
+  burntRed: { name: "Burnt Red", bg: "#170f0d", accent: "#e0522f" },
+  forestGreen: { name: "Forest Green", bg: "#0f1712", accent: "#4fae6d" }
+};
+const THEME_KEY = "gymtracker:theme";
+let currentThemeState = { key: "coolSteel" };
+
+function hexToRgb(hex){
+  hex = hex.replace("#", "");
+  if(hex.length === 3) hex = hex.split("").map(c => c + c).join("");
+  const num = parseInt(hex, 16);
+  return { r: (num >> 16) & 255, g: (num >> 8) & 255, b: num & 255 };
+}
+
+function rgbToHex({ r, g, b }){
+  return "#" + [r, g, b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0")).join("");
+}
+
+function mixHex(hex1, hex2, ratio){
+  const c1 = hexToRgb(hex1), c2 = hexToRgb(hex2);
+  return rgbToHex({
+    r: c1.r + (c2.r - c1.r) * ratio,
+    g: c1.g + (c2.g - c1.g) * ratio,
+    b: c1.b + (c2.b - c1.b) * ratio
+  });
+}
+
+function deriveTheme(bg, accent){
+  return {
+    bg,
+    panel: mixHex(bg, "#ffffff", 0.06),
+    panel2: mixHex(bg, "#ffffff", 0.11),
+    line: mixHex(bg, "#ffffff", 0.19),
+    text: mixHex(bg, "#ffffff", 0.92),
+    muted: mixHex(bg, "#ffffff", 0.55),
+    faint: mixHex(bg, "#ffffff", 0.38),
+    accent,
+    accentDim: mixHex(bg, accent, 0.28),
+    accentInk: mixHex("#000000", accent, 0.12)
+  };
+}
+
+function loadTheme(){
+  try{
+    const raw = localStorage.getItem(THEME_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){
+    console.error("Couldn't read theme", e);
+  }
+  return { key: "coolSteel" };
+}
+
+function saveTheme(){
+  try{
+    localStorage.setItem(THEME_KEY, JSON.stringify(currentThemeState));
+  }catch(e){
+    console.error("Couldn't save theme", e);
+  }
+}
+
+function applyTheme(themeKey, custom){
+  const t = themeKey === "custom" && custom ? custom : deriveTheme(THEMES[themeKey]?.bg || THEMES.coolSteel.bg, THEMES[themeKey]?.accent || THEMES.coolSteel.accent);
+  const root = document.documentElement.style;
+  root.setProperty("--bg", t.bg);
+  root.setProperty("--panel", t.panel);
+  root.setProperty("--panel-2", t.panel2);
+  root.setProperty("--line", t.line);
+  root.setProperty("--text", t.text);
+  root.setProperty("--muted", t.muted);
+  root.setProperty("--amber", t.accent);
+  root.setProperty("--amber-dim", t.accentDim);
+  root.setProperty("--accent-ink", t.accentInk);
+  root.setProperty("--faint", t.faint);
+  if(activeTab === "progress") renderProgressView();
+}
+
+function renderThemeSettings(){
+  const nav = document.getElementById("themePresets");
+  nav.innerHTML = "";
+  Object.keys(THEMES).forEach(key => {
+    const btn = document.createElement("button");
+    btn.textContent = THEMES[key].name;
+    btn.className = currentThemeState.key === key ? "active" : "";
+    btn.onclick = () => selectTheme(key);
+    nav.appendChild(btn);
+  });
+  const customBtn = document.createElement("button");
+  customBtn.textContent = "Custom";
+  customBtn.className = currentThemeState.key === "custom" ? "active" : "";
+  customBtn.onclick = () => selectTheme("custom");
+  nav.appendChild(customBtn);
+
+  const customControls = document.getElementById("customThemeControls");
+  customControls.style.display = currentThemeState.key === "custom" ? "flex" : "none";
+  if(currentThemeState.key === "custom" && currentThemeState.custom){
+    document.getElementById("customBgInput").value = currentThemeState.custom.bg;
+    document.getElementById("customAccentInput").value = currentThemeState.custom.accent;
+  }
+  applyThemeSettingsCollapsedState();
+}
+
+function selectTheme(key){
+  if(key === "custom"){
+    const base = currentThemeState.custom || { bg: "#0f1519", accent: "#22d3ee" };
+    const derived = deriveTheme(base.bg, base.accent);
+    derived.bg = base.bg;
+    derived.accent = base.accent;
+    currentThemeState = { key: "custom", custom: derived };
+  } else {
+    currentThemeState = { key };
+  }
+  saveTheme();
+  applyTheme(currentThemeState.key, currentThemeState.custom);
+  renderThemeSettings();
+}
+
+function handleCustomThemeChange(){
+  const bg = document.getElementById("customBgInput").value;
+  const accent = document.getElementById("customAccentInput").value;
+  const derived = deriveTheme(bg, accent);
+  derived.bg = bg;
+  derived.accent = accent;
+  currentThemeState = { key: "custom", custom: derived };
+  saveTheme();
+  applyTheme("custom", derived);
+}
+
+const EXERCISES_KEY = "gymtracker:exercises";
+let exercisesConfig = {};
+
+const EXERCISE_RENAME_MAP = {
+  "Dumbbell Press / Pec Fly": "Dumbbell Press",
+  "Tricep Push / Overhead Ext": "Tricep Push",
+  "Weighted Row / Lat Pull Down": "Weighted Row",
+  "Hammer Curl / Lat Raise": "Hammer Curl",
+  "Leg Extension / Prone Leg Curl": "Prone Leg Curl"
+};
+
+function loadExercises(){
+  try{
+    const raw = localStorage.getItem(EXERCISES_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === "object"){
+        let changed = false;
+        Object.keys(parsed).forEach(tabKey => {
+          parsed[tabKey] = parsed[tabKey].map(ex => {
+            if(EXERCISE_RENAME_MAP[ex]){ changed = true; return EXERCISE_RENAME_MAP[ex]; }
+            return ex;
+          });
+        });
+        if(changed){
+          try{ localStorage.setItem(EXERCISES_KEY, JSON.stringify(parsed)); }catch(e){}
+        }
+        return parsed;
+      }
+    }
+  }catch(e){
+    console.error("Couldn't read exercises config", e);
+  }
+  const defaults = {};
+  Object.keys(CONFIG).forEach(k => { defaults[k] = [...CONFIG[k].exercises]; });
+  return defaults;
+}
+
+function saveExercises(){
+  try{
+    localStorage.setItem(EXERCISES_KEY, JSON.stringify(exercisesConfig));
+  }catch(e){
+    console.error("Couldn't save exercises config", e);
+    showToast("Couldn't save — storage may be full or blocked");
+  }
+}
+
+function getExercises(tabKey){
+  return exercisesConfig[tabKey] || CONFIG[tabKey].exercises;
+}
+
+function renameExercise(tabKey, idx, newName){
+  newName = newName.trim();
+  if(!newName) return;
+  const list = getExercises(tabKey);
+  const oldName = list[idx];
+  if(oldName === newName) return;
+  if(list.includes(newName)){
+    showToast("That exercise name is already used on this day");
+    return;
+  }
+  list[idx] = newName;
+  exercisesConfig[tabKey] = list;
+  saveExercises();
+
+  // carry historical data logged under the old name forward to the new name
+  (cache[tabKey] || []).forEach(sess => {
+    if(sess.entries[oldName] && !sess.entries[newName]){
+      sess.entries[newName] = sess.entries[oldName];
+      delete sess.entries[oldName];
+    }
+  });
+  try{
+    localStorage.setItem(CONFIG[tabKey].key, JSON.stringify(cache[tabKey] || []));
+  }catch(e){
+    console.error("Storage write error", e);
+  }
+  if(activeTab === tabKey){ renderStatStrip(); renderForm(); renderHistory(); }
+}
+
+function addExercise(tabKey){
+  const list = getExercises(tabKey);
+  let n = 1;
+  while(list.includes(`New Exercise ${n}`)) n++;
+  list.push(`New Exercise ${n}`);
+  exercisesConfig[tabKey] = list;
+  saveExercises();
+  renderExerciseSettings();
+}
+
+async function removeExercise(tabKey, idx){
+  const list = getExercises(tabKey);
+  if(list.length <= 1){
+    showToast("You need at least one exercise");
+    return;
+  }
+  const name = list[idx];
+  if(!(await showConfirm(`Remove "${name}" from ${CONFIG[tabKey].label} Day? Past logged data stays saved and reappears if you re-add an exercise with the exact same name.`))){
+    return;
+  }
+  list.splice(idx, 1);
+  exercisesConfig[tabKey] = list;
+  saveExercises();
+  renderExerciseSettings();
+  if(activeTab === tabKey){ renderStatStrip(); renderForm(); renderHistory(); }
+  renderTabs();
+}
+
+function todayStr(){
+  const d = new Date();
+  return d.toISOString().slice(0,10);
+}
+
+function fmtDate(iso){
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString(undefined, { day:"numeric", month:"short", year:"numeric" });
+}
+
+function emptySets(){
+  return [{ wt: null, reps: "" }, { wt: null, reps: "" }, { wt: null, reps: "" }];
+}
+
+function getPersonSets(entry, personId){
+  return (entry && entry.sets && entry.sets[personId]) || emptySets();
+}
+
+// Converts an entry from any earlier format (single-number Sam/Joe, or the
+// hardcoded 3-set Sam/Joe format) into the generic { sets: { personId: [...] } }
+// shape. Already-normalized entries are returned unchanged.
+function normalizeEntry(e){
+  if(e && e.sets) return e;
+  const sets = {};
+  if(e){
+    if(e.samSets){
+      sets.sam = e.samSets;
+    } else if(typeof e.samWt === "number" || e.samNote){
+      sets.sam = emptySets();
+      sets.sam[0] = { wt: typeof e.samWt === "number" ? e.samWt : null, reps: e.samNote || "" };
+    }
+    if(e.joeSets){
+      sets.joe = e.joeSets;
+    } else if(typeof e.joeWt === "number" || e.joeNote){
+      sets.joe = emptySets();
+      sets.joe[0] = { wt: typeof e.joeWt === "number" ? e.joeWt : null, reps: e.joeNote || "" };
+    }
+  }
+  return { sets };
+}
+
+function normalizeSessions(sessions){
+  sessions.forEach(sess => {
+    Object.keys(sess.entries).forEach(ex => {
+      sess.entries[ex] = normalizeEntry(sess.entries[ex]);
+    });
+  });
+  return sessions;
+}
+
+// Resolves old two-exercises-in-one-slot entries (e.g. "Tricep Push / Overhead Ext")
+// into a single canonical exercise, for anyone whose phone still has data saved
+// under the old merged names from an earlier version of this app.
+const EXERCISE_SPLIT_RULES = {
+  push: {
+    "Dumbbell Press / Pec Fly": { newName: "Dumbbell Press", strip: /,?\s*pec fly [\d.]+kg/gi },
+    "Tricep Push / Overhead Ext": { newName: "Tricep Push", strip: /,?\s*OH ext[^,]*/gi }
+  },
+  pull: {
+    "Weighted Row / Lat Pull Down": { newName: "Weighted Row", strip: /,?\s*lat pulldown [\d.]+kg/gi },
+    "Hammer Curl / Lat Raise": { newName: "Hammer Curl", swapFrom: /hammer curl ([\d.]+)kg/i }
+  },
+  leg: {
+    "Leg Extension / Prone Leg Curl": { newName: "Prone Leg Curl", swapFrom: /prone leg curl ([\d.]+)kg/i }
+  }
+};
+
+function extractWeightFromText(text, regex){
+  if(!text) return null;
+  const m = String(text).match(regex);
+  return m ? parseFloat(m[1]) : null;
+}
+
+function stripFromText(text, regex){
+  return String(text || "").replace(regex, "").replace(/^,\s*/, "").trim();
+}
+
+function migrateExerciseSplits(tabKey, sessions){
+  const rules = EXERCISE_SPLIT_RULES[tabKey];
+  if(!rules) return;
+  sessions.forEach(sess => {
+    Object.keys(rules).forEach(oldName => {
+      const entry = sess.entries[oldName];
+      if(!entry) return;
+      const rule = rules[oldName];
+      Object.keys(entry.sets || {}).forEach(personId => {
+        const set0 = entry.sets[personId][0];
+        if(!set0) return;
+        if(rule.swapFrom){
+          set0.wt = extractWeightFromText(set0.reps, rule.swapFrom);
+          set0.reps = "";
+        } else if(rule.strip){
+          set0.reps = stripFromText(set0.reps, rule.strip);
+        }
+      });
+      if(!sess.entries[rule.newName]){
+        sess.entries[rule.newName] = entry;
+      }
+      delete sess.entries[oldName];
+    });
+  });
+}
+
+async function loadTab(tabKey){
+  const cfg = CONFIG[tabKey];
+  try{
+    const raw = localStorage.getItem(cfg.key);
+    const stored = raw ? JSON.parse(raw) : [];
+    const storedDates = new Set(stored.map(s => s.date));
+    const merged = [...stored];
+    // add any seed sessions the phone doesn't already have, without touching
+    // anything the user has actually logged for a date that matches
+    cfg.seedHistory.forEach(seedSession => {
+      if(!storedDates.has(seedSession.date)){
+        merged.push(JSON.parse(JSON.stringify(seedSession)));
+      }
+    });
+    merged.sort((a, b) => a.date.localeCompare(b.date));
+    normalizeSessions(merged);
+    migrateExerciseSplits(tabKey, merged);
+    cache[tabKey] = merged;
+    localStorage.setItem(cfg.key, JSON.stringify(merged));
+  }catch(e){
+    console.error("Storage read error", e);
+    const fallback = cfg.seedHistory.map(s => JSON.parse(JSON.stringify(s)));
+    normalizeSessions(fallback);
+    migrateExerciseSplits(tabKey, fallback);
+    cache[tabKey] = fallback;
+  }
+}
+
+async function saveTab(tabKey){
+  const cfg = CONFIG[tabKey];
+  try{
+    localStorage.setItem(cfg.key, JSON.stringify(cache[tabKey]));
+  }catch(e){
+    console.error("Storage write error", e);
+    showToast("Couldn't save — storage may be full or blocked");
+  }
+}
+
+function topSetWeight(sets){
+  if(!sets) return null;
+  const vals = sets.map(s => s.wt).filter(v => typeof v === "number");
+  return vals.length ? Math.max(...vals) : null;
+}
+
+function computeStatsFor(tabKey, exercise, personId){
+  const sessions = cache[tabKey];
+  let best = null, last = null;
+  for(const s of sessions){
+    const e = s.entries[exercise];
+    if(!e) continue;
+    const top = topSetWeight(getPersonSets(e, personId));
+    if(top !== null){
+      if(best === null || top > best) best = top;
+      last = top;
+    }
+  }
+  return { best, last };
+}
+
+function getLastEntry(tabKey, exercise){
+  const sessions = [...cache[tabKey]]
+    .filter(s => s.entries[exercise])
+    .sort((a, b) => b.date.localeCompare(a.date));
+  return sessions.length ? sessions[0].entries[exercise] : null;
+}
+
+function getNextSessionType(){
+  let nextKey = null, minDate = null;
+  Object.keys(CONFIG).forEach(k => {
+    const sessions = cache[k] || [];
+    const lastDate = sessions.length
+      ? sessions.reduce((max, s) => (s.date > max ? s.date : max), sessions[0].date)
+      : ""; // never logged = most overdue
+    if(minDate === null || lastDate < minDate){
+      minDate = lastDate;
+      nextKey = k;
+    }
+  });
+  return nextKey;
+}
+
+function renderTabs(){
+  const nav = document.getElementById("tabs");
+  nav.innerHTML = "";
+  const nextKey = getNextSessionType();
+  TAB_ORDER.forEach(key=>{
+    const btn = document.createElement("button");
+    const isNext = key === nextKey && key !== "progress" && key !== "settings";
+    if(key === "settings"){
+      btn.innerHTML = "⚙";
+      btn.setAttribute("aria-label", "Settings");
+      btn.className = "settings-tab" + (key === activeTab ? " active" : "");
+    } else {
+      const label = key === "progress" ? "Progress" : CONFIG[key].label + " Day";
+      btn.innerHTML = label + (isNext ? ' <span class="due-dot" title="Next session due"></span>' : "");
+      btn.className = key === activeTab ? "active" : "";
+    }
+    btn.onclick = () => switchTab(key);
+    nav.appendChild(btn);
+  });
+}
+
+let statsCollapsed = false;
+
+function loadStatsCollapsed(){
+  try{ return localStorage.getItem("gymtracker:statsCollapsed") === "1"; }catch(e){ return false; }
+}
+
+function saveStatsCollapsed(){
+  try{ localStorage.setItem("gymtracker:statsCollapsed", statsCollapsed ? "1" : "0"); }catch(e){}
+}
+
+function toggleStatsCollapsed(){
+  statsCollapsed = !statsCollapsed;
+  saveStatsCollapsed();
+  applyStatsCollapsedState();
+}
+
+function applyStatsCollapsedState(){
+  const strip = document.getElementById("statStrip");
+  const icon = document.getElementById("statsToggleIcon");
+  if(!strip || !icon) return;
+  strip.style.display = statsCollapsed ? "none" : "grid";
+  icon.textContent = statsCollapsed ? "▸" : "▾";
+}
+
+let formCollapsed = false;
+let historyCollapsed = false;
+
+function loadFormCollapsed(){
+  try{ return localStorage.getItem("gymtracker:formCollapsed") === "1"; }catch(e){ return false; }
+}
+function saveFormCollapsed(){
+  try{ localStorage.setItem("gymtracker:formCollapsed", formCollapsed ? "1" : "0"); }catch(e){}
+}
+function toggleFormCollapsed(){
+  formCollapsed = !formCollapsed;
+  saveFormCollapsed();
+  applyFormCollapsedState();
+}
+function applyFormCollapsedState(){
+  const form = document.getElementById("logForm");
+  const icon = document.getElementById("formToggleIcon");
+  if(!form || !icon) return;
+  form.style.display = formCollapsed ? "none" : "block";
+  icon.textContent = formCollapsed ? "▸" : "▾";
+}
+
+function loadHistoryCollapsed(){
+  try{ return localStorage.getItem("gymtracker:historyCollapsed") === "1"; }catch(e){ return false; }
+}
+function saveHistoryCollapsed(){
+  try{ localStorage.setItem("gymtracker:historyCollapsed", historyCollapsed ? "1" : "0"); }catch(e){}
+}
+function toggleHistoryCollapsed(){
+  historyCollapsed = !historyCollapsed;
+  saveHistoryCollapsed();
+  applyHistoryCollapsedState();
+}
+function applyHistoryCollapsedState(){
+  const history = document.getElementById("history");
+  const icon = document.getElementById("historyToggleIcon");
+  if(!history || !icon) return;
+  history.style.display = historyCollapsed ? "none" : "block";
+  icon.textContent = historyCollapsed ? "▸" : "▾";
+}
+
+let themeSettingsCollapsed = false;
+let peopleSettingsCollapsed = false;
+let exerciseSettingsCollapsed = false;
+
+function loadThemeSettingsCollapsed(){
+  try{ return localStorage.getItem("gymtracker:themeSettingsCollapsed") === "1"; }catch(e){ return false; }
+}
+function saveThemeSettingsCollapsed(){
+  try{ localStorage.setItem("gymtracker:themeSettingsCollapsed", themeSettingsCollapsed ? "1" : "0"); }catch(e){}
+}
+function toggleThemeCollapsed(){
+  themeSettingsCollapsed = !themeSettingsCollapsed;
+  saveThemeSettingsCollapsed();
+  applyThemeSettingsCollapsedState();
+}
+function applyThemeSettingsCollapsedState(){
+  const body = document.getElementById("themeSettingsBody");
+  const icon = document.getElementById("themeToggleIcon");
+  if(!body || !icon) return;
+  body.style.display = themeSettingsCollapsed ? "none" : "block";
+  icon.textContent = themeSettingsCollapsed ? "▸" : "▾";
+}
+
+function loadPeopleSettingsCollapsed(){
+  try{ return localStorage.getItem("gymtracker:peopleSettingsCollapsed") === "1"; }catch(e){ return false; }
+}
+function savePeopleSettingsCollapsed(){
+  try{ localStorage.setItem("gymtracker:peopleSettingsCollapsed", peopleSettingsCollapsed ? "1" : "0"); }catch(e){}
+}
+function togglePeopleCollapsed(){
+  peopleSettingsCollapsed = !peopleSettingsCollapsed;
+  savePeopleSettingsCollapsed();
+  applyPeopleSettingsCollapsedState();
+}
+function applyPeopleSettingsCollapsedState(){
+  const body = document.getElementById("peopleSettingsBody");
+  const icon = document.getElementById("peopleToggleIcon");
+  if(!body || !icon) return;
+  body.style.display = peopleSettingsCollapsed ? "none" : "block";
+  icon.textContent = peopleSettingsCollapsed ? "▸" : "▾";
+}
+
+function loadExerciseSettingsCollapsed(){
+  try{ return localStorage.getItem("gymtracker:exerciseSettingsCollapsed") === "1"; }catch(e){ return false; }
+}
+function saveExerciseSettingsCollapsed(){
+  try{ localStorage.setItem("gymtracker:exerciseSettingsCollapsed", exerciseSettingsCollapsed ? "1" : "0"); }catch(e){}
+}
+function toggleExerciseCollapsed(){
+  exerciseSettingsCollapsed = !exerciseSettingsCollapsed;
+  saveExerciseSettingsCollapsed();
+  applyExerciseSettingsCollapsedState();
+}
+function applyExerciseSettingsCollapsedState(){
+  const body = document.getElementById("exerciseSettingsBody");
+  const icon = document.getElementById("exerciseToggleIcon");
+  if(!body || !icon) return;
+  body.style.display = exerciseSettingsCollapsed ? "none" : "block";
+  icon.textContent = exerciseSettingsCollapsed ? "▸" : "▾";
+}
+
+let backupSettingsCollapsed = false;
+
+function loadBackupSettingsCollapsed(){
+  try{ return localStorage.getItem("gymtracker:backupSettingsCollapsed") === "1"; }catch(e){ return false; }
+}
+function saveBackupSettingsCollapsed(){
+  try{ localStorage.setItem("gymtracker:backupSettingsCollapsed", backupSettingsCollapsed ? "1" : "0"); }catch(e){}
+}
+function toggleBackupCollapsed(){
+  backupSettingsCollapsed = !backupSettingsCollapsed;
+  saveBackupSettingsCollapsed();
+  applyBackupSettingsCollapsedState();
+}
+function applyBackupSettingsCollapsedState(){
+  const body = document.getElementById("backupSettingsBody");
+  const icon = document.getElementById("backupToggleIcon");
+  if(!body || !icon) return;
+  body.style.display = backupSettingsCollapsed ? "none" : "block";
+  icon.textContent = backupSettingsCollapsed ? "▸" : "▾";
+}
+
+function renderStatStrip(){
+  const strip = document.getElementById("statStrip");
+  strip.innerHTML = "";
+  getExercises(activeTab).forEach(ex=>{
+    const card = document.createElement("div");
+    card.className = "stat-card";
+    let rows = `<div class="ex-name">${ex}</div>`;
+    people.forEach(p=>{
+      const st = computeStatsFor(activeTab, ex, p.id);
+      rows += `<div class="row best"><span class="who">Best <span style="color:${p.color};font-weight:700;">${p.name}</span></span><span class="val">${st.best ?? "–"}</span></div>`;
+    });
+    card.innerHTML = rows;
+    strip.appendChild(card);
+  });
+  applyStatsCollapsedState();
+}
+
+function setBoxHtml(exIndex, person, setIndex, set){
+  const wtVal = set.wt !== null ? set.wt : "";
+  const repsVal = set.reps || "";
+  const wtClass = set.wt !== null ? "prefilled" : "";
+  const repsClass = set.reps ? "prefilled" : "";
+  return `
+    <div class="set-col">
+      <div class="set-label">SET ${setIndex + 1}</div>
+      <div class="mini-box wt-box">
+        <input type="number" step="0.1" inputmode="decimal" placeholder="kg"
+          class="${wtClass}" value="${wtVal}"
+          data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="wt"
+          oninput="this.classList.remove('prefilled')">
+      </div>
+      <div class="mini-box reps-box">
+        <input type="text" placeholder="reps"
+          class="${repsClass}" value="${repsVal}"
+          data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="reps"
+          oninput="this.classList.remove('prefilled')">
+      </div>
+    </div>
+  `;
+}
+
+function fillForwardSets(sets){
+  // if set 1 has a weight but sets 2/3 don't, carry set 1's weight forward as a
+  // sensible prefill (most training uses the same weight across sets); an
+  // explicitly recorded later set always wins and is left untouched
+  const result = sets.map(s => ({ ...s }));
+  let lastWt = null;
+  result.forEach(s => {
+    if(s.wt !== null){
+      lastWt = s.wt;
+    } else if(lastWt !== null){
+      s.wt = lastWt;
+    }
+  });
+  return result;
+}
+
+function renderForm(){
+  const cfg = CONFIG[activeTab];
+  const form = document.getElementById("logForm");
+  let html = `
+    <div class="date-row">
+      <label for="sessionDate">Date</label>
+      <input type="date" id="sessionDate" value="${todayStr()}">
+    </div>
+  `;
+  getExercises(activeTab).forEach((ex, i)=>{
+    const lastEntry = getLastEntry(activeTab, ex);
+    html += `<div class="exercise-block"><div class="exercise-title">${ex}</div>`;
+    people.forEach((p, pi) => {
+      const sets = lastEntry ? fillForwardSets(getPersonSets(lastEntry, p.id)) : emptySets();
+      html += `
+        <div class="p-label" style="color:${p.color};${pi > 0 ? "margin-top:10px;" : ""}">${p.name.toUpperCase()}</div>
+        <div class="set-row">
+          ${sets.map((set, si) => setBoxHtml(i, p.id, si, set)).join("")}
+        </div>
+      `;
+    });
+    html += `</div>`;
+  });
+  html += `<button type="submit" id="saveBtn">Log ${cfg.label} Session</button>`;
+  form.innerHTML = html;
+  form.onsubmit = handleSave;
+  applyFormCollapsedState();
+}
+
+function renderHistory(){
+  const cfg = CONFIG[activeTab];
+  const sessions = [...cache[activeTab]].sort((a,b)=> b.date.localeCompare(a.date));
+  const container = document.getElementById("history");
+  if(sessions.length === 0){
+    container.innerHTML = '<div class="empty">No sessions logged yet.</div>';
+    applyHistoryCollapsedState();
+    return;
+  }
+  // precompute running bests in chronological order so we can flag PRs per row
+  const chrono = [...cache[activeTab]].sort((a,b)=> a.date.localeCompare(b.date));
+  const runningBest = {}; // ex -> personId -> best so far
+  const prFlags = {}; // date|ex -> personId -> bool
+  const regFlags = {};
+  let prevRow = null;
+  chrono.forEach(s=>{
+    getExercises(activeTab).forEach(ex=>{
+      const e = s.entries[ex];
+      const flagKey = s.date + "|" + ex;
+      if(!e){ return; }
+      prFlags[flagKey] = {};
+      regFlags[flagKey] = {};
+      runningBest[ex] = runningBest[ex] || {};
+      people.forEach(p=>{
+        const top = topSetWeight(getPersonSets(e, p.id));
+        if(top === null) return;
+        const prevBest = runningBest[ex][p.id];
+        prFlags[flagKey][p.id] = (prevBest === undefined || top >= prevBest);
+        runningBest[ex][p.id] = Math.max(prevBest ?? -Infinity, top);
+        const prevVal = prevRow && prevRow.entries[ex] ? topSetWeight(getPersonSets(prevRow.entries[ex], p.id)) : null;
+        regFlags[flagKey][p.id] = (prevVal !== null && top < prevVal);
+      });
+    });
+    prevRow = s;
+  });
+
+  container.innerHTML = "";
+  sessions.slice(0,6).forEach(s=>{
+    const row = document.createElement("div");
+    row.className = "history-row";
+    let inner = `
+      <div class="hdate-row">
+        <span class="hdate">${fmtDate(s.date)}</span>
+        <button class="delete-btn" onclick="deleteSession('${activeTab}','${s.date}')" aria-label="Delete session">🗑</button>
+      </div>
+    `;
+    getExercises(activeTab).forEach(ex=>{
+      const e = s.entries[ex];
+      if(!e) return;
+      const flagKey = s.date + "|" + ex;
+      const pf = prFlags[flagKey] || {};
+      const rf = regFlags[flagKey] || {};
+      let valsHtml = "";
+      let setsHtml = "";
+      people.forEach(p=>{
+        const top = topSetWeight(getPersonSets(e, p.id));
+        const display = top !== null ? top : "–";
+        const cls = top !== null ? (pf[p.id] ? "pr-val" : (rf[p.id] ? "reg-val" : "")) : "";
+        valsHtml += `<span class="${cls}">${display}</span>`;
+        const summary = setsSummary(getPersonSets(e, p.id));
+        if(summary){
+          setsHtml += (setsHtml ? " · " : "") + `<span style="color:${p.color};font-weight:700;">${p.name}:</span> ${summary}`;
+        }
+      });
+      inner += `
+        <div class="hex">
+          <span class="name">${ex}</span>
+          <span class="vals">${valsHtml}</span>
+        </div>
+      `;
+      if(setsHtml){
+        inner += `<div class="hex-sets">${setsHtml}</div>`;
+      }
+    });
+    row.innerHTML = inner;
+    container.appendChild(row);
+  });
+  applyHistoryCollapsedState();
+}
+
+function setsSummary(sets){
+  if(!sets) return "";
+  return sets
+    .filter(s => s.wt !== null || s.reps)
+    .map(s => (s.wt !== null ? s.wt : "?") + (s.reps ? `x${s.reps}` : ""))
+    .join(", ");
+}
+
+async function deleteSession(tabKey, date){
+  const label = fmtDate(date);
+  if(!(await showConfirm(`Delete the ${label} session? This can't be undone.`))) return;
+  cache[tabKey] = cache[tabKey].filter(s => s.date !== date);
+  try{
+    localStorage.setItem(CONFIG[tabKey].key, JSON.stringify(cache[tabKey]));
+  }catch(e){
+    console.error("Storage write error", e);
+  }
+  renderTabs();
+  renderStatStrip();
+  renderForm();
+  renderHistory();
+  showToast(`Deleted ${label}`);
+}
+
+function showToast(msg, type){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.className = type || "";
+  t.style.display = "block";
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(()=>{ t.style.display = "none"; }, 3200);
+}
+
+async function handleSave(evt){
+  evt.preventDefault();
+  const cfg = CONFIG[activeTab];
+  const date = document.getElementById("sessionDate").value;
+  if(!date){ showToast("Pick a date first"); return; }
+
+  function readSets(exIndex, personId){
+    return [0, 1, 2].map(si => {
+      const wtInput = document.querySelector(`[data-ex="${exIndex}"][data-person="${personId}"][data-set="${si}"][data-field="wt"]`);
+      const repsInput = document.querySelector(`[data-ex="${exIndex}"][data-person="${personId}"][data-set="${si}"][data-field="reps"]`);
+      const wtRaw = wtInput.value;
+      return {
+        wt: wtRaw === "" ? null : parseFloat(wtRaw),
+        reps: repsInput.value
+      };
+    });
+  }
+
+  const entries = {};
+  let prCount = 0, regCount = 0;
+  let anyValue = false;
+  getExercises(activeTab).forEach((ex, i)=>{
+    const sets = {};
+    people.forEach(p => {
+      const personSets = readSets(i, p.id);
+      sets[p.id] = personSets;
+
+      if(personSets.some(s => s.wt !== null || s.reps.trim() !== "")){
+        anyValue = true;
+      }
+
+      const top = topSetWeight(personSets);
+      const st = computeStatsFor(activeTab, ex, p.id);
+      if(top !== null){
+        if(st.best !== null && top > st.best) prCount++;
+        if(st.last !== null && top < st.last) regCount++;
+      }
+    });
+    entries[ex] = { sets };
+  });
+
+  if(!anyValue){
+    if(!(await showConfirm("Nothing's filled in — save an empty session anyway?"))){
+      return;
+    }
+  }
+
+  // remove any existing entry for the same date (overwrite instead of duplicate)
+  cache[activeTab] = cache[activeTab].filter(s => s.date !== date);
+  cache[activeTab].push({ date, entries });
+
+  const saveBtn = document.getElementById("saveBtn");
+  saveBtn.textContent = "Saving…";
+  saveBtn.disabled = true;
+  await saveTab(activeTab);
+  saveBtn.disabled = false;
+
+  renderTabs();
+  renderStatStrip();
+  renderForm();
+  renderHistory();
+
+  const ghCfg = getGithubConfig();
+  const hasGithub = !!(ghCfg && ghCfg.token && ghCfg.repo);
+  const savedPrefix = hasGithub ? "Saved" : "Saved locally";
+
+  if(prCount > 0){
+    showToast(`${savedPrefix} — ${prCount} new PR${prCount>1?"s":""} 🏆`, "pr");
+  } else if(regCount > 0){
+    showToast(`${savedPrefix} — down on ${regCount} lift${regCount>1?"s":""} from last time`, "reg");
+  } else {
+    showToast(hasGithub ? "Session saved" : "Session saved locally");
+  }
+
+  if(hasGithub){
+    if(await showConfirm("Push this session to GitHub now?")){
+      pushToGithub();
+    }
+  }
+}
+
+async function ensureAllLoaded(){
+  for(const k of Object.keys(CONFIG)){
+    if(!cache[k]) await loadTab(k);
+  }
+}
+
+async function switchTab(tabKey){
+  activeTab = tabKey;
+  renderTabs();
+
+  document.getElementById("dayView").style.display = "none";
+  document.getElementById("progressView").style.display = "none";
+  document.getElementById("settingsView").style.display = "none";
+
+  if(tabKey === "progress"){
+    document.getElementById("progressView").style.display = "block";
+    await ensureAllLoaded();
+    renderProgressView();
+    return;
+  }
+
+  if(tabKey === "settings"){
+    document.getElementById("settingsView").style.display = "block";
+    renderPeopleSettings();
+    renderExerciseSettings();
+    renderThemeSettings();
+    applyBackupSettingsCollapsedState();
+    return;
+  }
+
+  document.getElementById("dayView").style.display = "block";
+  if(!cache[tabKey]){
+    document.getElementById("history").innerHTML = '<div class="loading">Loading…</div>';
+    await loadTab(tabKey);
+  }
+  renderStatStrip();
+  renderForm();
+  renderHistory();
+}
+
+function renderPeopleSettings(){
+  const container = document.getElementById("peopleList");
+  container.innerHTML = "";
+  people.forEach((p, idx) => {
+    const row = document.createElement("div");
+    row.className = "person-row";
+    row.innerHTML = `
+      <input type="color" class="color-swatch-input" value="${p.color}"
+        oninput="updatePersonColor(${idx}, this.value)">
+      <input type="text" class="person-name-input" value="${p.name}"
+        oninput="updatePersonName(${idx}, this.value)">
+      <button type="button" class="delete-btn" onclick="removePerson(${idx})"
+        aria-label="Remove person" ${people.length <= 1 ? "disabled" : ""}>🗑</button>
+    `;
+    container.appendChild(row);
+  });
+  applyPeopleSettingsCollapsedState();
+}
+
+function updatePersonName(idx, value){
+  people[idx].name = value;
+  savePeople();
+}
+
+function updatePersonColor(idx, value){
+  people[idx].color = value;
+  savePeople();
+}
+
+function addPerson(){
+  people.push({ id: nextPersonId(), name: "New person", color: nextColor() });
+  savePeople();
+  renderPeopleSettings();
+  renderTabs();
+}
+
+async function removePerson(idx){
+  if(people.length <= 1){
+    showToast("You need at least one person");
+    return;
+  }
+  const p = people[idx];
+  if(!(await showConfirm(`Remove ${p.name}? Their past logged data stays saved and will reappear if you re-add them.`))){
+    return;
+  }
+  people.splice(idx, 1);
+  savePeople();
+  renderPeopleSettings();
+  renderTabs();
+}
+
+function renderExerciseSettings(){
+  const container = document.getElementById("exerciseSettingsContainer");
+  container.innerHTML = "";
+  Object.keys(CONFIG).forEach(tabKey => {
+    const section = document.createElement("div");
+    section.style.marginBottom = "18px";
+    let inner = `<div class="p-label" style="margin-bottom:8px;">${CONFIG[tabKey].label.toUpperCase()} DAY</div>`;
+    getExercises(tabKey).forEach((ex, idx) => {
+      inner += `
+        <div class="person-row">
+          <input type="text" class="person-name-input" value="${ex}"
+            onchange="renameExercise('${tabKey}', ${idx}, this.value)">
+          <button type="button" class="delete-btn" onclick="removeExercise('${tabKey}', ${idx})" aria-label="Remove exercise">🗑</button>
+        </div>
+      `;
+    });
+    inner += `<button type="button" class="icon-btn" style="width:100%;margin-top:4px;" onclick="addExercise('${tabKey}')">+ Add exercise</button>`;
+    section.innerHTML = inner;
+    container.appendChild(section);
+  });
+  applyExerciseSettingsCollapsedState();
+}
+
+function renderProgressSubTabs(){
+  const nav = document.getElementById("progressSubTabs");
+  nav.innerHTML = "";
+  Object.keys(CONFIG).forEach(key=>{
+    const btn = document.createElement("button");
+    btn.textContent = CONFIG[key].label;
+    btn.className = key === progressSubTab ? "active" : "";
+    btn.onclick = () => {
+      progressSubTab = key;
+      progressExercise = null; // reset to first exercise of new day type
+      renderProgressView();
+    };
+    nav.appendChild(btn);
+  });
+}
+
+function renderProgressExerciseTabs(cfg){
+  const nav = document.getElementById("progressExerciseTabs");
+  nav.innerHTML = "";
+  getExercises(progressSubTab).forEach(ex=>{
+    const btn = document.createElement("button");
+    btn.textContent = ex;
+    btn.className = ex === progressExercise ? "active" : "";
+    btn.onclick = () => { progressExercise = ex; renderProgressView(); };
+    nav.appendChild(btn);
+  });
+}
+
+function getExerciseSeries(tabKey, exercise){
+  return [...cache[tabKey]]
+    .filter(sess => sess.entries[exercise])
+    .sort((a,b) => a.date.localeCompare(b.date))
+    .map(sess => {
+      const point = { date: sess.date, values: {} };
+      people.forEach(p => {
+        point.values[p.id] = topSetWeight(getPersonSets(sess.entries[exercise], p.id));
+      });
+      return point;
+    });
+}
+
+function renderChartLegend(){
+  const legend = document.getElementById("chartLegend");
+  legend.innerHTML = people
+    .map(p => `<span class="legend-item"><span class="swatch" style="background:${p.color}"></span>${p.name}</span>`)
+    .join("");
+}
+
+function renderProgressView(){
+  renderProgressSubTabs();
+  renderChartLegend();
+  const cfg = CONFIG[progressSubTab];
+  if(!progressExercise || !getExercises(progressSubTab).includes(progressExercise)){
+    progressExercise = getExercises(progressSubTab)[0];
+  }
+  renderProgressExerciseTabs(cfg);
+  const series = getExerciseSeries(progressSubTab, progressExercise);
+  drawLineChart(series);
+}
+
+function drawLineChart(series){
+  const canvas = document.getElementById("progressCanvas");
+  const dpr = window.devicePixelRatio || 1;
+  const cssWidth = canvas.parentElement.clientWidth;
+  const cssHeight = 300;
+  canvas.style.width = cssWidth + "px";
+  canvas.style.height = cssHeight + "px";
+  canvas.width = cssWidth * dpr;
+  canvas.height = cssHeight * dpr;
+  const ctx = canvas.getContext("2d");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, cssWidth, cssHeight);
+
+  if(series.length === 0){
+    ctx.fillStyle = "#7d94a1";
+    ctx.font = "13px -apple-system, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("No sessions logged for this exercise yet", cssWidth / 2, cssHeight / 2);
+    return;
+  }
+
+  const paddingLeft = 34, paddingRight = 14, paddingTop = 16, paddingBottom = 66;
+  const chartW = cssWidth - paddingLeft - paddingRight;
+  const chartH = cssHeight - paddingTop - paddingBottom;
+  const baseY = paddingTop + chartH;
+
+  const allVals = series.flatMap(pt => people.map(p => pt.values[p.id])).filter(v => typeof v === "number");
+  const maxVal = Math.max(1, ...allVals);
+  const niceMax = Math.ceil(maxVal / 10) * 10 || 10;
+
+  ctx.strokeStyle = "#2f4049";
+  ctx.fillStyle = "#7d94a1";
+  ctx.font = "11px -apple-system, sans-serif";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "middle";
+  const steps = 4;
+  for(let i = 0; i <= steps; i++){
+    const val = (niceMax / steps) * i;
+    const y = baseY - (val / niceMax) * chartH;
+    ctx.beginPath();
+    ctx.moveTo(paddingLeft, y);
+    ctx.lineTo(paddingLeft + chartW, y);
+    ctx.stroke();
+    ctx.fillText(Math.round(val), paddingLeft - 6, y);
+  }
+
+  const n = series.length;
+  const xStep = n > 1 ? chartW / (n - 1) : 0;
+  const xPos = i => paddingLeft + (n > 1 ? i * xStep : chartW / 2);
+
+  function drawSeries(personId, color){
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+    ctx.lineWidth = 2.5;
+    let drawing = false;
+    series.forEach((pt, i) => {
+      const val = pt.values[personId];
+      const x = xPos(i);
+      if(typeof val === "number"){
+        const y = baseY - (val / niceMax) * chartH;
+        if(!drawing){ ctx.beginPath(); ctx.moveTo(x, y); drawing = true; }
+        else { ctx.lineTo(x, y); }
+      } else if(drawing){
+        ctx.stroke();
+        drawing = false;
+      }
+    });
+    if(drawing) ctx.stroke();
+    series.forEach((pt, i) => {
+      const val = pt.values[personId];
+      if(typeof val === "number"){
+        const x = xPos(i);
+        const y = baseY - (val / niceMax) * chartH;
+        ctx.beginPath();
+        ctx.arc(x, y, 3.2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    });
+  }
+
+  people.forEach(p => drawSeries(p.id, p.color));
+
+  ctx.fillStyle = "#7d94a1";
+  ctx.font = "10px -apple-system, sans-serif";
+  series.forEach((pt, i) => {
+    const x = xPos(i);
+    ctx.save();
+    ctx.translate(x, baseY + 8);
+    ctx.rotate(-Math.PI / 4);
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    const d = new Date(pt.date + "T00:00:00");
+    ctx.fillText(d.toLocaleDateString(undefined, { day: "numeric", month: "short" }), 0, 0);
+    ctx.restore();
+  });
+
+  ctx.strokeStyle = "#3d5561";
+  ctx.beginPath();
+  ctx.moveTo(paddingLeft, baseY);
+  ctx.lineTo(paddingLeft + chartW, baseY);
+  ctx.stroke();
+}
+
+window.addEventListener("resize", () => {
+  if(activeTab === "progress") renderProgressView();
+});
+
+// ---- Excel backup / restore ----
+
+function exportExcel(){
+  ensureAllLoaded().then(() => {
+    if(typeof XLSX === "undefined"){
+      showToast("Couldn't load the Excel library — check your connection");
+      return;
+    }
+    const wb = XLSX.utils.book_new();
+    Object.keys(CONFIG).forEach(tabKey => {
+      const cfg = CONFIG[tabKey];
+      const header = ["Date", "Exercise"];
+      people.forEach(p => {
+        for(let si = 1; si <= 3; si++){
+          header.push(`${p.name} S${si} Wt`, `${p.name} S${si} Reps`);
+        }
+      });
+      const rows = [header];
+      const sessions = [...(cache[tabKey] || [])].sort((a, b) => a.date.localeCompare(b.date));
+      sessions.forEach(sess => {
+        getExercises(tabKey).forEach(ex => {
+          const e = sess.entries[ex];
+          if(!e) return;
+          const row = [sess.date, ex];
+          people.forEach(p => {
+            getPersonSets(e, p.id).forEach(s => {
+              row.push(s.wt !== null ? s.wt : "", s.reps || "");
+            });
+          });
+          rows.push(row);
+        });
+      });
+      const ws = XLSX.utils.aoa_to_sheet(rows);
+      ws["!cols"] = [{ wch: 12 }, { wch: 30 }].concat(Array(people.length * 6).fill({ wch: 10 }));
+      XLSX.utils.book_append_sheet(wb, ws, cfg.label + " Day");
+    });
+
+    // a People sheet so the backup can restore names/colors on another device too
+    const peopleRows = [["id", "name", "color"], ...people.map(p => [p.id, p.name, p.color])];
+    const peopleWs = XLSX.utils.aoa_to_sheet(peopleRows);
+    XLSX.utils.book_append_sheet(wb, peopleWs, "People");
+
+    XLSX.writeFile(wb, `GymTracker-backup-${todayStr()}.xlsx`);
+    showToast("Backup downloaded");
+  });
+}
+
+function handleImportFile(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  if(typeof XLSX === "undefined"){
+    showToast("Couldn't load the Excel library — check your connection");
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try{
+      const data = new Uint8Array(e.target.result);
+      const wb = XLSX.read(data, { type: "array" });
+      await ensureAllLoaded();
+
+      // work out which file-person maps to which currently-configured person
+      let filePeople = null;
+      if(wb.Sheets["People"]){
+        const rows = XLSX.utils.sheet_to_json(wb.Sheets["People"], { header: 1 }).slice(1);
+        filePeople = rows.filter(r => r && r[0]).map(r => ({ id: String(r[0]), name: String(r[1] || r[0]), color: r[2] || "" }));
+      }
+
+      let idMap = {};
+      if(filePeople && filePeople.length){
+        const sameIds = filePeople.every(fp => people.some(p => p.id === fp.id));
+        let adopted = false;
+        if(!sameIds){
+          const fileNames = filePeople.map(p => p.name).join(", ");
+          const replace = await showConfirm(
+            `This backup was made with different people (${fileNames}). Replace your current people list with theirs? ` +
+            `Choosing Cancel keeps your current people and matches by name where possible.`
+          );
+          if(replace){
+            people = filePeople.map((p, idx) => ({
+              id: p.id, name: p.name, color: p.color || COLOR_PALETTE[idx % COLOR_PALETTE.length]
+            }));
+            savePeople();
+            adopted = true;
+          }
+        }
+        if(adopted){
+          filePeople.forEach(fp => { idMap[fp.id] = fp.id; });
+        } else {
+          filePeople.forEach(fp => {
+            const match = people.find(p => p.name === fp.name);
+            if(match) idMap[fp.id] = match.id;
+          });
+        }
+      } else {
+        // legacy backup with no People sheet — assume the old fixed Sam/Joe layout
+        const match = name => people.find(p => p.name === name);
+        const sam = match("Sam"), joe = match("Joe");
+        if(sam) idMap["sam"] = sam.id;
+        if(joe) idMap["joe"] = joe.id;
+      }
+
+      let importedRows = 0;
+      const skippedPeople = new Set();
+
+      Object.keys(CONFIG).forEach(tabKey => {
+        const cfg = CONFIG[tabKey];
+        const sheetName = cfg.label + " Day";
+        const ws = wb.Sheets[sheetName];
+        if(!ws) return;
+
+        const aoa = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        const header = aoa[0] || [];
+        const byDate = new Map((cache[tabKey] || []).map(s => [s.date, s]));
+        const numOrNull = v => (v === "" || v === undefined || v === null || isNaN(parseFloat(v))) ? null : parseFloat(v);
+
+        const peopleColumns = filePeople && filePeople.length
+          ? filePeople.map(fp => ({ filePerson: fp, startIdx: header.indexOf(`${fp.name} S1 Wt`) })).filter(pc => pc.startIdx !== -1)
+          : [
+              { filePerson: { id: "sam", name: "Sam" }, startIdx: 2 },
+              { filePerson: { id: "joe", name: "Joe" }, startIdx: 8 }
+            ];
+
+        aoa.slice(1).forEach(row => {
+          if(!row || !row[0] || !row[1]) return;
+          const rawDate = row[0];
+          const date = rawDate instanceof Date
+            ? rawDate.toISOString().slice(0, 10)
+            : String(rawDate).slice(0, 10);
+          const exercise = String(row[1]);
+          if(!getExercises(tabKey).includes(exercise)) return;
+
+          if(!byDate.has(date)) byDate.set(date, { date, entries: {} });
+          if(!byDate.get(date).entries[exercise]) byDate.get(date).entries[exercise] = { sets: {} };
+          const entrySets = byDate.get(date).entries[exercise].sets;
+
+          peopleColumns.forEach(pc => {
+            const targetId = idMap[pc.filePerson.id];
+            if(!targetId){ skippedPeople.add(pc.filePerson.name); return; }
+            entrySets[targetId] = [0, 1, 2].map(si => ({
+              wt: numOrNull(row[pc.startIdx + si * 2]),
+              reps: row[pc.startIdx + si * 2 + 1] || ""
+            }));
+            importedRows++;
+          });
+        });
+
+        const merged = [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
+        cache[tabKey] = merged;
+        localStorage.setItem(cfg.key, JSON.stringify(merged));
+      });
+
+      if(importedRows === 0){
+        showToast("No matching data found in that file");
+      } else {
+        const skippedMsg = skippedPeople.size ? ` (skipped: ${[...skippedPeople].join(", ")})` : "";
+        showToast(`Restored ${importedRows} entries${skippedMsg}`);
+        renderTabs();
+        if(activeTab === "progress"){ renderProgressView(); }
+        else if(activeTab === "settings"){ renderPeopleSettings(); }
+        else { renderStatStrip(); renderForm(); renderHistory(); }
+      }
+    }catch(err){
+      console.error(err);
+      showToast("Couldn't read that file: " + err.message);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+  event.target.value = "";
+}
+
+document.getElementById("importFileInput").addEventListener("change", handleImportFile);
+
+function detectNewUser(){
+  try{
+    const hasAnyData = Object.keys(CONFIG).some(k => {
+      const raw = localStorage.getItem(CONFIG[k].key);
+      if(!raw) return false;
+      try{ return JSON.parse(raw).length > 0; }catch(e){ return false; }
+    });
+    const hasPeople = !!localStorage.getItem(PEOPLE_KEY);
+    const hasExercises = !!localStorage.getItem(EXERCISES_KEY);
+    return !hasAnyData && !hasPeople && !hasExercises;
+  }catch(e){
+    return false;
+  }
+}
+
+function showWelcome(){
+  const overlay = document.getElementById("welcomeOverlay");
+  if(overlay) overlay.style.display = "flex";
+}
+
+function closeWelcome(){
+  const overlay = document.getElementById("welcomeOverlay");
+  if(overlay) overlay.style.display = "none";
+}
+
+function handleWelcomeExcel(){
+  closeWelcome();
+  document.getElementById("importFileInput").click();
+}
+
+async function handleWelcomeGithub(){
+  closeWelcome();
+  await switchTab("settings");
+  pullFromGithub();
+}
+
+const LEGACY_KEY_MIGRATIONS = [
+  ["pplLog:push", "gymtracker:push"],
+  ["pplLog:pull", "gymtracker:pull"],
+  ["pplLog:leg", "gymtracker:leg"],
+  ["pplLog:people", "gymtracker:people"],
+  ["pplLog:exercises", "gymtracker:exercises"],
+  ["pplLog:theme", "gymtracker:theme"],
+  ["pplLog:statsCollapsed", "gymtracker:statsCollapsed"],
+  ["pplLog:formCollapsed", "gymtracker:formCollapsed"],
+  ["pplLog:historyCollapsed", "gymtracker:historyCollapsed"],
+  ["pplLog:themeSettingsCollapsed", "gymtracker:themeSettingsCollapsed"],
+  ["pplLog:peopleSettingsCollapsed", "gymtracker:peopleSettingsCollapsed"],
+  ["pplLog:exerciseSettingsCollapsed", "gymtracker:exerciseSettingsCollapsed"],
+  ["pplLog:backupSettingsCollapsed", "gymtracker:backupSettingsCollapsed"],
+  ["pplGithubConfig", "gymtrackerGithubConfig"]
+];
+
+function migrateLegacyStorageKeys(){
+  try{
+    LEGACY_KEY_MIGRATIONS.forEach(([oldKey, newKey]) => {
+      const oldVal = localStorage.getItem(oldKey);
+      if(oldVal !== null && localStorage.getItem(newKey) === null){
+        localStorage.setItem(newKey, oldVal);
+        localStorage.removeItem(oldKey);
+      }
+    });
+  }catch(e){
+    console.error("Storage key migration failed", e);
+  }
+}
+
+async function init(){
+  migrateLegacyStorageKeys();
+  const isNewUser = detectNewUser();
+  people = loadPeople();
+  exercisesConfig = loadExercises();
+  statsCollapsed = loadStatsCollapsed();
+  formCollapsed = loadFormCollapsed();
+  historyCollapsed = loadHistoryCollapsed();
+  themeSettingsCollapsed = loadThemeSettingsCollapsed();
+  peopleSettingsCollapsed = loadPeopleSettingsCollapsed();
+  exerciseSettingsCollapsed = loadExerciseSettingsCollapsed();
+  backupSettingsCollapsed = loadBackupSettingsCollapsed();
+  currentThemeState = loadTheme();
+  applyTheme(currentThemeState.key, currentThemeState.custom);
+  await ensureAllLoaded();
+  renderTabs();
+  renderStatStrip();
+  renderForm();
+  renderHistory();
+  if(isNewUser) showWelcome();
+}
+
+// ---- GitHub backup ----
+
+function utf8ToBase64(str){
+  const bytes = new TextEncoder().encode(str);
+  let binary = "";
+  bytes.forEach(b => binary += String.fromCharCode(b));
+  return btoa(binary);
+}
+
+function base64ToUtf8(b64){
+  const binary = atob(b64.replace(/\n/g, ""));
+  const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
+
+function getGithubConfig(){
+  try{
+    const raw = localStorage.getItem("gymtrackerGithubConfig");
+    return raw ? JSON.parse(raw) : null;
+  }catch(e){ return null; }
+}
+
+function saveGithubConfigToStorage(cfg){
+  try{
+    localStorage.setItem("gymtrackerGithubConfig", JSON.stringify(cfg));
+    return true;
+  }catch(e){
+    console.error("Could not save GitHub settings", e);
+    return false;
+  }
+}
+
+function openSettings(){
+  const cfg = getGithubConfig() || {};
+  document.getElementById("ghToken").value = cfg.token || "";
+  document.getElementById("ghRepo").value = cfg.repo || "";
+  document.getElementById("ghPath").value = cfg.path || "GymLog.json";
+  document.getElementById("ghBranch").value = cfg.branch || "main";
+  const link = document.getElementById("quickTokenLink");
+  link.href = "https://github.com/settings/tokens/new?scopes=repo&description=" + encodeURIComponent("GymTracker backup");
+  document.getElementById("settingsOverlay").style.display = "flex";
+}
+
+function closeSettings(){
+  document.getElementById("settingsOverlay").style.display = "none";
+}
+
+function showConfirm(message){
+  return new Promise(resolve => {
+    const overlay = document.getElementById("confirmOverlay");
+    document.getElementById("confirmMessage").textContent = message;
+    overlay.style.display = "flex";
+    const okBtn = document.getElementById("confirmOkBtn");
+    const cancelBtn = document.getElementById("confirmCancelBtn");
+    function cleanup(result){
+      overlay.style.display = "none";
+      okBtn.removeEventListener("click", onOk);
+      cancelBtn.removeEventListener("click", onCancel);
+      resolve(result);
+    }
+    function onOk(){ cleanup(true); }
+    function onCancel(){ cleanup(false); }
+    okBtn.addEventListener("click", onOk);
+    cancelBtn.addEventListener("click", onCancel);
+  });
+}
+
+function toggleGithubHelp(){
+  const panel = document.getElementById("githubHelp");
+  panel.style.display = panel.style.display === "none" ? "block" : "none";
+}
+
+function handleSaveSettings(){
+  const token = document.getElementById("ghToken").value.trim();
+  const repo = document.getElementById("ghRepo").value.trim();
+  const path = document.getElementById("ghPath").value.trim() || "GymLog.json";
+  const branch = document.getElementById("ghBranch").value.trim() || "main";
+  if(!token || !repo){
+    showToast("Token and repo are both required");
+    return;
+  }
+  if(saveGithubConfigToStorage({ token, repo, path, branch })){
+    closeSettings();
+    showToast("GitHub settings saved");
+  } else {
+    showToast("Couldn't save settings — storage blocked?");
+  }
+}
+
+async function pushToGithub(){
+  const cfg = getGithubConfig();
+  if(!cfg || !cfg.token || !cfg.repo){
+    showToast("Set up GitHub first (tap ⚙)");
+    openSettings();
+    return;
+  }
+
+  const btn = document.getElementById("pushBtn");
+  btn.disabled = true;
+  btn.textContent = "Pushing…";
+
+  try{
+    // make sure every day's log is loaded, not just the active tab
+    for(const k of Object.keys(CONFIG)){
+      if(!cache[k]) await loadTab(k);
+    }
+
+    const localTotal = Object.keys(CONFIG).reduce((sum, k) => sum + (cache[k] || []).length, 0);
+    if(localTotal === 0){
+      if(!(await showConfirm("Your local log is empty. Pushing now could overwrite an existing GitHub backup with nothing. Continue?"))){
+        btn.disabled = false;
+        btn.textContent = "⤴ Push to GitHub";
+        return;
+      }
+    }
+
+    const payload = {
+      push: cache.push || [],
+      pull: cache.pull || [],
+      leg: cache.leg || [],
+      people: people,
+      exportedAt: new Date().toISOString()
+    };
+    const content = utf8ToBase64(JSON.stringify(payload, null, 2));
+    const apiUrl = `https://api.github.com/repos/${cfg.repo}/contents/${encodeURIComponent(cfg.path)}`;
+
+    let sha;
+    const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(cfg.branch)}`, {
+      headers: {
+        Authorization: `Bearer ${cfg.token}`,
+        Accept: "application/vnd.github+json"
+      }
+    });
+    if(getRes.status === 200){
+      const getJson = await getRes.json();
+      sha = getJson.sha;
+
+      // compare against what's already backed up before overwriting it
+      try{
+        const remoteJson = JSON.parse(base64ToUtf8(getJson.content));
+        const remoteTotal = Object.keys(CONFIG).reduce((sum, k) => sum + (remoteJson[k] || []).length, 0);
+        if(remoteTotal > 0 && localTotal < remoteTotal){
+          const proceed = await showConfirm(
+            `Your local log has ${localTotal} session${localTotal===1?"":"s"}, but GitHub currently has ${remoteTotal}. ` +
+            `Pushing will overwrite the GitHub copy with less data. Continue anyway?`
+          );
+          if(!proceed){
+            btn.disabled = false;
+            btn.textContent = "⤴ Push to GitHub";
+            return;
+          }
+        }
+      }catch(parseErr){
+        // existing file isn't in the expected format — skip the comparison, still allow the push
+        console.warn("Couldn't parse existing GitHub file for comparison", parseErr);
+      }
+    } else if(getRes.status !== 404){
+      const errJson = await getRes.json().catch(()=>({}));
+      throw new Error(errJson.message || `Couldn't check existing file (${getRes.status})`);
+    }
+
+    const putBody = {
+      message: `GymTracker log update — ${new Date().toLocaleString()}`,
+      content,
+      branch: cfg.branch
+    };
+    if(sha) putBody.sha = sha;
+
+    const putRes = await fetch(apiUrl, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${cfg.token}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(putBody)
+    });
+
+    if(!putRes.ok){
+      const errJson = await putRes.json().catch(()=>({}));
+      throw new Error(errJson.message || `Push failed (${putRes.status})`);
+    }
+
+    showToast("Backed up to GitHub", "pr");
+  }catch(e){
+    console.error(e);
+    showToast("GitHub push failed: " + e.message, "reg");
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "⤴ Push to GitHub";
+  }
+}
+
+async function pullFromGithub(){
+  const cfg = getGithubConfig();
+  if(!cfg || !cfg.token || !cfg.repo){
+    showToast("Set up GitHub first (tap ⚙)");
+    openSettings();
+    return;
+  }
+
+  const btn = document.getElementById("pullBtn");
+  btn.disabled = true;
+  btn.textContent = "Loading…";
+
+  try{
+    for(const k of Object.keys(CONFIG)){
+      if(!cache[k]) await loadTab(k);
+    }
+    const localTotal = Object.keys(CONFIG).reduce((sum, k) => sum + (cache[k] || []).length, 0);
+
+    const apiUrl = `https://api.github.com/repos/${cfg.repo}/contents/${encodeURIComponent(cfg.path)}`;
+    const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(cfg.branch)}`, {
+      headers: {
+        Authorization: `Bearer ${cfg.token}`,
+        Accept: "application/vnd.github+json"
+      }
+    });
+
+    if(getRes.status === 404){
+      showToast("No backup found at that path on GitHub yet");
+      return;
+    }
+    if(!getRes.ok){
+      const errJson = await getRes.json().catch(()=>({}));
+      throw new Error(errJson.message || `Couldn't fetch file (${getRes.status})`);
+    }
+
+    const getJson = await getRes.json();
+    const remote = JSON.parse(base64ToUtf8(getJson.content));
+    const remoteTotal = Object.keys(CONFIG).reduce((sum, k) => sum + (remote[k] || []).length, 0);
+
+    if(localTotal > 0){
+      const proceed = await showConfirm(
+        `This device has ${localTotal} session${localTotal===1?"":"s"} saved. Loading from GitHub (${remoteTotal} session${remoteTotal===1?"":"s"}) will replace everything on this device. Continue?`
+      );
+      if(!proceed) return;
+    }
+
+    Object.keys(CONFIG).forEach(tabKey => {
+      const sessions = Array.isArray(remote[tabKey]) ? remote[tabKey] : [];
+      normalizeSessions(sessions);
+      migrateExerciseSplits(tabKey, sessions);
+      cache[tabKey] = sessions;
+      try{ localStorage.setItem(CONFIG[tabKey].key, JSON.stringify(sessions)); }catch(e){}
+    });
+
+    if(Array.isArray(remote.people) && remote.people.length){
+      people = remote.people;
+      savePeople();
+    }
+
+    showToast("Loaded from GitHub", "pr");
+    renderTabs();
+    if(activeTab === "progress"){ renderProgressView(); }
+    else if(activeTab === "settings"){ renderPeopleSettings(); renderExerciseSettings(); }
+    else { renderStatStrip(); renderForm(); renderHistory(); }
+  }catch(e){
+    console.error(e);
+    showToast("GitHub load failed: " + e.message, "reg");
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "⤵ Load from GitHub";
+  }
+}
+
+async function deleteAllData(){
+  const firstConfirm = await showConfirm(
+    "Delete ALL data on this device? Every session, person, and exercise you've logged will be permanently erased. This cannot be undone."
+  );
+  if(!firstConfirm) return;
+
+  const secondConfirm = await showConfirm(
+    "Really sure? This is your last chance — nothing will be recoverable after this."
+  );
+  if(!secondConfirm) return;
+
+  try{
+    Object.keys(CONFIG).forEach(tabKey => {
+      localStorage.removeItem(CONFIG[tabKey].key);
+    });
+    localStorage.removeItem(PEOPLE_KEY);
+    localStorage.removeItem(EXERCISES_KEY);
+    localStorage.removeItem(THEME_KEY);
+    localStorage.removeItem("gymtracker:statsCollapsed");
+    localStorage.removeItem("gymtracker:formCollapsed");
+    localStorage.removeItem("gymtracker:historyCollapsed");
+    localStorage.removeItem("gymtracker:themeSettingsCollapsed");
+    localStorage.removeItem("gymtracker:peopleSettingsCollapsed");
+    localStorage.removeItem("gymtracker:exerciseSettingsCollapsed");
+    localStorage.removeItem("gymtracker:backupSettingsCollapsed");
+    localStorage.removeItem("gymtrackerGithubConfig");
+  }catch(e){
+    console.error("Couldn't clear storage", e);
+  }
+
+  showToast("All data deleted");
+  setTimeout(() => { window.location.reload(); }, 600);
+}
+
+init();
+</script>
+</body>
+</html>

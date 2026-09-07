@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.1.1 — 2026-09-07
+### Changed
+- **Exercise picker middle column** — now shows the muscle diagram (highlighted body) instead of text group labels; uses `EXERCISE_INFO[name].image` (the same diagram shown in the ℹ modal)
+- Version bump v0.5.1.0 → v0.5.1.1
+
+---
+
 ## v0.5.1.0 — 2026-09-07
 ### Changed
 - **Exercise picker layout** — replaced 2-column photo grid with a scrollable 3-column list: exercise name (left), muscles hit (middle), thumbnail image (right); all results visible at once, no pagination needed

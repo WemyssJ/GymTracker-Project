@@ -347,7 +347,8 @@
   .ex-picker-row.selected{background:var(--amber-dim);margin:0 -16px;padding-left:16px;padding-right:16px;}
   .ex-picker-row.in-list{opacity:0.32;pointer-events:none;}
   .ex-picker-row-name{flex:1;font-size:14px;font-weight:700;color:var(--text);line-height:1.3;}
-  .ex-picker-row-muscles{flex:1;font-size:11px;color:var(--muted);line-height:1.4;}
+  .ex-picker-row-muscle-img{width:44px;height:64px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .ex-picker-row-muscle-img img{width:100%;height:100%;object-fit:contain;display:block;}
   .ex-picker-row-img{width:56px;height:56px;border-radius:8px;overflow:hidden;background:var(--panel);flex-shrink:0;}
   .ex-picker-row-img img{width:100%;height:100%;object-fit:cover;display:block;}
   .ex-picker-row-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:22px;}
@@ -418,7 +419,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.0</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.1</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -1341,11 +1342,6 @@ const MUSCLE_GROUPS = {
 const ALL_PRESETS = Object.values(EXERCISES_BY_DAY).flat()
   .filter((v,i,a)=>a.indexOf(v)===i);
 
-const EX_MUSCLE_MAP = {};
-for(const [group, exList] of Object.entries(MUSCLE_GROUPS)){
-  for(const ex of exList){ (EX_MUSCLE_MAP[ex] = EX_MUSCLE_MAP[ex]||[]).push(group); }
-}
-
 let pickerTabKey = null, pickerIdx = -1;
 let pickerMuscle = "All", pickerSearch = "";
 
@@ -1417,14 +1413,17 @@ function renderPickerGrid(){
     const repdb = EXERCISE_REPDB[name];
     const already = inList.has(name) && name !== currentName;
     const sel = name === currentName;
-    const muscles = (EX_MUSCLE_MAP[name] || []).join(", ") || "—";
-    const imgEl = repdb
+    const info = EXERCISE_INFO[name];
+    const muscleImgEl = info
+      ? `<div class="ex-picker-row-muscle-img"><img src="${info.image}" alt="" onerror="this.style.display='none'"></div>`
+      : `<div class="ex-picker-row-muscle-img"></div>`;
+    const exImgEl = repdb
       ? `<img src="${repdb.files[0]}" alt="${name}" onerror="this.style.display='none'">`
       : `<div class="ex-picker-row-img-ph">💪</div>`;
     return `<div class="ex-picker-row${sel?" selected":""}${already?" in-list":""}" onclick="selectFromPicker('${name.replace(/'/g,"\\'")}')">
       <div class="ex-picker-row-name">${name}</div>
-      <div class="ex-picker-row-muscles">${muscles}</div>
-      <div class="ex-picker-row-img">${imgEl}</div>
+      ${muscleImgEl}
+      <div class="ex-picker-row-img">${exImgEl}</div>
     </div>`;
   }).join("");
 }

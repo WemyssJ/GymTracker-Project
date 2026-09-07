@@ -28,15 +28,20 @@
     --red-bg:#331d1c;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html{overflow-x:hidden;width:100%;overscroll-behavior-x:none;}
+  html{height:100%;overflow-x:hidden;width:100%;overscroll-behavior:none;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     -webkit-font-smoothing:antialiased;}
-  body{padding-bottom:40px;overflow-x:hidden;max-width:100vw;position:relative;}
+  body{
+    height:100%;overflow-y:scroll;-webkit-overflow-scrolling:touch;
+    overscroll-behavior-y:none;overflow-x:hidden;max-width:100vw;position:relative;
+    padding-bottom:calc(40px + env(safe-area-inset-bottom));
+  }
 
   header.top{
     position:sticky;top:0;z-index:20;background:var(--bg);
     padding:14px 16px 0 16px;border-bottom:1px solid var(--line);
+    padding-top:calc(14px + env(safe-area-inset-top));
   }
   h1{
     font-size:22px;font-weight:800;letter-spacing:-0.02em;margin:0 0 12px 0;
@@ -206,7 +211,7 @@
   button#saveBtn:active{opacity:0.85;}
 
   #toast{
-    position:fixed;left:16px;right:16px;bottom:20px;z-index:50;
+    position:fixed;left:16px;right:16px;bottom:calc(20px + env(safe-area-inset-bottom));z-index:50;
     background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
     padding:12px 14px;font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,0.4);
     display:none;max-width:520px;margin:0 auto;
@@ -270,7 +275,10 @@
     cursor:pointer;line-height:1;padding:0;flex-shrink:0;
     font-style:italic;font-family:Georgia,serif;
   }
-  .ex-info-box{max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
+  .ex-info-box{max-height:88vh;display:flex;flex-direction:column;overflow:hidden;}
+  .ex-info-header{display:flex;align-items:center;justify-content:space-between;
+    padding-bottom:14px;margin-bottom:0;border-bottom:1px solid var(--line);flex-shrink:0;}
+  .ex-info-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:14px;}
   .muscle-img{width:100%;border-radius:10px;margin-bottom:14px;display:block;}
   .muscle-section{margin-bottom:10px;}
   .muscle-section-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-bottom:5px;}
@@ -434,13 +442,15 @@
 
 <div id="exInfoOverlay" class="modal-overlay" onclick="closeExInfoIfBg(event)">
   <div class="modal-box ex-info-box">
-    <div class="modal-header-row" style="margin-bottom:14px;">
+    <div class="ex-info-header">
       <h2 id="exInfoTitle" style="font-size:17px;margin:0;"></h2>
       <button class="help-btn" onclick="closeExerciseInfo()" aria-label="Close" style="font-style:normal;">✕</button>
     </div>
-    <img id="exInfoImg" class="muscle-img" src="" alt="Muscle diagram" style="display:none;">
-    <div id="exInfoMuscles"></div>
-    <div id="exInfoTips"></div>
+    <div class="ex-info-body">
+      <img id="exInfoImg" class="muscle-img" src="" alt="Muscle diagram" style="display:none;">
+      <div id="exInfoMuscles"></div>
+      <div id="exInfoTips"></div>
+    </div>
   </div>
 </div>
 
@@ -2863,7 +2873,7 @@ function showExerciseInfo(exName){
   `;
   const overlay = document.getElementById("exInfoOverlay");
   overlay.style.display = "flex";
-  overlay.querySelector(".ex-info-box").scrollTop = 0;
+  overlay.querySelector(".ex-info-body").scrollTop = 0;
 }
 
 function closeExerciseInfo(){

@@ -1,450 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-title" content="GymTracker">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACrElEQVR4nO3dQU7bQABAUVJ1z6JiwRl6Cw7eW/QYvUMXSAgFfgiJPR5p3tshFo5nvsbYE5nT49PzA3zmx9EfgHmJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJg/TzqAP/+vP3/Y//Xn4f9UnmNMP4nMb/j7ez035PIg8zjc/oy8qFM//ytyuYanyGxnHNua3cx2zjMy6O689qzT4mHB93K6RBcXw39tUWjznHx8pBEgdJHCRxkMRBEgdJHKQNdmVn2D/k1bZzce/K8fFpzGrPr+ax+VzcFUcdWx/j7TEXt8cx1eby4naaixvjmG1zeWX7zYW7FZI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SIe9vOVLdvwPZ+UgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SPNuvC31no85dxmtHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkG6M45r99KX23A+031zcvnJcPp4yRtppLu66rNRRlTHeHnNx798cH4+tjKNsPhcbfE1QDfPYdi7crZDEQRIHSRwkcZDEQRIHaVAc373/Xu3ZyZzjY+UgjYvj+thXWzZeTTg+Q1cOG/2XzTY+oy8rNvovm2p8To9PzyOP9+bsjRSyODPD+BwWB/Nzt0ISB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEH6DwJ7gb2mFKkrAAAAAElFTkSuQmCC">
-<link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAACrElEQVR4nO3dQU7bQABAUVJ1z6JiwRl6Cw7eW/QYvUMXSAgFfgiJPR5p3tshFo5nvsbYE5nT49PzA3zmx9EfgHmJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJgyQOkjhI4iCJg/TzqAP/+vP3/Y//Xn4f9UnmNMP4nMb/j7ez035PIg8zjc/oy8qFM//ytyuYanyGxnHNua3cx2zjMy6O689qzT4mHB93K6RBcXw39tUWjznHx8pBEgdJHCRxkMRBEgdJHKQNdmVn2D/k1bZzce/K8fFpzGrPr+ax+VzcFUcdWx/j7TEXt8cx1eby4naaixvjmG1zeWX7zYW7FZI4SOIgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SIe9vOVLdvwPZ+UgiYMkDpI4SOIgiYMkDpI4SOIgiYMkDpI4SPNuvC31no85dxmtHCRxkMRBEgdJHCRxkMRBEgdJHCRxkMRBEgdJHCRxkG6M45r99KX23A+031zcvnJcPp4yRtppLu66rNRRlTHeHnNx798cH4+tjKNsPhcbfE1QDfPYdi7crZDEQRIHSRwkcZDEQRIHaVAc373/Xu3ZyZzjY+UgjYvj+thXWzZeTTg+Q1cOG/2XzTY+oy8rNvovm2p8To9PzyOP9+bsjRSyODPD+BwWB/Nzt0ISB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEESB0kcJHGQxEH6DwJ7gb2mFKkrAAAAAElFTkSuQmCC">
-<title>GymTracker</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<style>
-  :root{
-    --bg:#0f1519;
-    --panel:#182229;
-    --panel-2:#202c34;
-    --line:#2f4049;
-    --text:#e8f2f5;
-    --muted:#7d94a1;
-    --amber:#22d3ee;
-    --amber-dim:#123842;
-    --accent-ink:#062329;
-    --faint:#52697a;
-    --green:#3fa34d;
-    --green-bg:#1c3020;
-    --red:#d9534f;
-    --red-bg:#331d1c;
-  }
-  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html{overflow-x:hidden;width:100%;overscroll-behavior-x:none;}
-  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
-    -webkit-font-smoothing:antialiased;}
-  body{padding-bottom:40px;overflow-x:hidden;max-width:100vw;position:relative;}
 
-  header.top{
-    position:sticky;top:0;z-index:20;background:var(--bg);
-    padding:14px 16px 0 16px;border-bottom:1px solid var(--line);
-  }
-  h1{
-    font-size:22px;font-weight:800;letter-spacing:-0.02em;margin:0 0 12px 0;
-    font-stretch:condensed;
-  }
-  h1 span{color:var(--amber);}
-  h1 .version-stamp{
-    color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;
-    vertical-align:middle;
-  }
-
-  nav.tabs{display:flex;gap:2px;}
-  nav.tabs button{
-    flex:1;padding:10px 4px;background:none;border:none;color:var(--muted);
-    font-size:13px;font-weight:700;letter-spacing:0.02em;cursor:pointer;
-    border-bottom:3px solid transparent;
-  }
-  nav.tabs button.active{color:var(--text);border-bottom-color:var(--amber);}
-  nav.tabs button.settings-tab{flex:0 0 auto;font-size:17px;padding:10px 10px;}
-  .due-dot{
-    display:inline-block;width:6px;height:6px;border-radius:50%;
-    background:var(--green);margin-left:3px;vertical-align:middle;
-  }
-
-  .header-actions{display:flex;gap:8px;padding:10px 0;}
-  .icon-btn{
-    background:var(--panel);border:1px solid var(--line);color:var(--text);
-    border-radius:8px;padding:8px 12px;font-size:13px;font-weight:700;cursor:pointer;
-  }
-  .push-btn{flex:1;border-color:var(--amber-dim);color:var(--amber);}
-  .push-btn:disabled{opacity:0.6;}
-  .backup-btn{flex:1;color:var(--text);}
-  .backup-btn:disabled{opacity:0.6;}
-  .danger-btn{border-color:#5a2320;color:var(--red);}
-  .danger-btn:active{background:var(--red-bg);}
-
-  .modal-overlay{
-    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;
-    align-items:flex-end;justify-content:center;
-  }
-  .modal-box{
-    background:var(--panel);border:1px solid var(--line);border-radius:16px 16px 0 0;
-    padding:20px 18px 28px 18px;width:100%;max-width:520px;
-  }
-  .modal-box h2{font-size:17px;font-weight:800;margin:0 0 14px 0;}
-  .confirm-message{font-size:14.5px;line-height:1.55;color:var(--text);margin:0 0 4px 0;}
-  .modal-box label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:12px 0 5px 0;}
-  .modal-box input{
-    width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
-    border-radius:8px;padding:10px;font-size:14px;
-  }
-  .modal-box .hint{font-size:11.5px;color:var(--muted);margin-top:12px;line-height:1.5;}
-  .modal-actions{display:flex;gap:10px;margin-top:18px;}
-  .modal-actions button{flex:1;padding:12px;border-radius:8px;border:none;font-size:14px;font-weight:700;cursor:pointer;}
-  .btn-secondary{background:var(--panel-2);color:var(--text);}
-  .btn-primary{background:var(--amber);color:var(--accent-ink);}
-  .quick-link{
-    display:block;text-align:center;background:var(--amber-dim);color:var(--amber);
-    border-radius:8px;padding:11px;font-size:13.5px;font-weight:700;text-decoration:none;
-    margin-top:14px;
-  }
-
-  .modal-header-row{display:flex;align-items:center;justify-content:space-between;}
-  .modal-header-row h2{margin:0;}
-  .help-btn{
-    width:26px;height:26px;border-radius:50%;border:1px solid var(--line);
-    background:var(--panel-2);color:var(--muted);font-size:13px;font-weight:800;
-    cursor:pointer;line-height:1;padding:0;
-  }
-  .help-panel{
-    background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
-    padding:12px 12px;margin-top:12px;
-  }
-  .help-panel p{font-size:12px;line-height:1.5;color:var(--muted);margin:0 0 10px 0;}
-  .help-panel p:last-child{margin-bottom:0;}
-  .help-panel strong{color:var(--text);}
-  .help-panel em{color:var(--amber);font-style:normal;}
-
-  .subtabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
-  .subtabs button{
-    padding:8px 14px;border-radius:20px;border:1px solid var(--line);background:var(--panel);
-    color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;
-  }
-  .subtabs button.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
-
-  .chart-legend{display:flex;gap:16px;margin-bottom:12px;}
-  .legend-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:700;}
-  .swatch{width:10px;height:10px;border-radius:3px;display:inline-block;}
-
-  #progressCanvas{width:100%;display:block;background:var(--panel);
-    border:1px solid var(--line);border-radius:12px;}
-
-  main{padding:16px;max-width:520px;margin:0 auto;overflow-x:hidden;}
-
-  .stat-strip{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
-  .stat-card{
-    background:var(--panel);border:1px solid var(--line);
-    border-radius:10px;padding:8px 12px;min-width:0;
-  }
-  .stat-card .ex-name{font-size:11px;color:var(--muted);font-weight:600;
-    overflow:hidden;text-overflow:ellipsis;margin-bottom:4px;
-    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;}
-  .stat-card .row{display:flex;justify-content:space-between;font-size:12px;line-height:1.5;}
-  .stat-card .who{color:var(--muted);}
-  .stat-card .val{font-weight:700;}
-  .stat-card .best .val{color:var(--amber);}
-
-  .section-label{
-    font-size:13px;font-weight:800;color:var(--muted);margin:22px 0 10px 0;
-    letter-spacing:0.02em;
-  }
-  .section-label:first-child{margin-top:0;}
-  .section-label.collapsible{cursor:pointer;user-select:none;}
-  .section-label.collapsible span{display:inline-block;width:12px;color:var(--amber);}
-
-  form#logForm{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;}
-
-  .date-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
-  .date-row label{font-size:13px;color:var(--muted);font-weight:600;}
-  .date-row input[type=date]{
-    flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
-    border-radius:8px;padding:8px 10px;font-size:15px;
-  }
-
-  .exercise-block{border-top:1px solid var(--line);padding:12px 0;}
-  .exercise-block:first-of-type{border-top:none;padding-top:0;}
-  .exercise-title{font-size:14px;font-weight:700;margin-bottom:8px;}
-
-  .people-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .person-col .p-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px;}
-  .person-col input[type=number]{
-    width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
-    border-radius:8px;padding:9px 10px;font-size:15px;margin-bottom:6px;
-  }
-  .person-col input[type=text]{
-    width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);
-    border-radius:8px;padding:7px 10px;font-size:12px;
-  }
-  input::placeholder{color:var(--faint);}
-
-  .p-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:6px;}
-  .p-label.sam{color:#ff6fa5;}
-  .p-label.joe{color:#4fa8e0;}
-  .who-sam{color:#ff6fa5;font-weight:700;}
-  .who-joe{color:#4fa8e0;font-weight:700;}
-  .set-row{display:flex;gap:6px;margin-bottom:2px;}
-  .set-col{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
-  .set-label{font-size:9px;color:var(--muted);text-align:center;font-weight:700;letter-spacing:0.02em;}
-  .mini-box{
-    background:var(--panel-2);border:1px solid var(--line);
-    border-radius:8px;padding:2px;
-  }
-  .mini-box input{
-    width:100%;text-align:center;background:transparent;border:none;
-    color:var(--text);padding:6px 2px;font-size:13px;
-  }
-  .mini-box input:focus{outline:none;}
-  .reps-box input{font-size:11px;color:var(--muted);}
-  .mini-box input.prefilled{color:var(--muted);}
-  .reps-box input.prefilled{color:var(--faint);}
-
-  button#saveBtn{
-    width:100%;margin-top:16px;padding:14px;border:none;border-radius:10px;
-    background:var(--amber);color:var(--accent-ink);font-size:15px;font-weight:800;
-    letter-spacing:0.01em;cursor:pointer;
-  }
-  button#saveBtn:active{opacity:0.85;}
-
-  #toast{
-    position:fixed;left:16px;right:16px;bottom:20px;z-index:50;
-    background:var(--panel-2);border:1px solid var(--line);border-radius:10px;
-    padding:12px 14px;font-size:13px;box-shadow:0 6px 20px rgba(0,0,0,0.4);
-    display:none;max-width:520px;margin:0 auto;
-  }
-  #toast.pr{border-color:var(--green);}
-  #toast.reg{border-color:var(--red);}
-
-  .history{margin-top:8px;}
-  .history-row{
-    background:var(--panel);border:1px solid var(--line);border-radius:10px;
-    padding:10px 12px;margin-bottom:8px;
-  }
-  .history-row .hdate-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
-  .history-row .hdate{font-size:12px;font-weight:700;color:var(--muted);}
-  .delete-btn{
-    background:none;border:none;color:var(--muted);font-size:14px;
-    padding:2px 6px;cursor:pointer;line-height:1;
-  }
-  .delete-btn:active{color:var(--red);}
-  .hex{display:flex;justify-content:space-between;font-size:12.5px;padding:2px 0;}
-  .hex .name{color:var(--muted);flex:1;}
-  .hex .vals{display:flex;gap:10px;}
-  .hex .vals span{min-width:56px;text-align:right;}
-  .hex-sets{font-size:10.5px;color:var(--faint);padding:0 0 6px 0;margin-top:-2px;}
-  .hex-sets .who-sam, .hex-sets .who-joe{font-size:10.5px;}
-  .pr-val{color:var(--green);font-weight:800;}
-  .reg-val{color:var(--red);font-weight:800;}
-  .empty{color:var(--muted);font-size:12.5px;padding:6px 2px;}
-
-  .loading{color:var(--muted);font-size:13px;padding:20px 2px;}
-
-  .person-row{
-    display:flex;align-items:center;gap:10px;background:var(--panel);
-    border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px;
-  }
-  .color-swatch-input{
-    width:36px;height:36px;border:none;border-radius:8px;padding:0;
-    background:none;cursor:pointer;flex-shrink:0;
-  }
-  .color-swatch-input::-webkit-color-swatch-wrapper{padding:0;}
-  .color-swatch-input::-webkit-color-swatch{border:none;border-radius:8px;}
-  .person-name-input{
-    flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
-    border-radius:8px;padding:9px 10px;font-size:14px;min-width:0;
-  }
-  .exercise-select{
-    flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
-    border-radius:8px;padding:9px 10px;font-size:14px;min-width:0;cursor:pointer;
-    -webkit-appearance:none;appearance:none;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237d94a1' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
-    background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;
-  }
-  .exercise-select option,.exercise-select optgroup{background:var(--panel-2);color:var(--text);}
-  .exercise-custom-input{display:none;margin-top:6px;}
-
-  .exercise-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-  .exercise-title-row .exercise-title{margin-bottom:0;}
-  .ex-info-btn{
-    width:20px;height:20px;border-radius:50%;border:1px solid var(--amber);
-    background:var(--amber-dim);color:var(--amber);font-size:12px;font-weight:900;
-    cursor:pointer;line-height:1;padding:0;flex-shrink:0;
-    font-style:italic;font-family:Georgia,serif;
-  }
-  .ex-info-box{max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-  .muscle-img{width:100%;border-radius:10px;margin-bottom:14px;display:block;}
-  .muscle-section{margin-bottom:10px;}
-  .muscle-section-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-bottom:5px;}
-  .muscle-tags{display:flex;flex-wrap:wrap;gap:5px;}
-  .muscle-tag{font-size:12px;font-weight:700;padding:3px 9px;border-radius:6px;}
-  .muscle-tag.primary{background:var(--amber-dim);color:var(--amber);}
-  .muscle-tag.secondary{background:var(--panel-2);color:var(--muted);border:1px solid var(--line);}
-  .form-tips{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);}
-  .form-tips-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-bottom:8px;}
-  .form-tips ul{margin:0;padding:0 0 0 16px;}
-  .form-tips li{font-size:13px;color:var(--text);line-height:1.6;margin-bottom:6px;}
-  .form-tips li:last-child{margin-bottom:0;}
-</style>
-</head>
-<body>
-
-<header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.0.1</span></h1>
-  <nav class="tabs" id="tabs"></nav>
-  <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
-</header>
-
-<main>
-  <div id="dayView">
-    <div class="section-label collapsible" onclick="toggleStatsCollapsed()">
-      <span id="statsToggleIcon">▾</span> Personal Bests
-    </div>
-    <div class="stat-strip" id="statStrip"></div>
-
-    <div class="section-label collapsible" onclick="toggleFormCollapsed()">
-      <span id="formToggleIcon">▾</span> Log today's session
-    </div>
-    <form id="logForm"></form>
-
-    <div class="section-label collapsible" onclick="toggleHistoryCollapsed()">
-      <span id="historyToggleIcon">▾</span> Recent sessions
-    </div>
-    <div class="history" id="history"><div class="loading">Loading…</div></div>
-  </div>
-
-  <div id="progressView" style="display:none;">
-    <nav class="subtabs" id="progressSubTabs"></nav>
-    <nav class="subtabs" id="progressExerciseTabs"></nav>
-    <div class="chart-legend" id="chartLegend"></div>
-    <canvas id="progressCanvas" height="300"></canvas>
-    <p style="font-size:11.5px;color:var(--muted);margin-top:10px;">Line shows weight (kg) logged each session over time.</p>
-  </div>
-
-  <div id="settingsView" style="display:none;">
-    <div class="section-label collapsible" onclick="toggleThemeCollapsed()">
-      <span id="themeToggleIcon">▾</span> Theme
-    </div>
-    <div id="themeSettingsBody">
-      <nav class="subtabs" id="themePresets"></nav>
-      <div id="customThemeControls" style="display:none;gap:16px;align-items:center;margin-top:8px;">
-        <div>
-          <div class="set-label" style="margin-bottom:4px;">BACKGROUND</div>
-          <input type="color" id="customBgInput" class="color-swatch-input" oninput="handleCustomThemeChange()">
-        </div>
-        <div>
-          <div class="set-label" style="margin-bottom:4px;">ACCENT</div>
-          <input type="color" id="customAccentInput" class="color-swatch-input" oninput="handleCustomThemeChange()">
-        </div>
-      </div>
-    </div>
-
-    <div class="section-label collapsible" style="margin-top:26px;" onclick="togglePeopleCollapsed()">
-      <span id="peopleToggleIcon">▾</span> People
-    </div>
-    <div id="peopleSettingsBody">
-      <div id="peopleList"></div>
-      <button type="button" class="icon-btn" id="addPersonBtn" onclick="addPerson()" style="width:100%;margin-top:10px;">+ Add person</button>
-      <p style="font-size:11.5px;color:var(--muted);margin-top:14px;line-height:1.5;">
-        Add or remove people to use this solo or as a group. Removing someone just hides them going forward — their past logged data stays saved and reappears if you re-add them.
-      </p>
-    </div>
-
-    <div class="section-label collapsible" style="margin-top:26px;" onclick="toggleExerciseCollapsed()">
-      <span id="exerciseToggleIcon">▾</span> Exercises
-    </div>
-    <div id="exerciseSettingsBody">
-      <div id="exerciseSettingsContainer"></div>
-      <p style="font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5;">
-        Add, rename, or remove exercises per day. Renaming carries past data forward with it; removing just hides an exercise — its history reappears if you re-add one with the exact same name.
-      </p>
-    </div>
-
-    <div class="section-label collapsible" style="margin-top:26px;" onclick="toggleBackupCollapsed()">
-      <span id="backupToggleIcon">▾</span> Backup &amp; Sync
-    </div>
-    <div id="backupSettingsBody">
-      <button type="button" class="icon-btn" style="width:100%;margin-bottom:8px;" onclick="openSettings()">⚙ Configure GitHub</button>
-      <div class="header-actions" style="padding:0 0 8px 0;">
-        <button id="pushBtn" class="icon-btn push-btn" onclick="pushToGithub()">⤴ Push to GitHub</button>
-        <button id="pullBtn" class="icon-btn push-btn" onclick="pullFromGithub()">⤵ Load from GitHub</button>
-      </div>
-      <div class="header-actions" style="padding:0 0 18px 0;">
-        <button id="exportBtn" class="icon-btn backup-btn" onclick="exportExcel()">⤓ Backup (Excel)</button>
-        <button id="importBtn" class="icon-btn backup-btn" onclick="document.getElementById('importFileInput').click()">⤒ Restore (Excel)</button>
-      </div>
-      <button type="button" class="icon-btn danger-btn" style="width:100%;" onclick="deleteAllData()">🗑 Delete All Data</button>
-      <p style="font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5;">
-        Deleting all data wipes every session, person, and exercise on this device permanently. It can't be undone — back up first if you're not sure.
-      </p>
-    </div>
-  </div>
-</main>
-
-<div id="toast"></div>
-
-<div id="welcomeOverlay" class="modal-overlay">
-  <div class="modal-box">
-    <h2>👋 Looks like you're new here</h2>
-    <p class="confirm-message" style="margin-bottom:16px;">If you have existing data, import it now — or just start fresh.</p>
-    <div class="modal-actions" style="flex-direction:column;gap:10px;">
-      <button type="button" class="btn-primary" style="width:100%;" onclick="handleWelcomeExcel()">Import from Excel</button>
-      <button type="button" class="btn-primary" style="width:100%;" onclick="handleWelcomeGithub()">Import from GitHub</button>
-      <button type="button" class="btn-secondary" style="width:100%;" onclick="closeWelcome()">Start fresh</button>
-    </div>
-  </div>
-</div>
-
-<div id="confirmOverlay" class="modal-overlay">
-  <div class="modal-box">
-    <p id="confirmMessage" class="confirm-message"></p>
-    <div class="modal-actions">
-      <button type="button" class="btn-secondary" id="confirmCancelBtn">Cancel</button>
-      <button type="button" class="btn-primary" id="confirmOkBtn">OK</button>
-    </div>
-  </div>
-</div>
-
-<div id="settingsOverlay" class="modal-overlay">
-  <div class="modal-box">
-    <div class="modal-header-row">
-      <h2><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" style="vertical-align:-2px;margin-right:6px;" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub Backup</h2>
-      <button type="button" class="help-btn" onclick="toggleGithubHelp()">?</button>
-    </div>
-    <div id="githubHelp" class="help-panel" style="display:none;">
-      <p><strong>Personal access token</strong> — proves it's you. Tap "Generate a token" above and GitHub makes one for you; just copy it back here. Doing it manually instead? It's under GitHub → Settings → Developer settings → Personal access tokens.</p>
-      <p><strong>Repo (owner/name)</strong> — which repository to save into, written as <em>yourusername/reponame</em>. Look at the address bar when you're viewing the repo on GitHub: github.com/<em>this part</em>.</p>
-      <p><strong>File path</strong> — just a filename, e.g. <em>GymLog.json</em>. It doesn't need to exist yet — the first push creates it.</p>
-      <p><strong>Branch</strong> — almost always <em>main</em>. If unsure, open the repo on GitHub and check the branch name shown on its homepage.</p>
-    </div>
-    <a class="quick-link" id="quickTokenLink" href="#" target="_blank" rel="noopener">Generate a token on GitHub →</a>
-    <label for="ghToken">Personal access token</label>
-    <input type="password" id="ghToken" placeholder="github_pat_...">
-    <label for="ghRepo">Repo (owner/name)</label>
-    <input type="text" id="ghRepo" placeholder="yourname/gym-log">
-    <label for="ghPath">File path in repo</label>
-    <input type="text" id="ghPath" placeholder="GymLog.json">
-    <label for="ghBranch">Branch</label>
-    <input type="text" id="ghBranch" placeholder="main">
-    <p class="hint">Tap "Generate a token" — it opens GitHub with the right access already selected (full repo access, since that's the type this quick link can pre-fill). Click "Generate token" there, then copy it back here. Prefer something narrower? Create a fine-grained token yourself instead, scoped to just one repo with "Contents: Read and write" only. Either way, the token is stored solely on this phone.</p>
-    <div class="modal-actions">
-      <button class="btn-secondary" onclick="closeSettings()">Cancel</button>
-      <button class="btn-primary" onclick="handleSaveSettings()">Save</button>
-    </div>
-  </div>
-</div>
-
-<div id="exInfoOverlay" class="modal-overlay" onclick="closeExInfoIfBg(event)">
-  <div class="modal-box ex-info-box">
-    <div class="modal-header-row" style="margin-bottom:14px;">
-      <h2 id="exInfoTitle" style="font-size:17px;margin:0;"></h2>
-      <button class="help-btn" onclick="closeExerciseInfo()" aria-label="Close" style="font-style:normal;">✕</button>
-    </div>
-    <img id="exInfoImg" class="muscle-img" src="" alt="Muscle diagram" style="display:none;">
-    <div id="exInfoMuscles"></div>
-    <div id="exInfoTips"></div>
-  </div>
-</div>
-
-<script>
 const CONFIG = {
   "push": {
     "label": "Push",
@@ -457,7 +11,366 @@ const CONFIG = {
       "Lateral Raise",
       "Tricep Push"
     ],
-    "seedHistory": []
+    "seedHistory": [
+      {
+        "date": "2026-04-23",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Incline Press": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 6,
+            "samNote": "2x",
+            "joeWt": 12,
+            "joeNote": "2x"
+          },
+          "Tricep Push": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-05",
+        "entries": {
+          "Bench Press": {
+            "samWt": 32.5,
+            "samNote": "2r",
+            "joeWt": 47.5,
+            "joeNote": "5r"
+          },
+          "Incline Press": {
+            "samWt": 27.5,
+            "samNote": "3r",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 8,
+            "samNote": "2x",
+            "joeWt": 12,
+            "joeNote": "2x"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 23.8,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-12",
+        "entries": {
+          "Bench Press": {
+            "samWt": 32.5,
+            "samNote": "3r",
+            "joeWt": 50,
+            "joeNote": "5r"
+          },
+          "Incline Press": {
+            "samWt": 27.5,
+            "samNote": "3r",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 3r",
+            "joeWt": 14,
+            "joeNote": "2x, 4r"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 26.1,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-23",
+        "entries": {
+          "Bench Press": {
+            "samWt": 32.5,
+            "samNote": "3r",
+            "joeWt": 50,
+            "joeNote": "5r"
+          },
+          "Incline Press": {
+            "samWt": 27.5,
+            "samNote": "3r",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 3r",
+            "joeWt": 14,
+            "joeNote": "2x, 4r"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 26.1,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-28",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 52.5,
+            "joeNote": "4r"
+          },
+          "Incline Press": {
+            "samWt": 27.5,
+            "samNote": "3r",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 14,
+            "joeNote": "2x, 6r"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 26.1,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-04",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 52.5,
+            "joeNote": "4r"
+          },
+          "Incline Press": {
+            "samWt": 27.5,
+            "samNote": "3r",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 14,
+            "joeNote": "2x, 6r"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 28.4,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-15",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 55,
+            "joeNote": "3r, 2 spot"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 28.4,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-22",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 55,
+            "joeNote": "5,3,4"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 28.4,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-06",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 55,
+            "joeNote": "5,3,4"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 28.4,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-20",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 57.5,
+            "joeNote": "55kg (7,5) then 57.5kg (3)"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 30.6,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-29",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 57.5,
+            "joeNote": "57.5kg (4,4), 55kg (4)"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 30.6,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-08-09",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 57.5,
+            "joeNote": "57.5kg (4,4), 55kg (4)"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 30.6,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-08-23",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 55,
+            "joeNote": "4,5,3"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 30.6,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-09-03",
+        "entries": {
+          "Bench Press": {
+            "samWt": 30,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": "3,3,2"
+          },
+          "Dumbbell Press": {
+            "samWt": 10,
+            "samNote": "2x, 4r",
+            "joeWt": 16,
+            "joeNote": "2x, 5r+1 spot"
+          },
+          "Tricep Push": {
+            "samWt": 14.7,
+            "samNote": "",
+            "joeWt": 30.6,
+            "joeNote": ""
+          }
+        }
+      }
+    ]
   },
   "pull": {
     "label": "Pull",
@@ -470,7 +383,529 @@ const CONFIG = {
       "Bicep Curl",
       "Hammer Curl"
     ],
-    "seedHistory": []
+    "seedHistory": [
+      {
+        "date": "2026-04-29",
+        "entries": {
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": ""
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 14,
+            "samNote": "bar",
+            "joeWt": 14,
+            "joeNote": "2x"
+          },
+          "Weighted Row": {
+            "samWt": 18,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-11",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": ""
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 11.5,
+            "samNote": "",
+            "joeWt": 14,
+            "joeNote": "2x"
+          },
+          "Weighted Row": {
+            "samWt": 20.3,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": null,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-25",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": "3r, w"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 14,
+            "joeNote": "2x"
+          },
+          "Weighted Row": {
+            "samWt": 20.3,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-05-31",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": "3r, w"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 14,
+            "joeNote": "2x"
+          },
+          "Weighted Row": {
+            "samWt": 20.3,
+            "samNote": "",
+            "joeWt": 45,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-06-08",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 80,
+            "joeNote": "3r"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": "3r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 14,
+            "joeNote": "2x"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-06-17",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 70,
+            "joeNote": "5r"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 25,
+            "joeNote": "3r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-06-29",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 60,
+            "joeNote": "5r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 15,
+            "joeNote": "5r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-07-08",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 60,
+            "joeNote": "5r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 15,
+            "joeNote": "5r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-07-22",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "3r",
+            "joeWt": 60,
+            "joeNote": "5r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 15,
+            "joeNote": "5r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-08-03",
+        "entries": {
+          "Deadlift": {
+            "samWt": 30,
+            "samNote": "3r",
+            "joeWt": 50,
+            "joeNote": "6r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 15,
+            "joeNote": "5r"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-08-12",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "2r",
+            "joeWt": 50,
+            "joeNote": "6r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 20,
+            "joeNote": ""
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-08-26",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "2r",
+            "joeWt": 50,
+            "joeNote": "6r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": 20,
+            "joeNote": ""
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      },
+      {
+        "date": "2026-09-06",
+        "entries": {
+          "Deadlift": {
+            "samWt": 50,
+            "samNote": "2r",
+            "joeWt": 50,
+            "joeNote": "6r, watch form"
+          },
+          "Pull ups": {
+            "samWt": null,
+            "samNote": "Almost",
+            "joeWt": null,
+            "joeNote": "5 muscle ups"
+          },
+          "Head Pull": {
+            "samWt": 12.5,
+            "samNote": "",
+            "joeWt": 21.6,
+            "joeNote": ""
+          },
+          "Bicep Curl": {
+            "samWt": 13.5,
+            "samNote": "",
+            "joeWt": 16,
+            "joeNote": "2x, 3r"
+          },
+          "Weighted Row": {
+            "samWt": 25,
+            "samNote": "",
+            "joeWt": 52,
+            "joeNote": ""
+          },
+          "Hammer Curl": {
+            "samWt": null,
+            "samNote": "",
+            "joeWt": 14.0,
+            "joeNote": "2x"
+          }
+        }
+      }
+    ]
   },
   "leg": {
     "label": "Leg",
@@ -483,7 +918,428 @@ const CONFIG = {
       "Prone Leg Curl",
       "Calf Raises"
     ],
-    "seedHistory": []
+    "seedHistory": [
+      {
+        "date": "2026-04-27",
+        "entries": {
+          "Squat": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": "(ditto: same as squat)"
+          },
+          "Lunges": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": "(ditto: same as squat)"
+          },
+          "Calf Raises": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": "(ditto: same as squat)"
+          }
+        }
+      },
+      {
+        "date": "2026-05-06",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "4r",
+            "joeWt": 60,
+            "joeNote": "5r"
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "3r",
+            "joeWt": 70,
+            "joeNote": "10r"
+          },
+          "Lunges": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 40,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-13",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "4r",
+            "joeWt": 60,
+            "joeNote": "5r"
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "3r",
+            "joeWt": 70,
+            "joeNote": "10r"
+          },
+          "Lunges": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 40,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-05-27",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "5r",
+            "joeWt": 60,
+            "joeNote": "7r"
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 40,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-01",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "5r",
+            "joeWt": 60,
+            "joeNote": "7r"
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-10",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-06-18",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": "10r"
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-02",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 80,
+            "samNote": "",
+            "joeWt": 80,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-13",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 80,
+            "samNote": "",
+            "joeWt": 80,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-07-27",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 80,
+            "samNote": "",
+            "joeWt": 80,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-08-03",
+        "entries": {
+          "Squat": {
+            "samWt": 60,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 80,
+            "samNote": "",
+            "joeWt": 80,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      },
+      {
+        "date": "2026-08-31",
+        "entries": {
+          "Squat": {
+            "samWt": 62.5,
+            "samNote": "",
+            "joeWt": 62.5,
+            "joeNote": ""
+          },
+          "Hip Thrust": {
+            "samWt": 70,
+            "samNote": "",
+            "joeWt": 70,
+            "joeNote": ""
+          },
+          "Leg Press": {
+            "samWt": 80,
+            "samNote": "",
+            "joeWt": 80,
+            "joeNote": ""
+          },
+          "Lunges": {
+            "samWt": 50,
+            "samNote": "",
+            "joeWt": 50,
+            "joeNote": ""
+          },
+          "Calf Raises": {
+            "samWt": 40,
+            "samNote": "",
+            "joeWt": 60,
+            "joeNote": ""
+          },
+          "Prone Leg Curl": {
+            "samWt": 23.0,
+            "samNote": "",
+            "joeWt": 50.0,
+            "joeNote": ""
+          }
+        }
+      }
+    ]
   }
 };
 const EXERCISE_INFO = {
@@ -696,7 +1552,7 @@ const EXERCISE_INFO = {
       "Slightly bending the knee shifts emphasis to the deeper soleus muscle",
       "Use a step or plate so your heel can drop below the ball of your foot for the full stretch"
     ]
-  },
+  }
   // ── Extra exercises (not in default routine — available when added) ──────────
 
   // PUSH
@@ -1037,7 +1893,8 @@ const TAB_ORDER = [...Object.keys(CONFIG), "progress", "settings"];
 
 const PEOPLE_KEY = "gymtracker:people";
 const DEFAULT_PEOPLE = [
-  { id: "john", name: "John Smith", color: "#4fa8e0" }
+  { id: "sam", name: "Sam", color: "#ff6fa5" },
+  { id: "joe", name: "Joe", color: "#4fa8e0" }
 ];
 const COLOR_PALETTE = ["#ff6fa5", "#4fa8e0", "#e3a72e", "#3fa34d", "#9b7fe0", "#e0715f", "#5fc7c7", "#d9c25f"];
 let people = [];
@@ -2875,6 +3732,3 @@ function closeExInfoIfBg(evt){
 }
 
 init();
-</script>
-</body>
-</html>

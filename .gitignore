@@ -9,3 +9,5 @@ download-exercises.js
 download-exercises2.js
 find-exercises.js
 _exercise_repdb_local.txt
+convert-to-webp.js
+images/muscles/**/*.png

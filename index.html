@@ -340,18 +340,18 @@
   .muscle-chip.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
   .ex-picker-grid{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
     display:flex;flex-direction:column;padding:0 16px 8px;}
-  .ex-picker-row{display:flex;align-items:center;gap:12px;padding:10px 0;
+  .ex-picker-row{display:flex;align-items:center;gap:14px;padding:14px 0;
     border-bottom:1px solid var(--line);cursor:pointer;transition:opacity 0.12s;}
   .ex-picker-row:last-child{border-bottom:none;}
   .ex-picker-row:active{opacity:0.55;}
   .ex-picker-row.selected{background:var(--amber-dim);margin:0 -16px;padding-left:16px;padding-right:16px;}
   .ex-picker-row.in-list{opacity:0.32;pointer-events:none;}
-  .ex-picker-row-name{flex:1;font-size:14px;font-weight:700;color:var(--text);line-height:1.3;}
-  .ex-picker-row-muscle-img{width:44px;height:64px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .ex-picker-row-name{flex:1;font-size:15px;font-weight:700;color:var(--text);line-height:1.3;}
+  .ex-picker-row-muscle-img{width:56px;height:84px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
   .ex-picker-row-muscle-img img{width:100%;height:100%;object-fit:contain;display:block;}
-  .ex-picker-row-img{width:56px;height:56px;border-radius:8px;overflow:hidden;background:var(--panel);flex-shrink:0;}
+  .ex-picker-row-img{width:84px;height:84px;border-radius:10px;overflow:hidden;background:var(--panel);flex-shrink:0;}
   .ex-picker-row-img img{width:100%;height:100%;object-fit:cover;display:block;}
-  .ex-picker-row-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:22px;}
+  .ex-picker-row-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:28px;}
   .ex-picker-footer{padding:0 16px 16px;flex-shrink:0;}
   .set-count-row{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:6px;}
   .set-count-btn{width:28px;height:28px;border-radius:7px;border:1px solid var(--line);
@@ -419,7 +419,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.1</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.2</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>

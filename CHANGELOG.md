@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.0.9 — 2026-09-07
+### Changed
+- **Exercise picker pagination** — grid now shows 6 exercises per page with ‹ / › navigation; reduces image load on initial open and fixes thin-card rendering when "All" filter is active
+- Version bump v0.5.0.8 → v0.5.0.9
+
+---
+
 ## v0.5.0.7 — 2026-09-07
 ### Added
 - **Exercise picker** — replaces the Settings dropdown with a visual modal: search by name, filter by muscle group (Chest / Shoulders / Back / Arms / Legs / Glutes / Core), browse 2-column photo grid, or add a custom exercise name

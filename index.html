@@ -416,7 +416,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.0.8</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.0.9</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -674,6 +674,11 @@
     <input type="search" id="exPickerSearch" class="ex-picker-search" placeholder="Search exercises…" oninput="handlePickerSearch(this.value)" autocomplete="off">
     <div class="muscle-chips" id="muscleChips"></div>
     <div class="ex-picker-grid" id="exPickerGrid"></div>
+    <div id="exPickerPager" style="display:none;align-items:center;justify-content:space-between;padding:6px 2px 0;gap:8px;">
+      <button class="icon-btn" id="exPickerPrev" onclick="stepPickerPage(-1)" style="width:38px;height:38px;flex-shrink:0;">‹</button>
+      <span id="exPickerPageLabel" style="font-size:12px;color:var(--muted);flex:1;text-align:center;"></span>
+      <button class="icon-btn" id="exPickerNext" onclick="stepPickerPage(1)" style="width:38px;height:38px;flex-shrink:0;">›</button>
+    </div>
     <div class="ex-picker-footer">
       <button type="button" class="icon-btn" style="width:100%;" onclick="openPickerCustom()">+ Custom exercise…</button>
       <input type="text" id="exPickerCustomInput" class="person-name-input" style="display:none;margin-top:8px;" placeholder="Exercise name, then press Enter…" onkeydown="handlePickerCustomKey(event)">
@@ -1340,11 +1345,12 @@ const ALL_PRESETS = Object.values(EXERCISES_BY_DAY).flat()
   .filter((v,i,a)=>a.indexOf(v)===i);
 
 let pickerTabKey = null, pickerIdx = -1;
-let pickerMuscle = "All", pickerSearch = "";
+let pickerMuscle = "All", pickerSearch = "", pickerPage = 0;
+const PICKER_PAGE_SIZE = 6;
 
 function openExercisePicker(tabKey, idx){
   pickerTabKey = tabKey; pickerIdx = idx;
-  pickerMuscle = "All"; pickerSearch = "";
+  pickerMuscle = "All"; pickerSearch = ""; pickerPage = 0;
   const searchEl = document.getElementById("exPickerSearch");
   searchEl.value = "";
   const customEl = document.getElementById("exPickerCustomInput");
@@ -1380,12 +1386,19 @@ function renderPickerChips(){
 
 function filterPickerMuscle(group){
   pickerMuscle = group;
+  pickerPage = 0;
   renderPickerChips();
   renderPickerGrid();
 }
 
 function handlePickerSearch(val){
   pickerSearch = val.toLowerCase().trim();
+  pickerPage = 0;
+  renderPickerGrid();
+}
+
+function stepPickerPage(delta){
+  pickerPage += delta;
   renderPickerGrid();
 }
 
@@ -1400,13 +1413,29 @@ function renderPickerGrid(){
   }
   if(pickerSearch) exs = exs.filter(e=>e.toLowerCase().includes(pickerSearch));
 
+  const totalPages = Math.ceil(exs.length / PICKER_PAGE_SIZE);
+  pickerPage = Math.min(pickerPage, Math.max(0, totalPages - 1));
+  const pager = document.getElementById("exPickerPager");
+
   const grid = document.getElementById("exPickerGrid");
   if(!exs.length){
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;color:var(--muted);padding:24px 0;">No exercises found</div>`;
+    pager.style.display = "none";
     return;
   }
 
-  grid.innerHTML = exs.map(name=>{
+  const pageExs = exs.slice(pickerPage * PICKER_PAGE_SIZE, (pickerPage + 1) * PICKER_PAGE_SIZE);
+
+  if(totalPages > 1){
+    pager.style.display = "flex";
+    document.getElementById("exPickerPageLabel").textContent = `${pickerPage + 1} of ${totalPages}`;
+    document.getElementById("exPickerPrev").disabled = pickerPage === 0;
+    document.getElementById("exPickerNext").disabled = pickerPage >= totalPages - 1;
+  } else {
+    pager.style.display = "none";
+  }
+
+  grid.innerHTML = pageExs.map(name=>{
     const repdb = EXERCISE_REPDB[name];
     const already = inList.has(name) && name !== currentName;
     const sel = name === currentName;

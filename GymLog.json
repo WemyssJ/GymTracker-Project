@@ -1,0 +1,5921 @@
+{
+  "push": [
+    {
+      "date": "2026-04-23",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Incline Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 6,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 12,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-05-05",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 32.5,
+                "reps": "2r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 47.5,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Incline Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 27.5,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 8,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 12,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 23.8,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-05-12",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 32.5,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Incline Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 27.5,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 26.1,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-05-23",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 32.5,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Incline Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 27.5,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 26.1,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-05-28",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52.5,
+                "reps": "4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Incline Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 27.5,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x, 6r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 26.1,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-06-04",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52.5,
+                "reps": "4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Incline Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 27.5,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x, 6r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 28.4,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-06-15",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 55,
+                "reps": "3r, 2 spot"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 5r+1 spot"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 28.4,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-06-22",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 55,
+                "reps": "5,3,4"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 5r+1 spot"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 28.4,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-07-06",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 55,
+                "reps": "5,3,4"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 5r+1 spot"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 28.4,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-07-20",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 57.5,
+                "reps": "55kg (7,5) then 57.5kg (3)"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 5r+1 spot"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 30.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-07-29",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 57.5,
+                "reps": "57.5kg (4,4), 55kg (4)"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 5r+1 spot"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 30.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-08-09",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 57.5,
+                "reps": "57.5kg (4,4), 55kg (4)"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 5r+1 spot"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 30.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-08-23",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 55,
+                "reps": "4,5,3"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 5r+1 spot"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 30.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-09-03",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "3,3,2"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "2x, 4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 5r+1 spot"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14.7,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 30.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "pull": [
+    {
+      "date": "2026-04-29",
+      "entries": {
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 14,
+                "reps": "bar"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 18,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-05-11",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 11.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 20.3,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {}
+        }
+      }
+    },
+    {
+      "date": "2026-05-25",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 25,
+                "reps": "3r, w"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 20.3,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-05-31",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 25,
+                "reps": "3r, w"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 20.3,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 45,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-06-08",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 80,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 25,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-06-17",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 25,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-06-29",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "5r, watch form"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 15,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-07-08",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "5r, watch form"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 15,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-07-22",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "5r, watch form"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 15,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-08-03",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "6r, watch form"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 15,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-08-12",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "2r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "6r, watch form"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 20,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-08-26",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "2r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "6r, watch form"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 20,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-09-06",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": "2r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "6r, watch form"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Pull ups": {
+          "sets": {
+            "sam": [
+              {
+                "wt": null,
+                "reps": "Almost"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": null,
+                "reps": "5 muscle ups"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Head Pull": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 12.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 21.6,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Bicep Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 13.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "2x, 3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Weighted Row": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 52,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "2x"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "leg": [
+    {
+      "date": "2026-04-27",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "(ditto: same as squat)"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "(ditto: same as squat)"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "(ditto: same as squat)"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-05-06",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": "4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": "10r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-05-13",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": "4r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": "3r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": "10r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-05-27",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "7r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-06-01",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": "5r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "7r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-06-10",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-06-18",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Leg Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": "10r"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Prone Leg Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 23,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-07-02",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Leg Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 80,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 80,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Prone Leg Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 23,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-07-13",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Leg Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 80,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 80,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Prone Leg Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 23,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-07-27",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Leg Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 80,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 80,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Prone Leg Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 23,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-08-03",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Leg Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 80,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 80,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Prone Leg Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 23,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "date": "2026-08-31",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 62.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 62.5,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Hip Thrust": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 70,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Leg Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 80,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 80,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Lunges": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Calf Raises": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 40,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        },
+        "Prone Leg Curl": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 23,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ],
+            "joe": [
+              {
+                "wt": 50,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "people": [
+    {
+      "id": "sam",
+      "name": "Sam",
+      "color": "#ff6fa5"
+    },
+    {
+      "id": "joe",
+      "name": "Joe",
+      "color": "#4fa8e0"
+    }
+  ],
+  "exportedAt": "2026-09-07T06:41:03.223Z"
+}

@@ -1,5 +1,28 @@
 # Changelog
 
+## v0.5.0.5 — 2026-09-07
+### Added
+- **Exercise images toggle** — the exercise info modal now has a "Muscles / Exercise" pill toggle; Exercise view shows start + peak photos from the RepDB dataset (repdb.co) for 32 exercises
+- **Rest timer** — optional countdown between sets; auto-starts after logging a session; duration configurable (30s / 1m / 1.5m / 2m / 3m); vibrates on completion; toggled in Settings → Timers
+- **Challenge timer** — optional stopwatch for timed exercises (Plank, Leg Raise, Russian Twist); adds a ⏱ button next to those exercises in the log form; toggled in Settings → Timers
+- **Credits section** — Settings → Credits lists musclecharts.net, RepDB, and SheetJS with links
+
+### Changed
+- Version bump v0.5.0.4 → v0.5.0.5
+
+---
+
+## v0.5.0.4 — 2026-09-07
+### Added
+- **Optional training days** — each day type (Push / Pull / Leg / Core) can be toggled on/off in Settings → Days; disabling hides the tab but keeps all logged data; at least one day must remain active
+- **Setup day selection on first launch** — the welcome screen now lets new users pick which days they train before importing or starting fresh
+- **Inline GitHub restore on welcome screen** — new users on a new device can enter their token + repo directly on the welcome screen to restore all data in one step, without navigating through Settings first; no need to re-link GitHub every time
+
+### Changed
+- Version bump v0.5.0.3 → v0.5.0.4
+
+---
+
 ## v0.5.0.3 — 2026-09-07
 ### Added
 - **Core Day tab** — Plank, Crunch, Leg Raise, Russian Twist, Cable Crunch; fully wired into tracking, history, progress chart, and settings

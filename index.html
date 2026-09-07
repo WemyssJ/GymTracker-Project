@@ -240,6 +240,10 @@
   .show-all-link{text-align:center;font-size:12px;color:var(--amber);font-weight:700;
     cursor:pointer;padding:10px 0;letter-spacing:0.01em;}
 
+  .day-toggle-btn{padding:9px 16px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel-2);color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;}
+  .day-toggle-btn.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
+
   .history{margin-top:8px;}
   .history-row{
     background:var(--panel);border:1px solid var(--line);border-radius:10px;
@@ -299,7 +303,6 @@
   .ex-info-box{max-height:88vh;display:flex;flex-direction:column;overflow:hidden;}
   .ex-info-header{display:flex;align-items:center;justify-content:space-between;
     padding-bottom:14px;margin-bottom:0;border-bottom:1px solid var(--line);flex-shrink:0;}
-  .ex-info-body{overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:14px;}
   .muscle-img{width:100%;border-radius:10px;margin-bottom:14px;display:block;}
   .muscle-section{margin-bottom:10px;}
   .muscle-section-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-bottom:5px;}
@@ -312,12 +315,63 @@
   .form-tips ul{margin:0;padding:0 0 0 16px;}
   .form-tips li{font-size:13px;color:var(--text);line-height:1.6;margin-bottom:6px;}
   .form-tips li:last-child{margin-bottom:0;}
+
+  /* ── Exercise info view tabs ───────────────────────── */
+  .ex-view-tabs{display:flex;gap:6px;margin:8px 0 4px;flex-shrink:0;}
+  .ex-view-tab{
+    flex:1;padding:8px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel-2);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;
+  }
+  .ex-view-tab.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
+  .ex-info-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:14px;}
+
+  /* ── Timer widget ──────────────────────────────────── */
+  .timer-widget{
+    position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));
+    left:16px;right:16px;max-width:488px;margin:0 auto;
+    background:var(--panel);border:2px solid var(--amber);border-radius:14px;
+    padding:12px 16px 14px;z-index:45;
+    box-shadow:0 4px 20px rgba(0,0,0,0.5);
+    flex-direction:column;align-items:stretch;display:none;
+  }
+  .timer-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;text-align:center;margin-bottom:4px;}
+  .timer-display{
+    font-size:40px;font-weight:800;color:var(--amber);text-align:center;
+    font-variant-numeric:tabular-nums;letter-spacing:-0.02em;line-height:1;margin-bottom:10px;
+  }
+  .timer-display.done{color:var(--green);}
+  .timer-controls{display:flex;gap:8px;}
+  .timer-btn{flex:1;padding:10px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;}
+  .timer-btn.primary{background:var(--amber);color:var(--accent-ink);}
+  .timer-btn.secondary{background:var(--panel-2);color:var(--text);border:1px solid var(--line);}
+
+  /* ── Timer & credits settings rows ────────────────── */
+  .settings-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);}
+  .settings-row:first-child{border-top:none;padding-top:0;}
+  .settings-row-info{flex:1;}
+  .settings-row-title{font-size:14px;font-weight:700;color:var(--text);}
+  .settings-row-desc{font-size:12px;color:var(--muted);margin-top:2px;}
+  .toggle-switch{position:relative;display:inline-block;width:44px;height:26px;flex-shrink:0;}
+  .toggle-switch input{opacity:0;width:0;height:0;position:absolute;}
+  .toggle-slider{
+    position:absolute;cursor:pointer;inset:0;
+    background:var(--panel-2);border:1px solid var(--line);border-radius:26px;
+    transition:background 0.2s,border-color 0.2s;
+  }
+  .toggle-slider:before{
+    content:"";position:absolute;width:18px;height:18px;left:3px;bottom:3px;
+    background:var(--muted);border-radius:50%;transition:transform 0.2s,background 0.2s;
+  }
+  .toggle-switch input:checked + .toggle-slider{background:var(--amber-dim);border-color:var(--amber);}
+  .toggle-switch input:checked + .toggle-slider:before{transform:translateX(18px);background:var(--amber);}
+  .credits-link{color:var(--amber);text-decoration:none;}
+  .credits-link:hover{text-decoration:underline;}
 </style>
 </head>
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.0.3</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.0.5</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -349,6 +403,10 @@
   </div>
 
   <div id="settingsView" style="display:none;">
+    <div class="section-label" style="margin-top:0;">Days</div>
+    <div id="dayTogglesContainer" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;"></div>
+    <p style="font-size:11.5px;color:var(--muted);margin:0 0 26px 0;line-height:1.5;">Toggle which workout days appear. Disabling a day hides its tab but keeps all logged data.</p>
+
     <div class="section-label collapsible" onclick="toggleThemeCollapsed()">
       <span id="themeToggleIcon">▾</span> Theme
     </div>
@@ -405,18 +463,90 @@
         Deleting all data wipes every session, person, and exercise on this device permanently. It can't be undone — back up first if you're not sure.
       </p>
     </div>
+
+    <div class="section-label collapsible" style="margin-top:26px;" onclick="toggleTimerCollapsed()">
+      <span id="timerToggleIcon">▸</span> Timers
+    </div>
+    <div id="timerSettingsBody" class="collapsible-body is-collapsed">
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <div class="settings-row-title">Rest timer</div>
+          <div class="settings-row-desc">Countdown between sets after logging</div>
+        </div>
+        <label class="toggle-switch" aria-label="Rest timer">
+          <input type="checkbox" id="restTimerToggle" onchange="handleRestTimerToggle(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div id="restDurationPicker" style="display:none;padding:8px 0 4px;">
+        <div class="p-label" style="margin-bottom:6px;">DURATION</div>
+        <nav class="subtabs" id="restDurationTabs" style="flex-wrap:wrap;"></nav>
+      </div>
+      <div class="settings-row">
+        <div class="settings-row-info">
+          <div class="settings-row-title">Challenge timer</div>
+          <div class="settings-row-desc">Stopwatch button on timed exercises (Plank etc.)</div>
+        </div>
+        <label class="toggle-switch" aria-label="Challenge timer">
+          <input type="checkbox" id="challengeTimerToggle" onchange="handleChallengeTimerToggle(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="section-label collapsible" style="margin-top:26px;" onclick="toggleCreditsCollapsed()">
+      <span id="creditsToggleIcon">▸</span> Credits
+    </div>
+    <div id="creditsSettingsBody" class="collapsible-body is-collapsed" style="padding-bottom:10px;">
+      <p style="font-size:12.5px;color:var(--muted);line-height:1.6;margin:0 0 8px 0;">
+        Muscle diagrams generated with <a href="https://musclecharts.net" target="_blank" rel="noopener" class="credits-link">musclecharts.net</a>.
+      </p>
+      <p style="font-size:12.5px;color:var(--muted);line-height:1.6;margin:0 0 8px 0;">
+        Exercise images from the <a href="https://github.com/RepDB/exercise-dataset" target="_blank" rel="noopener" class="credits-link">RepDB exercise dataset</a>, served via <a href="https://repdb.co" target="_blank" rel="noopener" class="credits-link">repdb.co</a>.
+      </p>
+      <p style="font-size:12.5px;color:var(--muted);line-height:1.6;margin:0;">
+        Excel export powered by <a href="https://sheetjs.com/" target="_blank" rel="noopener" class="credits-link">SheetJS</a>.
+      </p>
+    </div>
   </div>
 </main>
 
 <div id="toast"></div>
 
+<div id="timerWidget" class="timer-widget">
+  <div id="timerLabel" class="timer-label">REST</div>
+  <div id="timerDisplay" class="timer-display">1:30</div>
+  <div class="timer-controls">
+    <button type="button" class="timer-btn secondary" onclick="hideTimerWidget()">Dismiss</button>
+    <button type="button" class="timer-btn primary" onclick="restartTimer()">Restart</button>
+  </div>
+</div>
+
 <div id="welcomeOverlay" class="modal-overlay">
   <div class="modal-box">
-    <h2>👋 Looks like you're new here</h2>
-    <p class="confirm-message" style="margin-bottom:16px;">If you have existing data, import it now — or just start fresh.</p>
-    <div class="modal-actions" style="flex-direction:column;gap:10px;">
-      <button type="button" class="btn-primary" style="width:100%;" onclick="handleWelcomeExcel()">Import from Excel</button>
-      <button type="button" class="btn-primary" style="width:100%;" onclick="handleWelcomeGithub()">Import from GitHub</button>
+    <h2 style="margin-bottom:4px;">👋 Welcome to GymTracker</h2>
+    <p class="confirm-message" style="margin-bottom:18px;font-size:13px;">Choose your training days then import any existing data, or start fresh.</p>
+
+    <div class="p-label" style="margin-bottom:8px;">YOUR TRAINING DAYS</div>
+    <div id="welcomeDayToggles" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;"></div>
+
+    <div class="p-label" style="margin-bottom:8px;">EXISTING DATA?</div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button type="button" class="icon-btn" style="width:100%;text-align:left;" onclick="toggleWelcomeGithubForm()">⤵ Restore from GitHub</button>
+      <div id="welcomeGithubForm" style="display:none;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;">
+        <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;">Personal access token</label>
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+          <input type="password" id="welcomeToken" placeholder="github_pat_..." style="flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px;">
+          <button type="button" id="welcomeTokenToggle" class="icon-btn" onclick="toggleWelcomeToken()" style="padding:6px 10px;font-size:15px;" aria-label="Show/hide token">👁</button>
+        </div>
+        <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;">Repo (owner/name)</label>
+        <input type="text" id="welcomeRepo" placeholder="yourname/gym-log" style="width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px;margin-bottom:10px;">
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn-secondary" style="flex:1;" onclick="toggleWelcomeGithubForm()">Cancel</button>
+          <button type="button" class="btn-primary" style="flex:1;" onclick="handleWelcomeGithubRestore()">Restore</button>
+        </div>
+      </div>
+      <button type="button" class="icon-btn" style="width:100%;text-align:left;" onclick="handleWelcomeExcel()">⤒ Import from Excel</button>
       <button type="button" class="btn-secondary" style="width:100%;" onclick="closeWelcome()">Start fresh</button>
     </div>
   </div>
@@ -470,10 +600,19 @@
       <h2 id="exInfoTitle" style="font-size:17px;margin:0;"></h2>
       <button class="help-btn" onclick="closeExerciseInfo()" aria-label="Close" style="font-style:normal;">✕</button>
     </div>
+    <div id="exInfoViewTabs" class="ex-view-tabs" style="display:none;">
+      <button class="ex-view-tab active" id="musclesViewTab" onclick="switchExInfoView('muscles')">Muscles</button>
+      <button class="ex-view-tab" id="exerciseViewTab" onclick="switchExInfoView('exercise')">Exercise</button>
+    </div>
     <div class="ex-info-body">
-      <img id="exInfoImg" class="muscle-img" src="" alt="Muscle diagram" style="display:none;">
-      <div id="exInfoMuscles"></div>
-      <div id="exInfoTips"></div>
+      <div id="exInfoMusclesView">
+        <img id="exInfoImg" class="muscle-img" src="" alt="Muscle diagram" style="display:none;">
+        <div id="exInfoMuscles"></div>
+        <div id="exInfoTips"></div>
+      </div>
+      <div id="exInfoExerciseView" style="display:none;">
+        <div id="exInfoRepdbImgs"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -1075,11 +1214,66 @@ const EXERCISES_BY_DAY = {
   ]
 };
 
+const EXERCISE_REPDB = {
+  "Bench Press":          { slug: "barbell-bench-press",         poses: ["start","peak"] },
+  "Incline Press":        { slug: "barbell-incline-bench-press",  poses: ["start","peak"] },
+  "Overhead Press":       { slug: "barbell-overhead-press",       poses: ["start","peak"] },
+  "Dumbbell Press":       { slug: "dumbbell-chest-press",         poses: ["start","peak"] },
+  "Lateral Raise":        { slug: "dumbbell-lateral-raise",       poses: ["start","peak"] },
+  "Tricep Push":          { slug: "cable-tricep-pushdown",        poses: ["start","peak"] },
+  "Deadlift":             { slug: "barbell-deadlift",             poses: ["start","peak"] },
+  "Pull ups":             { slug: "pull-up",                      poses: ["start","peak"] },
+  "Weighted Row":         { slug: "barbell-bent-over-row",        poses: ["start","peak"] },
+  "Head Pull":            { slug: "lat-pulldown",                 poses: ["start","peak"] },
+  "Bicep Curl":           { slug: "dumbbell-bicep-curl",          poses: ["start","peak"] },
+  "Hammer Curl":          { slug: "dumbbell-hammer-curl",         poses: ["start","peak"] },
+  "Squat":                { slug: "barbell-back-squat",           poses: ["start","peak"] },
+  "Hip Thrust":           { slug: "dumbbell-hip-thrust",          poses: ["start","peak"] },
+  "Leg Press":            { slug: "leg-press",                    poses: ["start","peak"] },
+  "Lunges":               { slug: "barbell-lunge",                poses: ["start","peak"] },
+  "Prone Leg Curl":       { slug: "lying-leg-curl",               poses: ["start","peak"] },
+  "Calf Raises":          { slug: "barbell-calf-raise",           poses: ["start","peak"] },
+  "Plank":                { slug: "plank",                        poses: ["main"] },
+  "Crunch":               { slug: "crunches",                     poses: ["start","peak"] },
+  "Leg Raise":            { slug: "leg-raise",                    poses: ["start","peak"] },
+  "Russian Twist":        { slug: "russian-twist",                poses: ["start","peak"] },
+  "Cable Crunch":         { slug: "cable-crunch",                 poses: ["start","peak"] },
+  "Arnold Press":         { slug: "arnold-press",                 poses: ["start","peak"] },
+  "Chest Fly":            { slug: "dumbbell-chest-fly",           poses: ["start","peak"] },
+  "Push Up":              { slug: "push-up",                      poses: ["start","peak"] },
+  "Chin Up":              { slug: "chin-up",                      poses: ["start","peak"] },
+  "Romanian Deadlift":    { slug: "romanian-deadlift",            poses: ["start","peak"] },
+  "Seated Cable Row":     { slug: "seated-cable-row",             poses: ["start","peak"] },
+  "Leg Extension":        { slug: "leg-extension",                poses: ["start","peak"] },
+  "Bulgarian Split Squat":{ slug: "bulgarian-split-squat",        poses: ["start","peak"] },
+  "Face Pull":            { slug: "face-pull",                    poses: ["start","peak"] },
+};
+
+const TIMED_EXERCISES = new Set(["Plank", "Leg Raise", "Russian Twist"]);
+
 let activeTab = "push";
 let progressSubTab = "push";
 let progressExercise = null;
 let cache = {}; // { push: [session, ...], pull: [...], leg: [...] }
 const TAB_ORDER = [...Object.keys(CONFIG), "progress", "settings"];
+
+const ACTIVE_DAYS_KEY = "gymtracker:activeDays";
+const DEFAULT_ACTIVE_DAYS = ["push", "pull", "leg"];
+let activeDays = [...DEFAULT_ACTIVE_DAYS];
+
+function loadActiveDays(){
+  try{
+    const raw = localStorage.getItem(ACTIVE_DAYS_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length) return parsed.filter(k => CONFIG[k]);
+    }
+  }catch(e){}
+  return [...DEFAULT_ACTIVE_DAYS];
+}
+function saveActiveDays(){
+  try{ localStorage.setItem(ACTIVE_DAYS_KEY, JSON.stringify(activeDays)); }catch(e){}
+}
 
 const PEOPLE_KEY = "gymtracker:people";
 const DEFAULT_PEOPLE = [
@@ -1534,7 +1728,7 @@ function getLastEntry(tabKey, exercise){
 
 function getNextSessionType(){
   let nextKey = null, minDate = null;
-  Object.keys(CONFIG).forEach(k => {
+  activeDays.forEach(k => {
     const sessions = cache[k] || [];
     const lastDate = sessions.length
       ? sessions.reduce((max, s) => (s.date > max ? s.date : max), sessions[0].date)
@@ -1551,7 +1745,7 @@ function renderTabs(){
   const nav = document.getElementById("tabs");
   nav.innerHTML = "";
   const nextKey = getNextSessionType();
-  TAB_ORDER.forEach(key=>{
+  [...activeDays, "progress", "settings"].forEach(key=>{
     const btn = document.createElement("button");
     const isNext = key === nextKey && key !== "progress" && key !== "settings";
     if(key === "settings"){
@@ -1788,7 +1982,11 @@ function renderForm(){
     const infoBtn = EXERCISE_INFO[ex]
       ? `<button type="button" class="ex-info-btn" onclick="showExerciseInfo('${safeName}')" aria-label="Exercise info">i</button>`
       : "";
-    html += `<div class="exercise-block"><div class="exercise-title-row"><div class="exercise-title">${ex}</div>${infoBtn}</div>`;
+    const challengeBtn = (timerSettings.challengeEnabled && TIMED_EXERCISES.has(ex))
+      ? `<button type="button" class="ex-info-btn" style="font-style:normal;font-family:inherit;background:var(--panel-2);border-color:var(--line);color:var(--muted);" onclick="startChallengeTimer()" aria-label="Start timer">⏱</button>`
+      : "";
+    const btnGroup = (infoBtn || challengeBtn) ? `<div style="display:flex;gap:6px;">${infoBtn}${challengeBtn}</div>` : "";
+    html += `<div class="exercise-block"><div class="exercise-title-row"><div class="exercise-title">${ex}</div>${btnGroup}</div>`;
     people.forEach((p, pi) => {
       const sets = lastEntry ? fillForwardSets(getPersonSets(lastEntry, p.id)) : emptySets();
       html += `
@@ -2004,6 +2202,8 @@ async function handleSave(evt){
     showToast(hasGithub ? "Session saved" : "Session saved locally");
   }
 
+  startRestTimer();
+
   if(hasGithub){
     if(await showConfirm("Push this session to GitHub now?")){
       pushToGithub();
@@ -2040,10 +2240,13 @@ async function switchTab(tabKey){
 
   if(tabKey === "settings"){
     document.getElementById("settingsView").style.display = "block";
+    renderDaySettings();
     renderPeopleSettings();
     renderExerciseSettings();
     renderThemeSettings();
     applyBackupSettingsCollapsedState();
+    renderTimerSettings();
+    applyCreditsCollapsedState();
     return;
   }
 
@@ -2526,6 +2729,49 @@ function detectNewUser(){
   }
 }
 
+function toggleDay(key){
+  if(activeDays.includes(key)){
+    if(activeDays.length <= 1){ showToast("You need at least one day enabled"); return; }
+    activeDays = activeDays.filter(k => k !== key);
+    if(activeTab === key) switchTab(activeDays[0]);
+  } else {
+    const order = Object.keys(CONFIG);
+    activeDays = order.filter(k => activeDays.includes(k) || k === key);
+  }
+  saveActiveDays();
+  renderTabs();
+  renderDaySettings();
+  renderWelcomeDayToggles();
+}
+
+function renderDaySettings(){
+  const container = document.getElementById("dayTogglesContainer");
+  if(!container) return;
+  container.innerHTML = "";
+  Object.keys(CONFIG).forEach(key => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "day-toggle-btn" + (activeDays.includes(key) ? " active" : "");
+    btn.textContent = CONFIG[key].label;
+    btn.onclick = () => toggleDay(key);
+    container.appendChild(btn);
+  });
+}
+
+function renderWelcomeDayToggles(){
+  const container = document.getElementById("welcomeDayToggles");
+  if(!container) return;
+  container.innerHTML = "";
+  Object.keys(CONFIG).forEach(key => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "day-toggle-btn" + (activeDays.includes(key) ? " active" : "");
+    btn.textContent = CONFIG[key].label;
+    btn.onclick = () => toggleDay(key);
+    container.appendChild(btn);
+  });
+}
+
 function openModal(id){
   const overlay = document.getElementById(id);
   if(!overlay) return;
@@ -2542,6 +2788,9 @@ function closeModal(id){
 }
 
 function showWelcome(){
+  renderWelcomeDayToggles();
+  const form = document.getElementById("welcomeGithubForm");
+  if(form) form.style.display = "none";
   openModal("welcomeOverlay");
 }
 
@@ -2562,10 +2811,32 @@ function handleWelcomeExcel(){
   document.getElementById("importFileInput").click();
 }
 
-async function handleWelcomeGithub(){
+function toggleWelcomeGithubForm(){
+  const form = document.getElementById("welcomeGithubForm");
+  if(!form) return;
+  form.style.display = form.style.display === "none" ? "block" : "none";
+}
+
+function toggleWelcomeToken(){
+  const input = document.getElementById("welcomeToken");
+  const btn = document.getElementById("welcomeTokenToggle");
+  if(!input) return;
+  if(input.type === "password"){ input.type = "text"; btn.textContent = "🙈"; }
+  else { input.type = "password"; btn.textContent = "👁"; }
+}
+
+async function handleWelcomeGithubRestore(){
+  const token = document.getElementById("welcomeToken").value.trim();
+  const repo = document.getElementById("welcomeRepo").value.trim();
+  if(!token || !repo){ showToast("Token and repo are both required"); return; }
+  try{
+    localStorage.setItem("gymtrackerGithubConfig", JSON.stringify({
+      token, repo, path: "GymLog.json", branch: "main"
+    }));
+  }catch(e){}
   closeWelcome();
-  await switchTab("settings");
-  pullFromGithub();
+  await ensureAllLoaded();
+  await pullFromGithub();
 }
 
 const LEGACY_KEY_MIGRATIONS = [
@@ -2599,9 +2870,182 @@ function migrateLegacyStorageKeys(){
   }
 }
 
+// ── Timer ─────────────────────────────────────────────────────────────────────
+
+const TIMER_SETTINGS_KEY = "gymtracker:timerSettings";
+let timerSettings = { restEnabled: false, restDuration: 90, challengeEnabled: false };
+let timerMode = "rest";
+let restIntervalId = null;
+let restRemaining = 0;
+let challengeIntervalId = null;
+let challengeElapsed = 0;
+let timerSettingsCollapsed = true;
+let creditsSettingsCollapsed = true;
+
+function loadTimerSettings(){
+  try{
+    const raw = localStorage.getItem(TIMER_SETTINGS_KEY);
+    if(raw) return { ...timerSettings, ...JSON.parse(raw) };
+  }catch(e){}
+  return { restEnabled: false, restDuration: 90, challengeEnabled: false };
+}
+
+function saveTimerSettings(){
+  try{ localStorage.setItem(TIMER_SETTINGS_KEY, JSON.stringify(timerSettings)); }catch(e){}
+}
+
+function formatTime(secs){
+  const m = Math.floor(secs / 60);
+  const s = secs % 60;
+  return m + ":" + String(s).padStart(2, "0");
+}
+
+function showTimerWidget(){
+  const w = document.getElementById("timerWidget");
+  const labelEl = document.getElementById("timerLabel");
+  if(labelEl) labelEl.textContent = timerMode === "rest" ? "REST" : "TIMER";
+  if(w) w.style.display = "flex";
+}
+
+function hideTimerWidget(){
+  if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
+  if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
+  const w = document.getElementById("timerWidget");
+  if(w) w.style.display = "none";
+}
+
+function updateTimerDisplay(text, done){
+  const el = document.getElementById("timerDisplay");
+  if(!el) return;
+  el.textContent = text;
+  el.classList.toggle("done", !!done);
+}
+
+function startRestTimer(){
+  if(!timerSettings.restEnabled) return;
+  if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
+  if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
+  timerMode = "rest";
+  restRemaining = timerSettings.restDuration;
+  updateTimerDisplay(formatTime(restRemaining), false);
+  showTimerWidget();
+  restIntervalId = setInterval(() => {
+    restRemaining--;
+    if(restRemaining <= 0){
+      clearInterval(restIntervalId); restIntervalId = null;
+      updateTimerDisplay("Done ✓", true);
+      if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+      setTimeout(() => hideTimerWidget(), 2500);
+    } else {
+      updateTimerDisplay(formatTime(restRemaining), false);
+    }
+  }, 1000);
+}
+
+function startChallengeTimer(){
+  if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
+  if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
+  timerMode = "challenge";
+  challengeElapsed = 0;
+  updateTimerDisplay(formatTime(challengeElapsed), false);
+  showTimerWidget();
+  challengeIntervalId = setInterval(() => {
+    challengeElapsed++;
+    updateTimerDisplay(formatTime(challengeElapsed), false);
+  }, 1000);
+}
+
+function restartTimer(){
+  if(timerMode === "rest") startRestTimer();
+  else startChallengeTimer();
+}
+
+function renderTimerSettings(){
+  const restToggle = document.getElementById("restTimerToggle");
+  if(restToggle) restToggle.checked = timerSettings.restEnabled;
+  const challengeToggle = document.getElementById("challengeTimerToggle");
+  if(challengeToggle) challengeToggle.checked = timerSettings.challengeEnabled;
+  const picker = document.getElementById("restDurationPicker");
+  if(picker) picker.style.display = timerSettings.restEnabled ? "block" : "none";
+  const nav = document.getElementById("restDurationTabs");
+  if(nav){
+    nav.innerHTML = "";
+    [30, 60, 90, 120, 180].forEach(secs => {
+      const btn = document.createElement("button");
+      btn.textContent = secs < 60 ? secs + "s" : (secs / 60) + "m";
+      btn.className = timerSettings.restDuration === secs ? "active" : "";
+      btn.onclick = () => { timerSettings.restDuration = secs; saveTimerSettings(); renderTimerSettings(); };
+      nav.appendChild(btn);
+    });
+  }
+  applyTimerCollapsedState();
+}
+
+function handleRestTimerToggle(checked){
+  timerSettings.restEnabled = checked;
+  saveTimerSettings();
+  renderTimerSettings();
+}
+
+function handleChallengeTimerToggle(checked){
+  timerSettings.challengeEnabled = checked;
+  saveTimerSettings();
+  renderTimerSettings();
+  if(CONFIG[activeTab]) renderForm();
+}
+
+function loadTimerSettingsCollapsed(){
+  try{ return localStorage.getItem("gymtracker:timerSettingsCollapsed") !== "0"; }catch(e){ return true; }
+}
+function saveTimerSettingsCollapsed(){
+  try{ localStorage.setItem("gymtracker:timerSettingsCollapsed", timerSettingsCollapsed ? "1" : "0"); }catch(e){}
+}
+function toggleTimerCollapsed(){
+  timerSettingsCollapsed = !timerSettingsCollapsed;
+  saveTimerSettingsCollapsed();
+  applyTimerCollapsedState();
+}
+function applyTimerCollapsedState(){
+  const body = document.getElementById("timerSettingsBody");
+  const icon = document.getElementById("timerToggleIcon");
+  if(!body || !icon) return;
+  body.classList.toggle("is-collapsed", timerSettingsCollapsed);
+  icon.textContent = timerSettingsCollapsed ? "▸" : "▾";
+}
+
+function loadCreditsSettingsCollapsed(){
+  try{ return localStorage.getItem("gymtracker:creditsSettingsCollapsed") !== "0"; }catch(e){ return true; }
+}
+function saveCreditsSettingsCollapsed(){
+  try{ localStorage.setItem("gymtracker:creditsSettingsCollapsed", creditsSettingsCollapsed ? "1" : "0"); }catch(e){}
+}
+function toggleCreditsCollapsed(){
+  creditsSettingsCollapsed = !creditsSettingsCollapsed;
+  saveCreditsSettingsCollapsed();
+  applyCreditsCollapsedState();
+}
+function applyCreditsCollapsedState(){
+  const body = document.getElementById("creditsSettingsBody");
+  const icon = document.getElementById("creditsToggleIcon");
+  if(!body || !icon) return;
+  body.classList.toggle("is-collapsed", creditsSettingsCollapsed);
+  icon.textContent = creditsSettingsCollapsed ? "▸" : "▾";
+}
+
+// ── Exercise info view ─────────────────────────────────────────────────────────
+
+function switchExInfoView(view){
+  document.getElementById("exInfoMusclesView").style.display = view === "muscles" ? "" : "none";
+  document.getElementById("exInfoExerciseView").style.display = view === "exercise" ? "" : "none";
+  document.getElementById("musclesViewTab").className = "ex-view-tab" + (view === "muscles" ? " active" : "");
+  document.getElementById("exerciseViewTab").className = "ex-view-tab" + (view === "exercise" ? " active" : "");
+  document.getElementById("exInfoOverlay").querySelector(".ex-info-body").scrollTop = 0;
+}
+
 async function init(){
   migrateLegacyStorageKeys();
   const isNewUser = detectNewUser();
+  activeDays = loadActiveDays();
   people = loadPeople();
   exercisesConfig = loadExercises();
   statsCollapsed = loadStatsCollapsed();
@@ -2611,6 +3055,9 @@ async function init(){
   peopleSettingsCollapsed = loadPeopleSettingsCollapsed();
   exerciseSettingsCollapsed = loadExerciseSettingsCollapsed();
   backupSettingsCollapsed = loadBackupSettingsCollapsed();
+  timerSettings = loadTimerSettings();
+  timerSettingsCollapsed = loadTimerSettingsCollapsed();
+  creditsSettingsCollapsed = loadCreditsSettingsCollapsed();
   currentThemeState = loadTheme();
   applyTheme(currentThemeState.key, currentThemeState.custom);
   await ensureAllLoaded();
@@ -2827,8 +3274,7 @@ async function pullFromGithub(){
   }
 
   const btn = document.getElementById("pullBtn");
-  btn.disabled = true;
-  btn.textContent = "Loading…";
+  if(btn){ btn.disabled = true; btn.textContent = "Loading…"; }
 
   try{
     for(const k of Object.keys(CONFIG)){
@@ -2886,8 +3332,7 @@ async function pullFromGithub(){
     console.error(e);
     showToast("GitHub load failed: " + e.message, "reg");
   }finally{
-    btn.disabled = false;
-    btn.textContent = "⤵ Load from GitHub";
+    if(btn){ btn.disabled = false; btn.textContent = "⤵ Load from GitHub"; }
   }
 }
 
@@ -2916,6 +3361,10 @@ async function deleteAllData(){
     localStorage.removeItem("gymtracker:peopleSettingsCollapsed");
     localStorage.removeItem("gymtracker:exerciseSettingsCollapsed");
     localStorage.removeItem("gymtracker:backupSettingsCollapsed");
+    localStorage.removeItem(TIMER_SETTINGS_KEY);
+    localStorage.removeItem("gymtracker:timerSettingsCollapsed");
+    localStorage.removeItem("gymtracker:creditsSettingsCollapsed");
+    localStorage.removeItem(ACTIVE_DAYS_KEY);
     localStorage.removeItem("gymtrackerGithubConfig");
   }catch(e){
     console.error("Couldn't clear storage", e);
@@ -2929,6 +3378,8 @@ function showExerciseInfo(exName){
   const info = EXERCISE_INFO[exName];
   if(!info) return;
   document.getElementById("exInfoTitle").textContent = exName;
+
+  // Muscles view
   const img = document.getElementById("exInfoImg");
   img.src = info.image;
   img.style.display = "block";
@@ -2950,6 +3401,33 @@ function showExerciseInfo(exName){
       <ul>${info.tips.map(t=>`<li>${t}</li>`).join("")}</ul>
     </div>
   `;
+
+  // Exercise view (RepDB images)
+  const repdb = EXERCISE_REPDB[exName];
+  const viewTabs = document.getElementById("exInfoViewTabs");
+  if(repdb){
+    viewTabs.style.display = "flex";
+    const base = "https://repdb.co/images/flat/";
+    const multi = repdb.poses.length > 1;
+    const imgsHtml = repdb.poses.map(pose =>
+      `<div style="flex:1;min-width:0;text-align:center;">
+        <img src="${base}${repdb.slug}-${pose}.webp" style="width:100%;border-radius:10px;display:block;" alt="${exName} ${pose}" onerror="this.parentElement.style.display='none'">
+        ${multi ? `<div style="font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-top:5px;">${pose.toUpperCase()}</div>` : ""}
+      </div>`
+    ).join("");
+    document.getElementById("exInfoRepdbImgs").innerHTML =
+      `<div style="display:flex;gap:10px;margin-bottom:10px;">${imgsHtml}</div>` +
+      `<p style="font-size:11px;color:var(--muted);text-align:center;margin:0;">Images via <a href="https://repdb.co" target="_blank" rel="noopener" style="color:var(--amber);">repdb.co</a></p>`;
+  } else {
+    viewTabs.style.display = "none";
+  }
+
+  // Reset to muscles view
+  document.getElementById("exInfoMusclesView").style.display = "";
+  document.getElementById("exInfoExerciseView").style.display = "none";
+  document.getElementById("musclesViewTab").className = "ex-view-tab active";
+  document.getElementById("exerciseViewTab").className = "ex-view-tab";
+
   openModal("exInfoOverlay");
   document.getElementById("exInfoOverlay").querySelector(".ex-info-body").scrollTop = 0;
 }

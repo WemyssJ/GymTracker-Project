@@ -219,6 +219,27 @@
   #toast.pr{border-color:var(--green);}
   #toast.reg{border-color:var(--red);}
 
+  /* ── Animations ───────────────────────────────────────────────── */
+  @keyframes modalSlideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+  @keyframes modalSlideDown{from{transform:translateY(0);opacity:1}to{transform:translateY(40px);opacity:0}}
+  .modal-enter{animation:modalSlideUp 0.22s cubic-bezier(0.22,1,0.36,1) both;}
+  .modal-overlay.closing .modal-box,.modal-overlay.closing .ex-info-box{animation:modalSlideDown 0.18s ease-in both;}
+
+  @keyframes toastIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes toastPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.018)}}
+  #toast.pr{animation:toastIn 0.2s ease,toastPulse 0.5s ease 0.2s;}
+  #toast.reg,#toast.default-toast{animation:toastIn 0.2s ease;}
+
+  @keyframes fadeInMain{from{opacity:0}to{opacity:1}}
+
+  /* ── Collapsible section transitions ─────────────────────────── */
+  .collapsible-body{overflow:hidden;max-height:3000px;opacity:1;}
+  .collapsible-body.is-collapsed{max-height:0;opacity:0;margin-bottom:0;}
+  .transitions-ready .collapsible-body{transition:max-height 0.3s ease,opacity 0.18s ease;}
+
+  .show-all-link{text-align:center;font-size:12px;color:var(--amber);font-weight:700;
+    cursor:pointer;padding:10px 0;letter-spacing:0.01em;}
+
   .history{margin-top:8px;}
   .history-row{
     background:var(--panel);border:1px solid var(--line);border-radius:10px;
@@ -296,7 +317,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.0.2</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.0.3</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -306,17 +327,17 @@
     <div class="section-label collapsible" onclick="toggleStatsCollapsed()">
       <span id="statsToggleIcon">▾</span> Personal Bests
     </div>
-    <div class="stat-strip" id="statStrip"></div>
+    <div class="stat-strip collapsible-body" id="statStrip"></div>
 
     <div class="section-label collapsible" onclick="toggleFormCollapsed()">
       <span id="formToggleIcon">▾</span> Log today's session
     </div>
-    <form id="logForm"></form>
+    <form id="logForm" class="collapsible-body"></form>
 
     <div class="section-label collapsible" onclick="toggleHistoryCollapsed()">
       <span id="historyToggleIcon">▾</span> Recent sessions
     </div>
-    <div class="history" id="history"><div class="loading">Loading…</div></div>
+    <div class="history collapsible-body" id="history"><div class="loading">Loading…</div></div>
   </div>
 
   <div id="progressView" style="display:none;">
@@ -331,7 +352,7 @@
     <div class="section-label collapsible" onclick="toggleThemeCollapsed()">
       <span id="themeToggleIcon">▾</span> Theme
     </div>
-    <div id="themeSettingsBody">
+    <div id="themeSettingsBody" class="collapsible-body">
       <nav class="subtabs" id="themePresets"></nav>
       <div id="customThemeControls" style="display:none;gap:16px;align-items:center;margin-top:8px;">
         <div>
@@ -348,7 +369,7 @@
     <div class="section-label collapsible" style="margin-top:26px;" onclick="togglePeopleCollapsed()">
       <span id="peopleToggleIcon">▾</span> People
     </div>
-    <div id="peopleSettingsBody">
+    <div id="peopleSettingsBody" class="collapsible-body">
       <div id="peopleList"></div>
       <button type="button" class="icon-btn" id="addPersonBtn" onclick="addPerson()" style="width:100%;margin-top:10px;">+ Add person</button>
       <p style="font-size:11.5px;color:var(--muted);margin-top:14px;line-height:1.5;">
@@ -359,7 +380,7 @@
     <div class="section-label collapsible" style="margin-top:26px;" onclick="toggleExerciseCollapsed()">
       <span id="exerciseToggleIcon">▾</span> Exercises
     </div>
-    <div id="exerciseSettingsBody">
+    <div id="exerciseSettingsBody" class="collapsible-body">
       <div id="exerciseSettingsContainer"></div>
       <p style="font-size:11.5px;color:var(--muted);margin-top:6px;line-height:1.5;">
         Add, rename, or remove exercises per day. Renaming carries past data forward with it; removing just hides an exercise — its history reappears if you re-add one with the exact same name.
@@ -369,7 +390,7 @@
     <div class="section-label collapsible" style="margin-top:26px;" onclick="toggleBackupCollapsed()">
       <span id="backupToggleIcon">▾</span> Backup &amp; Sync
     </div>
-    <div id="backupSettingsBody">
+    <div id="backupSettingsBody" class="collapsible-body">
       <button type="button" class="icon-btn" style="width:100%;margin-bottom:8px;" onclick="openSettings()">⚙ Configure GitHub</button>
       <div class="header-actions" style="padding:0 0 8px 0;">
         <button id="pushBtn" class="icon-btn push-btn" onclick="pushToGithub()">⤴ Push to GitHub</button>
@@ -425,7 +446,10 @@
     </div>
     <a class="quick-link" id="quickTokenLink" href="#" target="_blank" rel="noopener">Generate a token on GitHub →</a>
     <label for="ghToken">Personal access token</label>
-    <input type="password" id="ghToken" placeholder="github_pat_...">
+    <div style="display:flex;gap:8px;align-items:center;">
+      <input type="password" id="ghToken" placeholder="github_pat_..." style="flex:1;margin:0;">
+      <button type="button" id="tokenToggle" class="icon-btn" onclick="toggleTokenVisibility()" style="flex-shrink:0;padding:8px 11px;font-size:15px;" aria-label="Show/hide token">👁</button>
+    </div>
     <label for="ghRepo">Repo (owner/name)</label>
     <input type="text" id="ghRepo" placeholder="yourname/gym-log">
     <label for="ghPath">File path in repo</label>
@@ -492,6 +516,18 @@ const CONFIG = {
       "Lunges",
       "Prone Leg Curl",
       "Calf Raises"
+    ],
+    "seedHistory": []
+  },
+  "core": {
+    "label": "Core",
+    "key": "gymtracker:core",
+    "exercises": [
+      "Plank",
+      "Crunch",
+      "Leg Raise",
+      "Russian Twist",
+      "Cable Crunch"
     ],
     "seedHistory": []
   }
@@ -1533,6 +1569,7 @@ function renderTabs(){
 }
 
 let statsCollapsed = false;
+let historyShowAll = false;
 
 function loadStatsCollapsed(){
   try{ return localStorage.getItem("gymtracker:statsCollapsed") === "1"; }catch(e){ return false; }
@@ -1552,7 +1589,7 @@ function applyStatsCollapsedState(){
   const strip = document.getElementById("statStrip");
   const icon = document.getElementById("statsToggleIcon");
   if(!strip || !icon) return;
-  strip.style.display = statsCollapsed ? "none" : "grid";
+  strip.classList.toggle("is-collapsed", statsCollapsed);
   icon.textContent = statsCollapsed ? "▸" : "▾";
 }
 
@@ -1574,7 +1611,7 @@ function applyFormCollapsedState(){
   const form = document.getElementById("logForm");
   const icon = document.getElementById("formToggleIcon");
   if(!form || !icon) return;
-  form.style.display = formCollapsed ? "none" : "block";
+  form.classList.toggle("is-collapsed", formCollapsed);
   icon.textContent = formCollapsed ? "▸" : "▾";
 }
 
@@ -1593,7 +1630,7 @@ function applyHistoryCollapsedState(){
   const history = document.getElementById("history");
   const icon = document.getElementById("historyToggleIcon");
   if(!history || !icon) return;
-  history.style.display = historyCollapsed ? "none" : "block";
+  history.classList.toggle("is-collapsed", historyCollapsed);
   icon.textContent = historyCollapsed ? "▸" : "▾";
 }
 
@@ -1616,7 +1653,7 @@ function applyThemeSettingsCollapsedState(){
   const body = document.getElementById("themeSettingsBody");
   const icon = document.getElementById("themeToggleIcon");
   if(!body || !icon) return;
-  body.style.display = themeSettingsCollapsed ? "none" : "block";
+  body.classList.toggle("is-collapsed", themeSettingsCollapsed);
   icon.textContent = themeSettingsCollapsed ? "▸" : "▾";
 }
 
@@ -1635,7 +1672,7 @@ function applyPeopleSettingsCollapsedState(){
   const body = document.getElementById("peopleSettingsBody");
   const icon = document.getElementById("peopleToggleIcon");
   if(!body || !icon) return;
-  body.style.display = peopleSettingsCollapsed ? "none" : "block";
+  body.classList.toggle("is-collapsed", peopleSettingsCollapsed);
   icon.textContent = peopleSettingsCollapsed ? "▸" : "▾";
 }
 
@@ -1654,7 +1691,7 @@ function applyExerciseSettingsCollapsedState(){
   const body = document.getElementById("exerciseSettingsBody");
   const icon = document.getElementById("exerciseToggleIcon");
   if(!body || !icon) return;
-  body.style.display = exerciseSettingsCollapsed ? "none" : "block";
+  body.classList.toggle("is-collapsed", exerciseSettingsCollapsed);
   icon.textContent = exerciseSettingsCollapsed ? "▸" : "▾";
 }
 
@@ -1675,7 +1712,7 @@ function applyBackupSettingsCollapsedState(){
   const body = document.getElementById("backupSettingsBody");
   const icon = document.getElementById("backupToggleIcon");
   if(!body || !icon) return;
-  body.style.display = backupSettingsCollapsed ? "none" : "block";
+  body.classList.toggle("is-collapsed", backupSettingsCollapsed);
   icon.textContent = backupSettingsCollapsed ? "▸" : "▾";
 }
 
@@ -1806,7 +1843,8 @@ function renderHistory(){
   });
 
   container.innerHTML = "";
-  sessions.slice(0,6).forEach(s=>{
+  const maxVisible = historyShowAll ? sessions.length : 6;
+  sessions.slice(0, maxVisible).forEach(s=>{
     const row = document.createElement("div");
     row.className = "history-row";
     let inner = `
@@ -1846,6 +1884,13 @@ function renderHistory(){
     row.innerHTML = inner;
     container.appendChild(row);
   });
+  if(sessions.length > 6){
+    const link = document.createElement("div");
+    link.className = "show-all-link";
+    link.textContent = historyShowAll ? "Show less" : `Show all ${sessions.length} sessions`;
+    link.onclick = ()=>{ historyShowAll = !historyShowAll; renderHistory(); };
+    container.appendChild(link);
+  }
   applyHistoryCollapsedState();
 }
 
@@ -1876,8 +1921,11 @@ async function deleteSession(tabKey, date){
 function showToast(msg, type){
   const t = document.getElementById("toast");
   t.textContent = msg;
-  t.className = type || "";
+  t.className = type || "default-toast";
   t.style.display = "block";
+  t.style.animation = "none";
+  void t.offsetWidth;
+  t.style.animation = "";
   clearTimeout(window._toastTimer);
   window._toastTimer = setTimeout(()=>{ t.style.display = "none"; }, 3200);
 }
@@ -1971,7 +2019,13 @@ async function ensureAllLoaded(){
 
 async function switchTab(tabKey){
   activeTab = tabKey;
+  historyShowAll = false;
   renderTabs();
+
+  const main = document.querySelector("main");
+  main.style.animation = "none";
+  void main.offsetWidth;
+  main.style.animation = "fadeInMain 0.15s ease";
 
   document.getElementById("dayView").style.display = "none";
   document.getElementById("progressView").style.display = "none";
@@ -2056,7 +2110,7 @@ async function removePerson(idx){
 
 function buildExerciseSelectOptions(tabKey, currentName){
   const dayList  = EXERCISES_BY_DAY[tabKey] || [];
-  const coreList = EXERCISES_BY_DAY.core || [];
+  const coreList = tabKey === 'core' ? [] : (EXERCISES_BY_DAY.core || []);
   const isKnown  = dayList.includes(currentName) || coreList.includes(currentName);
   let opts = `<option value="" disabled${currentName===''?" selected":""}>Select exercise…</option>`;
   dayList.forEach(name => {
@@ -2472,14 +2526,35 @@ function detectNewUser(){
   }
 }
 
+function openModal(id){
+  const overlay = document.getElementById(id);
+  if(!overlay) return;
+  overlay.classList.remove("closing");
+  overlay.style.display = "flex";
+  const box = overlay.querySelector(".modal-box, .ex-info-box");
+  if(box){ box.classList.remove("modal-enter"); void box.offsetWidth; box.classList.add("modal-enter"); }
+}
+function closeModal(id){
+  const overlay = document.getElementById(id);
+  if(!overlay) return;
+  overlay.classList.add("closing");
+  setTimeout(()=>{ overlay.style.display = "none"; overlay.classList.remove("closing"); }, 180);
+}
+
 function showWelcome(){
-  const overlay = document.getElementById("welcomeOverlay");
-  if(overlay) overlay.style.display = "flex";
+  openModal("welcomeOverlay");
 }
 
 function closeWelcome(){
-  const overlay = document.getElementById("welcomeOverlay");
-  if(overlay) overlay.style.display = "none";
+  closeModal("welcomeOverlay");
+}
+
+function toggleTokenVisibility(){
+  const input = document.getElementById("ghToken");
+  const btn = document.getElementById("tokenToggle");
+  if(!input) return;
+  if(input.type === "password"){ input.type = "text"; btn.textContent = "🙈"; }
+  else { input.type = "password"; btn.textContent = "👁"; }
 }
 
 function handleWelcomeExcel(){
@@ -2544,6 +2619,7 @@ async function init(){
   renderForm();
   renderHistory();
   if(isNewUser) showWelcome();
+  setTimeout(()=> document.body.classList.add("transitions-ready"), 50);
 }
 
 // ---- GitHub backup ----
@@ -2580,28 +2656,31 @@ function saveGithubConfigToStorage(cfg){
 
 function openSettings(){
   const cfg = getGithubConfig() || {};
-  document.getElementById("ghToken").value = cfg.token || "";
+  const tokenInput = document.getElementById("ghToken");
+  tokenInput.value = cfg.token || "";
+  tokenInput.type = "password";
+  const tokenToggle = document.getElementById("tokenToggle");
+  if(tokenToggle) tokenToggle.textContent = "👁";
   document.getElementById("ghRepo").value = cfg.repo || "";
   document.getElementById("ghPath").value = cfg.path || "GymLog.json";
   document.getElementById("ghBranch").value = cfg.branch || "main";
   const link = document.getElementById("quickTokenLink");
   link.href = "https://github.com/settings/tokens/new?scopes=repo&description=" + encodeURIComponent("GymTracker backup");
-  document.getElementById("settingsOverlay").style.display = "flex";
+  openModal("settingsOverlay");
 }
 
 function closeSettings(){
-  document.getElementById("settingsOverlay").style.display = "none";
+  closeModal("settingsOverlay");
 }
 
 function showConfirm(message){
   return new Promise(resolve => {
-    const overlay = document.getElementById("confirmOverlay");
     document.getElementById("confirmMessage").textContent = message;
-    overlay.style.display = "flex";
+    openModal("confirmOverlay");
     const okBtn = document.getElementById("confirmOkBtn");
     const cancelBtn = document.getElementById("confirmCancelBtn");
     function cleanup(result){
-      overlay.style.display = "none";
+      closeModal("confirmOverlay");
       okBtn.removeEventListener("click", onOk);
       cancelBtn.removeEventListener("click", onCancel);
       resolve(result);
@@ -2871,13 +2950,12 @@ function showExerciseInfo(exName){
       <ul>${info.tips.map(t=>`<li>${t}</li>`).join("")}</ul>
     </div>
   `;
-  const overlay = document.getElementById("exInfoOverlay");
-  overlay.style.display = "flex";
-  overlay.querySelector(".ex-info-body").scrollTop = 0;
+  openModal("exInfoOverlay");
+  document.getElementById("exInfoOverlay").querySelector(".ex-info-body").scrollTop = 0;
 }
 
 function closeExerciseInfo(){
-  document.getElementById("exInfoOverlay").style.display = "none";
+  closeModal("exInfoOverlay");
 }
 
 function closeExInfoIfBg(evt){

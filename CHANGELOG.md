@@ -1,9 +1,9 @@
 # Changelog
 
-## v0.5.0.9 — 2026-09-07
+## v0.5.1.0 — 2026-09-07
 ### Changed
-- **Exercise picker pagination** — grid now shows 6 exercises per page with ‹ / › navigation; reduces image load on initial open and fixes thin-card rendering when "All" filter is active
-- Version bump v0.5.0.8 → v0.5.0.9
+- **Exercise picker layout** — replaced 2-column photo grid with a scrollable 3-column list: exercise name (left), muscles hit (middle), thumbnail image (right); all results visible at once, no pagination needed
+- Version bump v0.5.0.9 → v0.5.1.0
 
 ---
 

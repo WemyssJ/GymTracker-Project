@@ -5,3 +5,7 @@ _check.js
 generate-muscle-images.js
 generate-extra-images.js
 GymLog.json
+download-exercises.js
+download-exercises2.js
+find-exercises.js
+_exercise_repdb_local.txt

@@ -1,5 +1,17 @@
 # Changelog
 
+## v0.5.0.6 — 2026-09-07
+### Added
+- **Local exercise images** — 43 exercises now have locally-hosted start/peak photos served from `images/exercises/`; no external CDN dependency
+
+### Fixed
+- Exercise tab in info modal now correctly loads local image files (was broken due to stale remote URL reference)
+
+### Changed
+- Version bump v0.5.0.5 → v0.5.0.6
+
+---
+
 ## v0.5.0.5 — 2026-09-07
 ### Added
 - **Exercise images toggle** — the exercise info modal now has a "Muscles / Exercise" pill toggle; Exercise view shows start + peak photos from the RepDB dataset (repdb.co) for 32 exercises

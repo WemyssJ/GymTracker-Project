@@ -28,7 +28,7 @@
     --red-bg:#331d1c;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-  html{height:100%;overflow-x:hidden;width:100%;overscroll-behavior:none;}
+  html{height:100%;overflow-x:hidden;width:100%;overscroll-behavior:none;background:#09131a;}
   html,body{margin:0;padding:0;background:var(--bg);color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     -webkit-font-smoothing:antialiased;}
@@ -36,6 +36,16 @@
     height:100%;overflow-y:scroll;-webkit-overflow-scrolling:touch;
     overscroll-behavior-y:none;overflow-x:hidden;max-width:100vw;position:relative;
     padding-bottom:calc(40px + env(safe-area-inset-bottom));
+  }
+  @media(min-width:500px){
+    body{
+      max-width:430px;margin:0 auto;
+      box-shadow:0 0 0 1px var(--line),0 0 60px rgba(0,0,0,0.6);
+    }
+    #toast,#timerWidget{
+      left:50%;transform:translateX(-50%);right:auto;
+      width:calc(430px - 32px);max-width:calc(430px - 32px);
+    }
   }
 
   header.top{
@@ -371,7 +381,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.0.5</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.0.6</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -1215,38 +1225,49 @@ const EXERCISES_BY_DAY = {
 };
 
 const EXERCISE_REPDB = {
-  "Bench Press":          { slug: "barbell-bench-press",         poses: ["start","peak"] },
-  "Incline Press":        { slug: "barbell-incline-bench-press",  poses: ["start","peak"] },
-  "Overhead Press":       { slug: "barbell-overhead-press",       poses: ["start","peak"] },
-  "Dumbbell Press":       { slug: "dumbbell-chest-press",         poses: ["start","peak"] },
-  "Lateral Raise":        { slug: "dumbbell-lateral-raise",       poses: ["start","peak"] },
-  "Tricep Push":          { slug: "cable-tricep-pushdown",        poses: ["start","peak"] },
-  "Deadlift":             { slug: "barbell-deadlift",             poses: ["start","peak"] },
-  "Pull ups":             { slug: "pull-up",                      poses: ["start","peak"] },
-  "Weighted Row":         { slug: "barbell-bent-over-row",        poses: ["start","peak"] },
-  "Head Pull":            { slug: "lat-pulldown",                 poses: ["start","peak"] },
-  "Bicep Curl":           { slug: "dumbbell-bicep-curl",          poses: ["start","peak"] },
-  "Hammer Curl":          { slug: "dumbbell-hammer-curl",         poses: ["start","peak"] },
-  "Squat":                { slug: "barbell-back-squat",           poses: ["start","peak"] },
-  "Hip Thrust":           { slug: "dumbbell-hip-thrust",          poses: ["start","peak"] },
-  "Leg Press":            { slug: "leg-press",                    poses: ["start","peak"] },
-  "Lunges":               { slug: "barbell-lunge",                poses: ["start","peak"] },
-  "Prone Leg Curl":       { slug: "lying-leg-curl",               poses: ["start","peak"] },
-  "Calf Raises":          { slug: "barbell-calf-raise",           poses: ["start","peak"] },
-  "Plank":                { slug: "plank",                        poses: ["main"] },
-  "Crunch":               { slug: "crunches",                     poses: ["start","peak"] },
-  "Leg Raise":            { slug: "leg-raise",                    poses: ["start","peak"] },
-  "Russian Twist":        { slug: "russian-twist",                poses: ["start","peak"] },
-  "Cable Crunch":         { slug: "cable-crunch",                 poses: ["start","peak"] },
-  "Arnold Press":         { slug: "arnold-press",                 poses: ["start","peak"] },
-  "Chest Fly":            { slug: "dumbbell-chest-fly",           poses: ["start","peak"] },
-  "Push Up":              { slug: "push-up",                      poses: ["start","peak"] },
-  "Chin Up":              { slug: "chin-up",                      poses: ["start","peak"] },
-  "Romanian Deadlift":    { slug: "romanian-deadlift",            poses: ["start","peak"] },
-  "Seated Cable Row":     { slug: "seated-cable-row",             poses: ["start","peak"] },
-  "Leg Extension":        { slug: "leg-extension",                poses: ["start","peak"] },
-  "Bulgarian Split Squat":{ slug: "bulgarian-split-squat",        poses: ["start","peak"] },
-  "Face Pull":            { slug: "face-pull",                    poses: ["start","peak"] },
+  "Bench Press":          { poses:["start","peak"], files:["images/exercises/bench-press-start.webp","images/exercises/bench-press-peak.webp"] },
+  "Incline Press":        { poses:["start","peak"], files:["images/exercises/incline-bench-press-start.webp","images/exercises/incline-bench-press-peak.webp"] },
+  "Overhead Press":       { poses:["start","peak"], files:["images/exercises/ohp-start.webp","images/exercises/ohp-peak.webp"] },
+  "Dumbbell Press":       { poses:["start","peak"], files:["images/exercises/incline-db-press-start.webp","images/exercises/incline-db-press-peak.webp"] },
+  "Lateral Raise":        { poses:["start","peak"], files:["images/exercises/lateral-raise-start.webp","images/exercises/lateral-raise-peak.webp"] },
+  "Tricep Push":          { poses:["start","peak"], files:["images/exercises/tricep-pushdown-start.webp","images/exercises/tricep-pushdown-peak.webp"] },
+  "Deadlift":             { poses:["start","peak"], files:["images/exercises/deadlift-start.webp","images/exercises/deadlift-peak.webp"] },
+  "Pull ups":             { poses:["start","peak"], files:["images/exercises/pull-up-start.webp","images/exercises/pull-up-peak.webp"] },
+  "Weighted Row":         { poses:["start","peak"], files:["images/exercises/barbell-row-start.webp","images/exercises/barbell-row-peak.webp"] },
+  "Head Pull":            { poses:["start","peak"], files:["images/exercises/lat-pulldown-start.webp","images/exercises/lat-pulldown-peak.webp"] },
+  "Bicep Curl":           { poses:["start","peak"], files:["images/exercises/barbell-curl-start.webp","images/exercises/barbell-curl-peak.webp"] },
+  "Hammer Curl":          { poses:["start","peak"], files:["images/exercises/hammer-curl-start.webp","images/exercises/hammer-curl-peak.webp"] },
+  "Squat":                { poses:["start","peak"], files:["images/exercises/squat-start.webp","images/exercises/squat-peak.webp"] },
+  "Hip Thrust":           { poses:["start","peak"], files:["images/exercises/hip-thrust-start.webp","images/exercises/hip-thrust-peak.webp"] },
+  "Leg Press":            { poses:["start","peak"], files:["images/exercises/leg-press-start.webp","images/exercises/leg-press-peak.webp"] },
+  "Lunges":               { poses:["start","peak"], files:["images/exercises/lunge-start.webp","images/exercises/lunge-peak.webp"] },
+  "Prone Leg Curl":       { poses:["start","peak"], files:["images/exercises/leg-curl-start.webp","images/exercises/leg-curl-peak.webp"] },
+  "Calf Raises":          { poses:["start","peak"], files:["images/exercises/barbell-calf-raise-start.webp","images/exercises/barbell-calf-raise-peak.webp"] },
+  "Plank":                { poses:["main"],         files:["images/exercises/plank-main.webp"] },
+  "Crunch":               { poses:["start","peak"], files:["images/exercises/crunches-start.webp","images/exercises/crunches-peak.webp"] },
+  "Leg Raise":            { poses:["start","peak"], files:["images/exercises/lying-leg-raise-start.webp","images/exercises/lying-leg-raise-peak.webp"] },
+  "Russian Twist":        { poses:["start","peak"], files:["images/exercises/russian-twist-start.webp","images/exercises/russian-twist-peak.webp"] },
+  "Cable Crunch":         { poses:["start","peak"], files:["images/exercises/cable-crunch-start.webp","images/exercises/cable-crunch-peak.webp"] },
+  "Arnold Press":         { poses:["start","peak"], files:["images/exercises/arnold-press-start.webp","images/exercises/arnold-press-peak.webp"] },
+  "Chest Fly":            { poses:["start","peak"], files:["images/exercises/db-fly-start.webp","images/exercises/db-fly-peak.webp"] },
+  "Push Up":              { poses:["start","peak"], files:["images/exercises/push-up-start.webp","images/exercises/push-up-peak.webp"] },
+  "Chest Dip":            { poses:["start","peak"], files:["images/exercises/dips-start.webp","images/exercises/dips-peak.webp"] },
+  "Front Raise":          { poses:["start","peak"], files:["images/exercises/dumbbell-front-raise-start.webp","images/exercises/dumbbell-front-raise-peak.webp"] },
+  "Upright Row":          { poses:["start","peak"], files:["images/exercises/upright-row-start.webp","images/exercises/upright-row-peak.webp"] },
+  "Skull Crushers":       { poses:["start","peak"], files:["images/exercises/skull-crusher-start.webp","images/exercises/skull-crusher-peak.webp"] },
+  "Rear Delt Fly":        { poses:["start","peak"], files:["images/exercises/rear-delt-fly-start.webp","images/exercises/rear-delt-fly-peak.webp"] },
+  "Face Pull":            { poses:["start","peak"], files:["images/exercises/face-pull-start.webp","images/exercises/face-pull-peak.webp"] },
+  "Seated Cable Row":     { poses:["start","peak"], files:["images/exercises/seated-cable-row-start.webp","images/exercises/seated-cable-row-peak.webp"] },
+  "Cable Row":            { poses:["start","peak"], files:["images/exercises/seated-cable-row-start.webp","images/exercises/seated-cable-row-peak.webp"] },
+  "Chin Up":              { poses:["start","peak"], files:["images/exercises/chin-ups-start.webp","images/exercises/chin-ups-peak.webp"] },
+  "Romanian Deadlift":    { poses:["start","peak"], files:["images/exercises/romanian-deadlift-start.webp","images/exercises/romanian-deadlift-peak.webp"] },
+  "Preacher Curl":        { poses:["start","peak"], files:["images/exercises/preacher-curl-start.webp","images/exercises/preacher-curl-peak.webp"] },
+  "Leg Extension":        { poses:["start","peak"], files:["images/exercises/leg-extension-start.webp","images/exercises/leg-extension-peak.webp"] },
+  "Bulgarian Split Squat":{ poses:["start","peak"], files:["images/exercises/bulgarian-split-squat-start.webp","images/exercises/bulgarian-split-squat-peak.webp"] },
+  "Sumo Squat":           { poses:["start","peak"], files:["images/exercises/sumo-squat-start.webp","images/exercises/sumo-squat-peak.webp"] },
+  "Glute Kickback":       { poses:["start","peak"], files:["images/exercises/glute-kickback-start.webp","images/exercises/glute-kickback-peak.webp"] },
+  "Abductor Machine":     { poses:["start","peak"], files:["images/exercises/hip-abduction-start.webp","images/exercises/hip-abduction-peak.webp"] },
+  "Adductor Machine":     { poses:["start","peak"], files:["images/exercises/hip-adduction-start.webp","images/exercises/hip-adduction-peak.webp"] },
 };
 
 const TIMED_EXERCISES = new Set(["Plank", "Leg Raise", "Russian Twist"]);
@@ -3407,17 +3428,16 @@ function showExerciseInfo(exName){
   const viewTabs = document.getElementById("exInfoViewTabs");
   if(repdb){
     viewTabs.style.display = "flex";
-    const base = "https://repdb.co/images/flat/";
     const multi = repdb.poses.length > 1;
-    const imgsHtml = repdb.poses.map(pose =>
+    const imgsHtml = repdb.poses.map((pose, i) =>
       `<div style="flex:1;min-width:0;text-align:center;">
-        <img src="${base}${repdb.slug}-${pose}.webp" style="width:100%;border-radius:10px;display:block;" alt="${exName} ${pose}" onerror="this.parentElement.style.display='none'">
+        <img src="${repdb.files[i]}" style="width:100%;border-radius:10px;display:block;" alt="${exName} ${pose}" onerror="this.parentElement.style.display='none'">
         ${multi ? `<div style="font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-top:5px;">${pose.toUpperCase()}</div>` : ""}
       </div>`
     ).join("");
     document.getElementById("exInfoRepdbImgs").innerHTML =
       `<div style="display:flex;gap:10px;margin-bottom:10px;">${imgsHtml}</div>` +
-      `<p style="font-size:11px;color:var(--muted);text-align:center;margin:0;">Images via <a href="https://repdb.co" target="_blank" rel="noopener" style="color:var(--amber);">repdb.co</a></p>`;
+      `<p style="font-size:11px;color:var(--muted);text-align:center;margin:0;">Images via <a href="https://github.com/RepDB/exercise-dataset" target="_blank" rel="noopener" style="color:var(--amber);">RepDB</a></p>`;
   } else {
     viewTabs.style.display = "none";
   }

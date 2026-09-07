@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.5.0.7 — 2026-09-07
+### Added
+- **Exercise picker** — replaces the Settings dropdown with a visual modal: search by name, filter by muscle group (Chest / Shoulders / Back / Arms / Legs / Glutes / Core), browse 2-column photo grid, or add a custom exercise name
+
+### Changed
+- Version bump v0.5.0.6 → v0.5.0.7
+
+---
+
 ## v0.5.0.6 — 2026-09-07
 ### Added
 - **Local exercise images** — 43 exercises now have locally-hosted start/peak photos served from `images/exercises/`; no external CDN dependency

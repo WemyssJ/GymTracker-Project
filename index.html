@@ -75,9 +75,6 @@
     display:inline-block;width:6px;height:6px;border-radius:50%;
     background:var(--green);margin-left:3px;vertical-align:middle;
   }
-  .due-dot-legend{font-size:10.5px;color:var(--muted);padding:5px 2px 0;display:none;align-items:center;gap:5px;}
-  .due-dot-legend.visible{display:flex;}
-  .due-dot-legend .due-dot{margin-left:0;}
 
   .header-actions{display:flex;gap:8px;padding:10px 0;}
   .icon-btn{
@@ -448,7 +445,6 @@
 <header class="top">
   <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.5</span></h1>
   <nav class="tabs" id="tabs"></nav>
-  <div id="dueDotLegend" class="due-dot-legend"><span class="due-dot"></span> = your next day</div>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
 
@@ -1980,8 +1976,6 @@ function renderTabs(){
     btn.onclick = () => switchTab(key);
     nav.appendChild(btn);
   });
-  const legend = document.getElementById("dueDotLegend");
-  if(legend) legend.classList.toggle("visible", !!nextKey && activeDays.includes(nextKey));
 }
 
 let statsCollapsed = false;

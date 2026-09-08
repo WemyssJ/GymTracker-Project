@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.1.3 — 2026-09-08
+### Added
+- **Android app** — GymTracker can now be packaged as an Android APK via Capacitor (`create-apk.bat`); web assets are bundled locally so the app runs fully offline once installed, with no dependency on GitHub Pages
+- Local bundled copy of the SheetJS (`xlsx`) library — Excel export/import now works offline instead of requiring the cdnjs CDN
+
+### Changed
+- Version bump v0.5.1.2 → v0.5.1.3
+
+---
+
 ## v0.5.1.1 — 2026-09-07
 ### Changed
 - **Exercise picker middle column** — now shows the muscle diagram (highlighted body) instead of text group labels; uses `EXERCISE_INFO[name].image` (the same diagram shown in the ℹ modal)

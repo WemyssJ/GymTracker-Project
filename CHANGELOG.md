@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.5.1.5 — 2026-09-09
+### Changed
+- **Timer simplified to one configurable timer** — Settings → Timers is now a single "Timer" toggle with a Count down / Count up mode selector; count-down duration is set directly (minutes + seconds) instead of fixed presets
+- Removed the separate Challenge timer setting and its per-exercise ⏱ stopwatch button — there's now just the one timer, usable for either resting or timing anything else
+- Version bump v0.5.1.4 → v0.5.1.5
+
+---
+
 ## v0.5.1.4 — 2026-09-08
 ### Added
 - **New user setup wizard** — replaces the old single-screen welcome with an 8-step walkthrough: name, optional partner/friend, per-person colours, theme (now with visual colour-swatch previews), training days, workouts (recommended defaults, editable inline with the real exercise picker), default sets per exercise, and rest timer

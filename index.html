@@ -446,7 +446,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.4</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.5</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <div id="dueDotLegend" class="due-dot-legend"><span class="due-dot"></span> = your next day</div>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
@@ -546,27 +546,26 @@
     <div id="timerSettingsBody" class="collapsible-body is-collapsed">
       <div class="settings-row">
         <div class="settings-row-info">
-          <div class="settings-row-title">Rest timer</div>
-          <div class="settings-row-desc">Countdown between sets after logging</div>
+          <div class="settings-row-title">Timer</div>
+          <div class="settings-row-desc">Shows a Start/Pause/Stop/Lap timer footer on workout pages</div>
         </div>
-        <label class="toggle-switch" aria-label="Rest timer">
-          <input type="checkbox" id="restTimerToggle" onchange="handleRestTimerToggle(this.checked)">
+        <label class="toggle-switch" aria-label="Timer">
+          <input type="checkbox" id="timerEnabledToggle" onchange="handleTimerEnabledToggle(this.checked)">
           <span class="toggle-slider"></span>
         </label>
       </div>
-      <div id="restDurationPicker" style="display:none;padding:8px 0 4px;">
-        <div class="p-label" style="margin-bottom:6px;">DURATION</div>
-        <nav class="subtabs" id="restDurationTabs" style="flex-wrap:wrap;"></nav>
-      </div>
-      <div class="settings-row">
-        <div class="settings-row-info">
-          <div class="settings-row-title">Challenge timer</div>
-          <div class="settings-row-desc">Stopwatch button on timed exercises (Plank etc.)</div>
+      <div id="timerModeSettings" style="display:none;padding:8px 0 4px;">
+        <div class="p-label" style="margin-bottom:6px;">MODE</div>
+        <nav class="subtabs" id="timerModeTabs"></nav>
+        <div id="timerDurationSetting" style="margin-top:10px;">
+          <div class="p-label" style="margin-bottom:6px;">COUNT DOWN FROM</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <input type="number" id="timerDurationMin" min="0" max="59" style="width:56px;text-align:center;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 6px;font-size:14px;" onchange="handleTimerDurationInput()">
+            <span style="color:var(--muted);font-weight:700;font-size:12px;">min</span>
+            <input type="number" id="timerDurationSec" min="0" max="59" style="width:56px;text-align:center;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 6px;font-size:14px;" onchange="handleTimerDurationInput()">
+            <span style="color:var(--muted);font-weight:700;font-size:12px;">sec</span>
+          </div>
         </div>
-        <label class="toggle-switch" aria-label="Challenge timer">
-          <input type="checkbox" id="challengeTimerToggle" onchange="handleChallengeTimerToggle(this.checked)">
-          <span class="toggle-slider"></span>
-        </label>
       </div>
     </div>
 
@@ -1334,8 +1333,6 @@ const EXERCISE_REPDB = {
   "Abductor Machine":     { poses:["start","peak"], files:["images/exercises/hip-abduction-start.webp","images/exercises/hip-abduction-peak.webp"] },
   "Adductor Machine":     { poses:["start","peak"], files:["images/exercises/hip-adduction-start.webp","images/exercises/hip-adduction-peak.webp"] },
 };
-
-const TIMED_EXERCISES = new Set(["Plank", "Leg Raise", "Russian Twist"]);
 
 const MUSCLE_GROUPS = {
   "Chest":     ["Bench Press","Chest Dip","Chest Fly","Dumbbell Press","Incline Press","Push Up"],
@@ -2208,10 +2205,7 @@ function renderForm(){
     const infoBtn = EXERCISE_INFO[ex]
       ? `<button type="button" class="ex-info-btn" onclick="showExerciseInfo('${safeName}')" aria-label="Exercise info">i</button>`
       : "";
-    const challengeBtn = (timerSettings.challengeEnabled && TIMED_EXERCISES.has(ex))
-      ? `<button type="button" class="ex-info-btn" style="font-style:normal;font-family:inherit;background:var(--panel-2);border-color:var(--line);color:var(--muted);" onclick="startChallengeTimer()" aria-label="Start timer">⏱</button>`
-      : "";
-    const btnGroup = (infoBtn || challengeBtn) ? `<div style="display:flex;gap:6px;">${infoBtn}${challengeBtn}</div>` : "";
+    const btnGroup = infoBtn ? `<div style="display:flex;gap:6px;">${infoBtn}</div>` : "";
     html += `<div class="exercise-block"><div class="exercise-title-row"><div class="exercise-title">${ex}</div>${btnGroup}</div>`;
     people.forEach((p, pi) => {
       const lastSets = lastEntry ? fillForwardSets(getPersonSets(lastEntry, p.id)) : emptySets();
@@ -2448,7 +2442,7 @@ async function handleSave(evt){
     showToast(hasGithub ? "Saved" : "Saved locally");
   }
 
-  if(timerSettings.restEnabled) startRestTimer();
+  if(timerSettings.enabled) startRestTimer();
 
   if(hasGithub) autoPushToGithub();
 }
@@ -3202,12 +3196,29 @@ function renderWizardStepBody(){
   } else if(wizardStep === 8){
     body.innerHTML = `
       <div class="wizard-yesno">
-        <button type="button" class="${!timerSettings.restEnabled?"active":""}" onclick="setWizardRestTimer(false)">No timer</button>
-        <button type="button" class="${timerSettings.restEnabled?"active":""}" onclick="setWizardRestTimer(true)">Show rest timer</button>
+        <button type="button" class="${!timerSettings.enabled?"active":""}" onclick="setWizardTimerEnabled(false)">No timer</button>
+        <button type="button" class="${timerSettings.enabled?"active":""}" onclick="setWizardTimerEnabled(true)">Show timer</button>
       </div>
-      ${timerSettings.restEnabled ? `<nav class="subtabs" id="wizardRestDurationTabs"></nav>` : ""}
+      ${timerSettings.enabled ? `
+        <nav class="subtabs" id="wizardTimerModeTabs"></nav>
+        <div id="wizardTimerDurationWrap" style="${timerSettings.mode==='countdown'?'':'display:none;'}margin-top:10px;">
+          <div class="p-label" style="margin-bottom:6px;">COUNT DOWN FROM</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <input type="number" id="wizardTimerMin" min="0" max="59" style="width:56px;text-align:center;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 6px;font-size:14px;" onchange="handleWizardTimerDurationInput()">
+            <span style="color:var(--muted);font-weight:700;font-size:12px;">min</span>
+            <input type="number" id="wizardTimerSec" min="0" max="59" style="width:56px;text-align:center;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 6px;font-size:14px;" onchange="handleWizardTimerDurationInput()">
+            <span style="color:var(--muted);font-weight:700;font-size:12px;">sec</span>
+          </div>
+        </div>
+      ` : ""}
     `;
-    if(timerSettings.restEnabled) renderWizardRestDurationTabs();
+    if(timerSettings.enabled){
+      renderTimerModeTabs("wizardTimerModeTabs");
+      const minEl = document.getElementById("wizardTimerMin");
+      const secEl = document.getElementById("wizardTimerSec");
+      if(minEl) minEl.value = Math.floor(timerSettings.duration / 60);
+      if(secEl) secEl.value = timerSettings.duration % 60;
+    }
   }
 }
 
@@ -3232,25 +3243,21 @@ function setWizardPartner(want){
   renderWizardStepBody();
 }
 
-function setWizardRestTimer(on){
-  timerSettings.restEnabled = on;
+function setWizardTimerEnabled(on){
+  timerSettings.enabled = on;
   saveTimerSettings();
   renderTimerSettings();
   renderWizardStepBody();
   refreshTimerFooter();
 }
 
-function renderWizardRestDurationTabs(){
-  const nav = document.getElementById("wizardRestDurationTabs");
-  if(!nav) return;
-  nav.innerHTML = "";
-  [30, 60, 90, 120, 180].forEach(secs => {
-    const btn = document.createElement("button");
-    btn.textContent = secs < 60 ? secs + "s" : (secs / 60) + "m";
-    btn.className = timerSettings.restDuration === secs ? "active" : "";
-    btn.onclick = () => { timerSettings.restDuration = secs; saveTimerSettings(); renderTimerSettings(); renderWizardRestDurationTabs(); };
-    nav.appendChild(btn);
-  });
+function handleWizardTimerDurationInput(){
+  const min = Math.max(0, parseInt(document.getElementById("wizardTimerMin").value, 10) || 0);
+  const sec = Math.max(0, Math.min(59, parseInt(document.getElementById("wizardTimerSec").value, 10) || 0));
+  timerSettings.duration = Math.max(5, min * 60 + sec);
+  saveTimerSettings();
+  refreshTimerFooter();
+  renderTimerSettings();
 }
 
 function toggleTokenVisibility(){
@@ -3364,21 +3371,27 @@ function adjustDefaultSetCount(delta){
 }
 
 const TIMER_SETTINGS_KEY = "gymtracker:timerSettings";
-let timerSettings = { restEnabled: false, restDuration: 90, challengeEnabled: false };
-let timerMode = "rest";
-let restIntervalId = null;
-let restRemaining = 0;
-let challengeIntervalId = null;
-let challengeElapsed = 0;
+let timerSettings = { enabled: false, mode: "countdown", duration: 90 };
+let timerIntervalId = null;
+let timerRemaining = 0;
+let timerElapsed = 0;
 let timerSettingsCollapsed = true;
 let creditsSettingsCollapsed = true;
 
 function loadTimerSettings(){
+  const defaults = { enabled: false, mode: "countdown", duration: 90 };
   try{
     const raw = localStorage.getItem(TIMER_SETTINGS_KEY);
-    if(raw) return { ...timerSettings, ...JSON.parse(raw) };
+    if(raw){
+      const parsed = JSON.parse(raw);
+      return {
+        enabled: parsed.enabled ?? parsed.restEnabled ?? defaults.enabled,
+        mode: parsed.mode === "countup" ? "countup" : "countdown",
+        duration: typeof parsed.duration === "number" ? parsed.duration : (parsed.restDuration ?? defaults.duration)
+      };
+    }
   }catch(e){}
-  return { restEnabled: false, restDuration: 90, challengeEnabled: false };
+  return defaults;
 }
 
 function saveTimerSettings(){
@@ -3397,7 +3410,7 @@ let lapCount = 0;
 function refreshTimerFooter(){
   const w = document.getElementById("timerWidget");
   const main = document.querySelector("main");
-  const shouldShow = (timerSettings.restEnabled && !!CONFIG[activeTab]) || timerRunState !== "idle";
+  const shouldShow = (timerSettings.enabled && !!CONFIG[activeTab]) || timerRunState !== "idle";
   if(w) w.classList.toggle("visible", shouldShow);
   if(main) main.classList.toggle("has-timer-footer", shouldShow);
   if(!shouldShow) return;
@@ -3410,14 +3423,14 @@ function refreshTimerFooter(){
   const lapBtn = document.getElementById("timerLapBtn");
   if(!labelEl || !display || !startBtn) return;
 
-  labelEl.textContent = timerMode === "rest" ? "REST TIMER" : "STOPWATCH";
+  labelEl.textContent = timerSettings.mode === "countdown" ? "TIMER" : "STOPWATCH";
   if(timerRunState === "done"){
     display.classList.add("done");
     display.textContent = "Done ✓";
   } else {
     display.classList.remove("done");
-    if(timerMode === "rest") display.textContent = formatTime(timerRunState === "idle" ? timerSettings.restDuration : Math.max(0, restRemaining));
-    else display.textContent = formatTime(challengeElapsed);
+    if(timerSettings.mode === "countdown") display.textContent = formatTime(timerRunState === "idle" ? timerSettings.duration : Math.max(0, timerRemaining));
+    else display.textContent = formatTime(timerElapsed);
   }
 
   startBtn.textContent = timerRunState === "paused" ? "Resume" : "Start";
@@ -3429,11 +3442,11 @@ function refreshTimerFooter(){
 
 function timerResumeInterval(){
   timerRunState = "running";
-  if(timerMode === "rest"){
-    restIntervalId = setInterval(() => {
-      restRemaining--;
-      if(restRemaining <= 0){
-        clearInterval(restIntervalId); restIntervalId = null;
+  if(timerSettings.mode === "countdown"){
+    timerIntervalId = setInterval(() => {
+      timerRemaining--;
+      if(timerRemaining <= 0){
+        clearInterval(timerIntervalId); timerIntervalId = null;
         timerRunState = "done";
         if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
         refreshTimerFooter();
@@ -3445,8 +3458,8 @@ function timerResumeInterval(){
       }
     }, 1000);
   } else {
-    challengeIntervalId = setInterval(() => {
-      challengeElapsed++;
+    timerIntervalId = setInterval(() => {
+      timerElapsed++;
       refreshTimerFooter();
     }, 1000);
   }
@@ -3454,19 +3467,9 @@ function timerResumeInterval(){
 }
 
 function startRestTimer(){
-  if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
-  if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
-  timerMode = "rest";
-  restRemaining = timerSettings.restDuration;
-  lapCount = 0;
-  timerResumeInterval();
-}
-
-function startChallengeTimer(){
-  if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
-  if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
-  timerMode = "challenge";
-  challengeElapsed = 0;
+  if(timerIntervalId){ clearInterval(timerIntervalId); timerIntervalId = null; }
+  timerRemaining = timerSettings.duration;
+  timerElapsed = 0;
   lapCount = 0;
   timerResumeInterval();
 }
@@ -3477,15 +3480,13 @@ function timerStart(){
 }
 
 function timerPause(){
-  if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
-  if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
+  if(timerIntervalId){ clearInterval(timerIntervalId); timerIntervalId = null; }
   timerRunState = "paused";
   refreshTimerFooter();
 }
 
 function timerStop(){
-  if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
-  if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
+  if(timerIntervalId){ clearInterval(timerIntervalId); timerIntervalId = null; }
   timerRunState = "idle";
   refreshTimerFooter();
 }
@@ -3493,43 +3494,57 @@ function timerStop(){
 function timerLap(){
   if(timerRunState !== "running") return;
   lapCount++;
-  const t = timerMode === "rest" ? formatTime(timerSettings.restDuration - restRemaining) : formatTime(challengeElapsed);
+  const t = timerSettings.mode === "countdown" ? formatTime(timerSettings.duration - timerRemaining) : formatTime(timerElapsed);
   showToast(`Lap ${lapCount} — ${t}`);
 }
 
+function renderTimerModeTabs(navId){
+  const nav = document.getElementById(navId);
+  if(!nav) return;
+  nav.innerHTML = "";
+  [["countdown","Count down"], ["countup","Count up"]].forEach(([key, label]) => {
+    const btn = document.createElement("button");
+    btn.textContent = label;
+    btn.className = timerSettings.mode === key ? "active" : "";
+    btn.onclick = () => {
+      timerSettings.mode = key;
+      saveTimerSettings();
+      refreshTimerFooter();
+      renderTimerSettings();
+      if(wizardStep === 8) renderWizardStepBody();
+    };
+    nav.appendChild(btn);
+  });
+}
+
 function renderTimerSettings(){
-  const restToggle = document.getElementById("restTimerToggle");
-  if(restToggle) restToggle.checked = timerSettings.restEnabled;
-  const challengeToggle = document.getElementById("challengeTimerToggle");
-  if(challengeToggle) challengeToggle.checked = timerSettings.challengeEnabled;
-  const picker = document.getElementById("restDurationPicker");
-  if(picker) picker.style.display = timerSettings.restEnabled ? "block" : "none";
-  const nav = document.getElementById("restDurationTabs");
-  if(nav){
-    nav.innerHTML = "";
-    [30, 60, 90, 120, 180].forEach(secs => {
-      const btn = document.createElement("button");
-      btn.textContent = secs < 60 ? secs + "s" : (secs / 60) + "m";
-      btn.className = timerSettings.restDuration === secs ? "active" : "";
-      btn.onclick = () => { timerSettings.restDuration = secs; saveTimerSettings(); renderTimerSettings(); };
-      nav.appendChild(btn);
-    });
-  }
+  const toggle = document.getElementById("timerEnabledToggle");
+  if(toggle) toggle.checked = timerSettings.enabled;
+  const modeWrap = document.getElementById("timerModeSettings");
+  if(modeWrap) modeWrap.style.display = timerSettings.enabled ? "block" : "none";
+  renderTimerModeTabs("timerModeTabs");
+  const durationWrap = document.getElementById("timerDurationSetting");
+  if(durationWrap) durationWrap.style.display = timerSettings.mode === "countdown" ? "block" : "none";
+  const minInput = document.getElementById("timerDurationMin");
+  const secInput = document.getElementById("timerDurationSec");
+  if(minInput) minInput.value = Math.floor(timerSettings.duration / 60);
+  if(secInput) secInput.value = timerSettings.duration % 60;
   applyTimerCollapsedState();
 }
 
-function handleRestTimerToggle(checked){
-  timerSettings.restEnabled = checked;
+function handleTimerEnabledToggle(checked){
+  timerSettings.enabled = checked;
   saveTimerSettings();
   renderTimerSettings();
   refreshTimerFooter();
 }
 
-function handleChallengeTimerToggle(checked){
-  timerSettings.challengeEnabled = checked;
+function handleTimerDurationInput(){
+  const min = Math.max(0, parseInt(document.getElementById("timerDurationMin").value, 10) || 0);
+  const sec = Math.max(0, Math.min(59, parseInt(document.getElementById("timerDurationSec").value, 10) || 0));
+  timerSettings.duration = Math.max(5, min * 60 + sec);
   saveTimerSettings();
-  renderTimerSettings();
-  if(CONFIG[activeTab]) renderForm();
+  refreshTimerFooter();
 }
 
 function loadTimerSettingsCollapsed(){

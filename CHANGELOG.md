@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.5.1.4 — 2026-09-08
+### Added
+- **New user setup wizard** — replaces the old single-screen welcome with an 8-step walkthrough: name, optional partner/friend, per-person colours, theme (now with visual colour-swatch previews), training days, workouts (recommended defaults, editable inline with the real exercise picker), default sets per exercise, and rest timer
+- **Drag-to-reorder exercises** — Settings → Exercises rows now have a ⠿ drag handle (touch + mouse via Pointer Events) to reorder a day's exercise list
+- **Exercise picker "(already selected)" label** — greyed-out already-picked exercises now say so in text, not just via opacity
+- **Default sets per exercise** — new Settings → Exercises control; used as the starting set count for any exercise without its own override
+- **Delete All Data now asks first** — choose to keep your profile (people, colours, theme, days, exercises, settings) and only clear workout history, or reset everything and go through setup again
+- **"Next day" legend** — a small "🟢 = your next day" line under the tab bar explains the green dot next to the suggested day
+- **Persistent timer footer** — when the rest timer is enabled, a fixed footer (doesn't scroll) stays on workout day pages with a large countdown/stopwatch display and Start/Pause/Stop/Lap controls, usable anytime during a workout — not just automatically after logging a set
+
+### Changed
+- Version bump v0.5.1.3 → v0.5.1.4
+
+---
+
 ## v0.5.1.3 — 2026-09-08
 ### Added
 - **Android app** — GymTracker can now be packaged as an Android APK via Capacitor (`create-apk.bat`); web assets are bundled locally so the app runs fully offline once installed, with no dependency on GitHub Pages

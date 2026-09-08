@@ -75,6 +75,9 @@
     display:inline-block;width:6px;height:6px;border-radius:50%;
     background:var(--green);margin-left:3px;vertical-align:middle;
   }
+  .due-dot-legend{font-size:10.5px;color:var(--muted);padding:5px 2px 0;display:none;align-items:center;gap:5px;}
+  .due-dot-legend.visible{display:flex;}
+  .due-dot-legend .due-dot{margin-left:0;}
 
   .header-actions{display:flex;gap:8px;padding:10px 0;}
   .icon-btn{
@@ -254,6 +257,24 @@
     background:var(--panel-2);color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;}
   .day-toggle-btn.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
 
+  /* ── Onboarding wizard ─────────────────────────── */
+  #welcomeOverlay .modal-box{max-height:88vh;overflow-y:auto;}
+  .wizard-progress{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:0.05em;margin-bottom:10px;}
+  .wizard-step-title{font-size:17px;font-weight:800;margin:0 0 6px 0;}
+  .wizard-step-desc{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 18px 0;}
+  .wizard-yesno{display:flex;gap:10px;margin-bottom:14px;}
+  .wizard-yesno button{flex:1;padding:12px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel-2);color:var(--text);font-size:14px;font-weight:700;cursor:pointer;}
+  .wizard-yesno button.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
+  .theme-swatch-dot{display:inline-block;width:12px;height:12px;border-radius:50%;
+    margin-right:7px;vertical-align:-1px;}
+
+  /* ── Exercise drag-to-reorder ─────────────────────────── */
+  .drag-handle{cursor:grab;color:var(--muted);font-size:16px;padding:4px 6px;
+    touch-action:none;user-select:none;flex-shrink:0;}
+  .exercise-row.dragging{opacity:0.45;}
+  .ex-picker-already{font-size:11px;font-weight:600;color:var(--muted);margin-left:6px;}
+
   .history{margin-top:8px;}
   .history-row{
     background:var(--panel);border:1px solid var(--line);border-radius:10px;
@@ -373,25 +394,31 @@
   .ex-view-tab.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
   .ex-info-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:14px;}
 
-  /* ── Timer widget ──────────────────────────────────── */
+  /* ── Timer footer ──────────────────────────────────── */
+  main.has-timer-footer{padding-bottom:150px;}
   .timer-widget{
-    position:fixed;bottom:calc(80px + env(safe-area-inset-bottom));
-    left:16px;right:16px;max-width:488px;margin:0 auto;
-    background:var(--panel);border:2px solid var(--amber);border-radius:14px;
-    padding:12px 16px 14px;z-index:45;
-    box-shadow:0 4px 20px rgba(0,0,0,0.5);
-    flex-direction:column;align-items:stretch;display:none;
+    position:fixed;left:0;right:0;bottom:0;
+    background:var(--panel);border-top:2px solid var(--amber);
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    z-index:45;box-shadow:0 -4px 20px rgba(0,0,0,0.4);
+    display:none;flex-direction:column;gap:8px;
   }
-  .timer-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;text-align:center;margin-bottom:4px;}
+  .timer-widget.visible{display:flex;}
+  .timer-widget-info{text-align:center;}
+  .timer-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-bottom:2px;}
   .timer-display{
-    font-size:40px;font-weight:800;color:var(--amber);text-align:center;
-    font-variant-numeric:tabular-nums;letter-spacing:-0.02em;line-height:1;margin-bottom:10px;
+    font-size:42px;font-weight:800;color:var(--amber);
+    font-variant-numeric:tabular-nums;letter-spacing:-0.02em;line-height:1;
   }
   .timer-display.done{color:var(--green);}
   .timer-controls{display:flex;gap:8px;}
-  .timer-btn{flex:1;padding:10px;border-radius:8px;border:none;font-size:13px;font-weight:700;cursor:pointer;}
-  .timer-btn.primary{background:var(--amber);color:var(--accent-ink);}
-  .timer-btn.secondary{background:var(--panel-2);color:var(--text);border:1px solid var(--line);}
+  .timer-btn{
+    flex:1;padding:10px 4px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel-2);color:var(--text);font-size:12.5px;font-weight:700;
+    cursor:pointer;white-space:nowrap;
+  }
+  .timer-btn:disabled{opacity:0.35;cursor:default;}
+  .timer-btn:not(:disabled):active{opacity:0.7;}
 
   /* ── Timer & credits settings rows ────────────────── */
   .settings-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);}
@@ -419,8 +446,9 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.3</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.4</span></h1>
   <nav class="tabs" id="tabs"></nav>
+  <div id="dueDotLegend" class="due-dot-legend"><span class="due-dot"></span> = your next day</div>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
 
@@ -565,41 +593,21 @@
 <div id="toast"></div>
 
 <div id="timerWidget" class="timer-widget">
-  <div id="timerLabel" class="timer-label">REST</div>
-  <div id="timerDisplay" class="timer-display">1:30</div>
-  <div class="timer-controls">
-    <button type="button" class="timer-btn secondary" onclick="hideTimerWidget()">Dismiss</button>
-    <button type="button" class="timer-btn primary" onclick="restartTimer()">Restart</button>
+  <div class="timer-widget-info">
+    <div id="timerLabel" class="timer-label">REST TIMER</div>
+    <div id="timerDisplay" class="timer-display">1:30</div>
+  </div>
+  <div id="timerControls" class="timer-controls">
+    <button type="button" id="timerStartBtn" class="timer-btn" onclick="timerStart()">Start</button>
+    <button type="button" id="timerPauseBtn" class="timer-btn" onclick="timerPause()" disabled>Pause</button>
+    <button type="button" id="timerStopBtn" class="timer-btn" onclick="timerStop()" disabled>Stop</button>
+    <button type="button" id="timerLapBtn" class="timer-btn" onclick="timerLap()" disabled>Lap</button>
   </div>
 </div>
 
 <div id="welcomeOverlay" class="modal-overlay">
   <div class="modal-box">
-    <h2 style="margin-bottom:4px;">👋 Welcome to GymTracker</h2>
-    <p class="confirm-message" style="margin-bottom:18px;font-size:13px;">Choose your training days then import any existing data, or start fresh.</p>
-
-    <div class="p-label" style="margin-bottom:8px;">YOUR TRAINING DAYS</div>
-    <div id="welcomeDayToggles" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;"></div>
-
-    <div class="p-label" style="margin-bottom:8px;">EXISTING DATA?</div>
-    <div style="display:flex;flex-direction:column;gap:8px;">
-      <button type="button" class="icon-btn" style="width:100%;text-align:left;" onclick="toggleWelcomeGithubForm()">⤵ Restore from GitHub</button>
-      <div id="welcomeGithubForm" style="display:none;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;">
-        <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;">Personal access token</label>
-        <div style="display:flex;gap:6px;margin-bottom:10px;">
-          <input type="password" id="welcomeToken" placeholder="github_pat_..." style="flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px;">
-          <button type="button" id="welcomeTokenToggle" class="icon-btn" onclick="toggleWelcomeToken()" style="padding:6px 10px;font-size:15px;" aria-label="Show/hide token">👁</button>
-        </div>
-        <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;">Repo (owner/name)</label>
-        <input type="text" id="welcomeRepo" placeholder="yourname/gym-log" style="width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px;margin-bottom:10px;">
-        <div style="display:flex;gap:8px;">
-          <button type="button" class="btn-secondary" style="flex:1;" onclick="toggleWelcomeGithubForm()">Cancel</button>
-          <button type="button" class="btn-primary" style="flex:1;" onclick="handleWelcomeGithubRestore()">Restore</button>
-        </div>
-      </div>
-      <button type="button" class="icon-btn" style="width:100%;text-align:left;" onclick="handleWelcomeExcel()">⤒ Import from Excel</button>
-      <button type="button" class="btn-secondary" style="width:100%;" onclick="closeWelcome()">Start fresh</button>
-    </div>
+    <div id="wizardContent"></div>
   </div>
 </div>
 
@@ -1366,7 +1374,7 @@ function closeExercisePicker(){
       list.splice(pickerIdx, 1);
       exercisesConfig[pickerTabKey] = list;
       saveExercises();
-      renderExerciseSettings();
+      refreshExerciseUIs();
     }
   }
   pickerTabKey = null; pickerIdx = -1;
@@ -1420,8 +1428,9 @@ function renderPickerGrid(){
     const exImgEl = repdb
       ? `<img src="${repdb.files[0]}" alt="${name}" onerror="this.style.display='none'">`
       : `<div class="ex-picker-row-img-ph">💪</div>`;
+    const alreadyTag = already ? `<span class="ex-picker-already">(already selected)</span>` : "";
     return `<div class="ex-picker-row${sel?" selected":""}${already?" in-list":""}" onclick="selectFromPicker('${name.replace(/'/g,"\\'")}')">
-      <div class="ex-picker-row-name">${name}</div>
+      <div class="ex-picker-row-name">${name}${alreadyTag}</div>
       ${muscleImgEl}
       <div class="ex-picker-row-img">${exImgEl}</div>
     </div>`;
@@ -1438,12 +1447,12 @@ function selectFromPicker(name){
     list.push(name);
     exercisesConfig[tabKey] = list;
     saveExercises();
-    renderExerciseSettings();
+    refreshExerciseUIs();
     if(activeTab === tabKey){ renderStatStrip(); renderForm(); renderHistory(); }
     renderTabs();
   } else {
     renameExercise(tabKey, idx, name);
-    renderExerciseSettings();
+    refreshExerciseUIs();
   }
 }
 
@@ -1605,12 +1614,15 @@ function applyTheme(themeKey, custom){
   if(activeTab === "progress") renderProgressView();
 }
 
-function renderThemeSettings(){
-  const nav = document.getElementById("themePresets");
+function renderThemeSettings(navId){
+  navId = navId || "themePresets";
+  const nav = document.getElementById(navId);
+  if(!nav) return;
   nav.innerHTML = "";
   Object.keys(THEMES).forEach(key => {
+    const t = THEMES[key];
     const btn = document.createElement("button");
-    btn.textContent = THEMES[key].name;
+    btn.innerHTML = `<span class="theme-swatch-dot" style="background:${t.bg};box-shadow:inset 0 0 0 2px ${t.accent};"></span>${t.name}`;
     btn.className = currentThemeState.key === key ? "active" : "";
     btn.onclick = () => selectTheme(key);
     nav.appendChild(btn);
@@ -1621,6 +1633,7 @@ function renderThemeSettings(){
   customBtn.onclick = () => selectTheme("custom");
   nav.appendChild(customBtn);
 
+  if(navId !== "themePresets") return;
   const customControls = document.getElementById("customThemeControls");
   customControls.style.display = currentThemeState.key === "custom" ? "flex" : "none";
   if(currentThemeState.key === "custom" && currentThemeState.custom){
@@ -1643,6 +1656,7 @@ function selectTheme(key){
   saveTheme();
   applyTheme(currentThemeState.key, currentThemeState.custom);
   renderThemeSettings();
+  if(wizardStep === 4) renderThemeSettings("wizardThemePresets");
 }
 
 function handleCustomThemeChange(){
@@ -1742,7 +1756,7 @@ function addExercise(tabKey){
   list.push('');
   exercisesConfig[tabKey] = list;
   saveExercises();
-  renderExerciseSettings();
+  refreshExerciseUIs();
 }
 
 async function removeExercise(tabKey, idx){
@@ -1761,7 +1775,7 @@ async function removeExercise(tabKey, idx){
   list.splice(idx, 1);
   exercisesConfig[tabKey] = list;
   saveExercises();
-  renderExerciseSettings();
+  refreshExerciseUIs();
   if(activeTab === tabKey){ renderStatStrip(); renderForm(); renderHistory(); }
   renderTabs();
 }
@@ -1969,6 +1983,8 @@ function renderTabs(){
     btn.onclick = () => switchTab(key);
     nav.appendChild(btn);
   });
+  const legend = document.getElementById("dueDotLegend");
+  if(legend) legend.classList.toggle("visible", !!nextKey && activeDays.includes(nextKey));
 }
 
 let statsCollapsed = false;
@@ -2188,7 +2204,7 @@ function renderForm(){
   getExercises(activeTab).forEach((ex, i)=>{
     const lastEntry = getLastEntry(activeTab, ex);
     const safeName = ex.replace(/\\/g,"\\\\").replace(/'/g,"\\'");
-    const count = exSetCounts[ex] ?? 3;
+    const count = exSetCounts[ex] ?? defaultSetCount;
     const infoBtn = EXERCISE_INFO[ex]
       ? `<button type="button" class="ex-info-btn" onclick="showExerciseInfo('${safeName}')" aria-label="Exercise info">i</button>`
       : "";
@@ -2381,7 +2397,7 @@ async function handleSave(evt){
   let anyValue = false;
   getExercises(activeTab).forEach((ex, i)=>{
     const sets = {};
-    const count = exSetCounts[ex] ?? 3;
+    const count = exSetCounts[ex] ?? defaultSetCount;
     people.forEach(p => {
       const personSets = readSets(i, p.id, count);
       sets[p.id] = personSets;
@@ -2432,7 +2448,7 @@ async function handleSave(evt){
     showToast(hasGithub ? "Saved" : "Saved locally");
   }
 
-  startRestTimer();
+  if(timerSettings.restEnabled) startRestTimer();
 
   if(hasGithub) autoPushToGithub();
 }
@@ -2447,6 +2463,7 @@ async function switchTab(tabKey){
   activeTab = tabKey;
   historyShowAll = false;
   renderTabs();
+  refreshTimerFooter();
 
   const main = document.querySelector("main");
   main.style.animation = "none";
@@ -2554,18 +2571,41 @@ function buildExerciseSelectOptions(tabKey, currentName){
   return { opts, isKnown };
 }
 
-function renderExerciseSettings(){
-  const container = document.getElementById("exerciseSettingsContainer");
+function renderExerciseSettings(containerId){
+  containerId = containerId || "exerciseSettingsContainer";
+  const container = document.getElementById(containerId);
+  if(!container) return;
   container.innerHTML = "";
+  const isMain = containerId === "exerciseSettingsContainer";
+  if(isMain){
+    const row = document.createElement("div");
+    row.className = "settings-row";
+    row.style.marginBottom = "14px";
+    row.innerHTML = `
+      <div class="settings-row-info">
+        <div class="settings-row-title">Default sets per exercise</div>
+        <div class="settings-row-desc">Used for any exercise without a custom count</div>
+      </div>
+      <div class="set-count-row" style="margin-top:0;">
+        <button type="button" class="set-count-btn" onclick="adjustDefaultSetCount(-1)">−</button>
+        <span class="set-count-label" id="defaultSetCountLabel">${defaultSetCount} sets</span>
+        <button type="button" class="set-count-btn" onclick="adjustDefaultSetCount(1)">+</button>
+      </div>
+    `;
+    container.appendChild(row);
+  }
   Object.keys(CONFIG).forEach(tabKey => {
     const section = document.createElement("div");
     section.style.marginBottom = "18px";
     let inner = `<div class="p-label" style="margin-bottom:8px;">${CONFIG[tabKey].label.toUpperCase()} DAY</div>`;
+    inner += `<div class="exercise-drag-list" data-day="${tabKey}">`;
     getExercises(tabKey, true).forEach((ex, idx) => {
       const label = ex || "Select exercise…";
       const isPlaceholder = !ex;
+      const safeName = (ex || "").replace(/"/g,"&quot;");
       inner += `
-        <div class="person-row" style="gap:10px;">
+        <div class="person-row exercise-row" style="gap:10px;" data-day="${tabKey}" data-idx="${idx}" data-name="${safeName}">
+          <span class="drag-handle" onpointerdown="startExerciseDrag(event)" aria-label="Drag to reorder">⠿</span>
           <button type="button" class="ex-picker-btn" onclick="openExercisePicker('${tabKey}',${idx})">
             <span class="${isPlaceholder?"ex-picker-btn-placeholder":""}">${label}</span>
             <span style="color:var(--muted);font-size:11px;">▾</span>
@@ -2574,11 +2614,62 @@ function renderExerciseSettings(){
         </div>
       `;
     });
+    inner += `</div>`;
     inner += `<button type="button" class="icon-btn" style="width:100%;margin-top:4px;" onclick="openExercisePicker('${tabKey}',-1)">+ Add exercise</button>`;
     section.innerHTML = inner;
     container.appendChild(section);
   });
-  applyExerciseSettingsCollapsedState();
+  if(isMain) applyExerciseSettingsCollapsedState();
+}
+
+function refreshExerciseUIs(){
+  renderExerciseSettings();
+  if(wizardStep === 6) renderExerciseSettings("wizardExerciseContainer");
+}
+
+let exerciseDragState = null;
+
+function startExerciseDrag(e){
+  e.preventDefault();
+  const row = e.currentTarget.closest(".exercise-row");
+  if(!row) return;
+  exerciseDragState = { day: row.dataset.day, row };
+  row.classList.add("dragging");
+  document.addEventListener("pointermove", handleExerciseDragMove);
+  document.addEventListener("pointerup", endExerciseDrag, { once: true });
+}
+
+function handleExerciseDragMove(e){
+  if(!exerciseDragState) return;
+  const { row } = exerciseDragState;
+  const list = row.parentElement;
+  if(!list) return;
+  const rows = [...list.querySelectorAll(".exercise-row")];
+  const curIdx = rows.indexOf(row);
+  const y = e.clientY;
+  for(let i = 0; i < rows.length; i++){
+    const r = rows[i];
+    if(r === row) continue;
+    const rect = r.getBoundingClientRect();
+    const mid = rect.top + rect.height / 2;
+    if(i < curIdx && y < mid){ list.insertBefore(row, r); break; }
+    else if(i > curIdx && y > mid){ list.insertBefore(row, r.nextSibling); break; }
+  }
+}
+
+function endExerciseDrag(){
+  if(!exerciseDragState) return;
+  const { row, day } = exerciseDragState;
+  row.classList.remove("dragging");
+  document.removeEventListener("pointermove", handleExerciseDragMove);
+  const list = row.parentElement;
+  const names = [...list.querySelectorAll(".exercise-row")].map(r => r.dataset.name || "");
+  exercisesConfig[day] = names;
+  saveExercises();
+  exerciseDragState = null;
+  refreshExerciseUIs();
+  if(activeTab === day){ renderStatStrip(); renderForm(); renderHistory(); }
+  renderTabs();
 }
 
 function renderProgressSubTabs(){
@@ -2949,35 +3040,25 @@ function toggleDay(key){
   saveActiveDays();
   renderTabs();
   renderDaySettings();
-  renderWelcomeDayToggles();
+  renderDayToggleButtons("wizardDayToggles");
+}
+
+function renderDayToggleButtons(containerId){
+  const container = document.getElementById(containerId);
+  if(!container) return;
+  container.innerHTML = "";
+  Object.keys(CONFIG).forEach(key => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "day-toggle-btn" + (activeDays.includes(key) ? " active" : "");
+    btn.textContent = CONFIG[key].label;
+    btn.onclick = () => toggleDay(key);
+    container.appendChild(btn);
+  });
 }
 
 function renderDaySettings(){
-  const container = document.getElementById("dayTogglesContainer");
-  if(!container) return;
-  container.innerHTML = "";
-  Object.keys(CONFIG).forEach(key => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "day-toggle-btn" + (activeDays.includes(key) ? " active" : "");
-    btn.textContent = CONFIG[key].label;
-    btn.onclick = () => toggleDay(key);
-    container.appendChild(btn);
-  });
-}
-
-function renderWelcomeDayToggles(){
-  const container = document.getElementById("welcomeDayToggles");
-  if(!container) return;
-  container.innerHTML = "";
-  Object.keys(CONFIG).forEach(key => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "day-toggle-btn" + (activeDays.includes(key) ? " active" : "");
-    btn.textContent = CONFIG[key].label;
-    btn.onclick = () => toggleDay(key);
-    container.appendChild(btn);
-  });
+  renderDayToggleButtons("dayTogglesContainer");
 }
 
 function openModal(id){
@@ -2995,15 +3076,181 @@ function closeModal(id){
   setTimeout(()=>{ overlay.style.display = "none"; overlay.classList.remove("closing"); }, 180);
 }
 
+let wizardStep = 0; // 0 = intro (existing data?), 1..8 = onboarding steps
+
+const WIZARD_STEPS = [
+  null,
+  { title: "What's your name?", desc: "This is how you'll appear throughout the app." },
+  { title: "Training with anyone else?", desc: "Add a partner or friend to track their sessions alongside yours on the same device." },
+  { title: "Pick your colours", desc: "Used to tell everyone apart in charts and history." },
+  { title: "Choose a theme", desc: "Sets the whole app's look. You can change this anytime in Settings." },
+  { title: "Which days do you train?", desc: "Toggle the split you follow — you can change this later in Settings." },
+  { title: "Your workouts", desc: "Recommended exercises are pre-filled for each day. Tap any exercise to swap it, add or remove one, or drag ⠿ to reorder." },
+  { title: "Sets per exercise", desc: "How many sets should new exercises start with? You can still adjust any single exercise later." },
+  { title: "Rest timer", desc: "Shows a countdown between sets after logging. You can turn this on or off anytime in Settings." }
+];
+
 function showWelcome(){
-  renderWelcomeDayToggles();
-  const form = document.getElementById("welcomeGithubForm");
-  if(form) form.style.display = "none";
+  wizardStep = 0;
+  renderWizardStep();
   openModal("welcomeOverlay");
 }
 
 function closeWelcome(){
   closeModal("welcomeOverlay");
+}
+
+function wizardIntroHtml(){
+  return `
+    <h2 style="margin-bottom:4px;">👋 Welcome to GymTracker</h2>
+    <p class="confirm-message" style="margin-bottom:18px;font-size:13px;">Let's get you set up, or import any existing data instead.</p>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <button type="button" class="icon-btn" style="width:100%;text-align:left;" onclick="toggleWelcomeGithubForm()">⤵ Restore from GitHub</button>
+      <div id="welcomeGithubForm" style="display:none;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;">
+        <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;">Personal access token</label>
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+          <input type="password" id="welcomeToken" placeholder="github_pat_..." style="flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px;">
+          <button type="button" id="welcomeTokenToggle" class="icon-btn" onclick="toggleWelcomeToken()" style="padding:6px 10px;font-size:15px;" aria-label="Show/hide token">👁</button>
+        </div>
+        <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;">Repo (owner/name)</label>
+        <input type="text" id="welcomeRepo" placeholder="yourname/gym-log" style="width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px;margin-bottom:10px;">
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn-secondary" style="flex:1;" onclick="toggleWelcomeGithubForm()">Cancel</button>
+          <button type="button" class="btn-primary" style="flex:1;" onclick="handleWelcomeGithubRestore()">Restore</button>
+        </div>
+      </div>
+      <button type="button" class="icon-btn" style="width:100%;text-align:left;" onclick="handleWelcomeExcel()">⤒ Import from Excel</button>
+      <button type="button" class="btn-primary" style="width:100%;" onclick="startFreshWizard()">Start fresh — set up my account</button>
+    </div>
+  `;
+}
+
+function renderWizardStep(){
+  const el = document.getElementById("wizardContent");
+  if(!el) return;
+  if(wizardStep === 0){
+    el.innerHTML = wizardIntroHtml();
+    return;
+  }
+  const meta = WIZARD_STEPS[wizardStep];
+  el.innerHTML = `
+    <div class="wizard-progress">STEP ${wizardStep} OF 8</div>
+    <h2 class="wizard-step-title">${meta.title}</h2>
+    <p class="wizard-step-desc">${meta.desc}</p>
+    <div id="wizardStepBody"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" onclick="wizardBack()">Back</button>
+      ${wizardStep < 8
+        ? `<button type="button" class="btn-primary" onclick="wizardNext()">Next</button>`
+        : `<button type="button" class="btn-primary" onclick="wizardFinish()">Finish</button>`}
+    </div>
+  `;
+  renderWizardStepBody();
+}
+
+function renderWizardStepBody(){
+  const body = document.getElementById("wizardStepBody");
+  if(!body) return;
+  if(wizardStep === 1){
+    const nameVal = (people[0] && people[0].name !== "John Smith") ? people[0].name : "";
+    body.innerHTML = `
+      <label for="wizardNameInput">Your name</label>
+      <input type="text" id="wizardNameInput" placeholder="e.g. Alex" value="${nameVal.replace(/"/g,"&quot;")}"
+        oninput="updatePersonName(0, this.value)">
+    `;
+    setTimeout(()=>{ const inp = document.getElementById("wizardNameInput"); if(inp) inp.focus(); }, 80);
+  } else if(wizardStep === 2){
+    const hasPartner = people.length > 1;
+    body.innerHTML = `
+      <div class="wizard-yesno">
+        <button type="button" class="${!hasPartner?"active":""}" onclick="setWizardPartner(false)">Just me</button>
+        <button type="button" class="${hasPartner?"active":""}" onclick="setWizardPartner(true)">Add a partner</button>
+      </div>
+      ${hasPartner ? `
+        <label for="wizardPartnerName">Their name</label>
+        <input type="text" id="wizardPartnerName" placeholder="e.g. Sam" value="${(people[1].name||"").replace(/"/g,"&quot;")}"
+          oninput="updatePersonName(1, this.value)">
+      ` : ""}
+    `;
+  } else if(wizardStep === 3){
+    body.innerHTML = people.map((p, idx) => `
+      <div class="person-row">
+        <input type="color" class="color-swatch-input" value="${p.color}" oninput="updatePersonColor(${idx}, this.value)">
+        <div style="flex:1;font-size:14px;font-weight:700;color:var(--text);">${p.name || "(unnamed)"}</div>
+      </div>
+    `).join("");
+  } else if(wizardStep === 4){
+    body.innerHTML = `
+      <nav class="subtabs" id="wizardThemePresets"></nav>
+      <p style="font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.5;">Want a fully custom colour scheme? Set one anytime in Settings → Theme → Custom.</p>
+    `;
+    renderThemeSettings("wizardThemePresets");
+  } else if(wizardStep === 5){
+    body.innerHTML = `<div id="wizardDayToggles" style="display:flex;flex-wrap:wrap;gap:8px;"></div>`;
+    renderDayToggleButtons("wizardDayToggles");
+  } else if(wizardStep === 6){
+    body.innerHTML = `<div id="wizardExerciseContainer"></div>`;
+    renderExerciseSettings("wizardExerciseContainer");
+  } else if(wizardStep === 7){
+    body.innerHTML = `
+      <div class="set-count-row" style="justify-content:center;gap:16px;margin-top:4px;">
+        <button type="button" class="set-count-btn" onclick="adjustDefaultSetCount(-1)">−</button>
+        <span class="set-count-label" id="wizardSetCountLabel" style="font-size:15px;">${defaultSetCount} sets</span>
+        <button type="button" class="set-count-btn" onclick="adjustDefaultSetCount(1)">+</button>
+      </div>
+    `;
+  } else if(wizardStep === 8){
+    body.innerHTML = `
+      <div class="wizard-yesno">
+        <button type="button" class="${!timerSettings.restEnabled?"active":""}" onclick="setWizardRestTimer(false)">No timer</button>
+        <button type="button" class="${timerSettings.restEnabled?"active":""}" onclick="setWizardRestTimer(true)">Show rest timer</button>
+      </div>
+      ${timerSettings.restEnabled ? `<nav class="subtabs" id="wizardRestDurationTabs"></nav>` : ""}
+    `;
+    if(timerSettings.restEnabled) renderWizardRestDurationTabs();
+  }
+}
+
+function wizardBack(){ wizardStep = Math.max(0, wizardStep - 1); renderWizardStep(); }
+function wizardNext(){ wizardStep = Math.min(8, wizardStep + 1); renderWizardStep(); }
+function wizardFinish(){
+  closeWelcome();
+  showToast("You're all set 💪");
+  switchTab(activeDays.includes(activeTab) ? activeTab : activeDays[0]);
+}
+function startFreshWizard(){ wizardStep = 1; renderWizardStep(); }
+
+function setWizardPartner(want){
+  if(want && people.length <= 1){
+    people.push({ id: nextPersonId(), name: "", color: nextColor() });
+    savePeople();
+  } else if(!want && people.length > 1){
+    people.splice(1, people.length - 1);
+    savePeople();
+  }
+  renderTabs();
+  renderWizardStepBody();
+}
+
+function setWizardRestTimer(on){
+  timerSettings.restEnabled = on;
+  saveTimerSettings();
+  renderTimerSettings();
+  renderWizardStepBody();
+  refreshTimerFooter();
+}
+
+function renderWizardRestDurationTabs(){
+  const nav = document.getElementById("wizardRestDurationTabs");
+  if(!nav) return;
+  nav.innerHTML = "";
+  [30, 60, 90, 120, 180].forEach(secs => {
+    const btn = document.createElement("button");
+    btn.textContent = secs < 60 ? secs + "s" : (secs / 60) + "m";
+    btn.className = timerSettings.restDuration === secs ? "active" : "";
+    btn.onclick = () => { timerSettings.restDuration = secs; saveTimerSettings(); renderTimerSettings(); renderWizardRestDurationTabs(); };
+    nav.appendChild(btn);
+  });
 }
 
 function toggleTokenVisibility(){
@@ -3087,12 +3334,33 @@ function loadSetCounts(){ try{ return JSON.parse(localStorage.getItem(SET_COUNT_
 function saveSetCounts(){ try{ localStorage.setItem(SET_COUNT_KEY, JSON.stringify(exSetCounts)); }catch(e){} }
 
 function adjustSetCount(exName, delta){
-  const cur = exSetCounts[exName] ?? 3;
+  const cur = exSetCounts[exName] ?? defaultSetCount;
   const next = Math.max(1, Math.min(6, cur + delta));
   if(next === cur) return;
   exSetCounts[exName] = next;
   saveSetCounts();
   renderForm();
+}
+
+const DEFAULT_SET_COUNT_KEY = "gymtracker:defaultSetCount";
+let defaultSetCount = 3;
+
+function loadDefaultSetCount(){
+  try{
+    const v = parseInt(localStorage.getItem(DEFAULT_SET_COUNT_KEY), 10);
+    return (v >= 1 && v <= 6) ? v : 3;
+  }catch(e){ return 3; }
+}
+function saveDefaultSetCount(){ try{ localStorage.setItem(DEFAULT_SET_COUNT_KEY, String(defaultSetCount)); }catch(e){} }
+
+function adjustDefaultSetCount(delta){
+  defaultSetCount = Math.max(1, Math.min(6, defaultSetCount + delta));
+  saveDefaultSetCount();
+  const mainLabel = document.getElementById("defaultSetCountLabel");
+  if(mainLabel) mainLabel.textContent = defaultSetCount + " sets";
+  const wizardLabel = document.getElementById("wizardSetCountLabel");
+  if(wizardLabel) wizardLabel.textContent = defaultSetCount + " sets";
+  if(CONFIG[activeTab]) renderForm();
 }
 
 const TIMER_SETTINGS_KEY = "gymtracker:timerSettings";
@@ -3123,46 +3391,75 @@ function formatTime(secs){
   return m + ":" + String(s).padStart(2, "0");
 }
 
-function showTimerWidget(){
+let timerRunState = "idle"; // "idle" | "running" | "paused" | "done"
+let lapCount = 0;
+
+function refreshTimerFooter(){
   const w = document.getElementById("timerWidget");
+  const main = document.querySelector("main");
+  const shouldShow = (timerSettings.restEnabled && !!CONFIG[activeTab]) || timerRunState !== "idle";
+  if(w) w.classList.toggle("visible", shouldShow);
+  if(main) main.classList.toggle("has-timer-footer", shouldShow);
+  if(!shouldShow) return;
+
   const labelEl = document.getElementById("timerLabel");
-  if(labelEl) labelEl.textContent = timerMode === "rest" ? "REST" : "TIMER";
-  if(w) w.style.display = "flex";
+  const display = document.getElementById("timerDisplay");
+  const startBtn = document.getElementById("timerStartBtn");
+  const pauseBtn = document.getElementById("timerPauseBtn");
+  const stopBtn = document.getElementById("timerStopBtn");
+  const lapBtn = document.getElementById("timerLapBtn");
+  if(!labelEl || !display || !startBtn) return;
+
+  labelEl.textContent = timerMode === "rest" ? "REST TIMER" : "STOPWATCH";
+  if(timerRunState === "done"){
+    display.classList.add("done");
+    display.textContent = "Done ✓";
+  } else {
+    display.classList.remove("done");
+    if(timerMode === "rest") display.textContent = formatTime(timerRunState === "idle" ? timerSettings.restDuration : Math.max(0, restRemaining));
+    else display.textContent = formatTime(challengeElapsed);
+  }
+
+  startBtn.textContent = timerRunState === "paused" ? "Resume" : "Start";
+  startBtn.disabled = timerRunState === "running";
+  pauseBtn.disabled = timerRunState !== "running";
+  stopBtn.disabled = timerRunState === "idle";
+  lapBtn.disabled = timerRunState !== "running";
 }
 
-function hideTimerWidget(){
-  if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
-  if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
-  const w = document.getElementById("timerWidget");
-  if(w) w.style.display = "none";
-}
-
-function updateTimerDisplay(text, done){
-  const el = document.getElementById("timerDisplay");
-  if(!el) return;
-  el.textContent = text;
-  el.classList.toggle("done", !!done);
+function timerResumeInterval(){
+  timerRunState = "running";
+  if(timerMode === "rest"){
+    restIntervalId = setInterval(() => {
+      restRemaining--;
+      if(restRemaining <= 0){
+        clearInterval(restIntervalId); restIntervalId = null;
+        timerRunState = "done";
+        if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        refreshTimerFooter();
+        setTimeout(() => {
+          if(timerRunState === "done"){ timerRunState = "idle"; refreshTimerFooter(); }
+        }, 2500);
+      } else {
+        refreshTimerFooter();
+      }
+    }, 1000);
+  } else {
+    challengeIntervalId = setInterval(() => {
+      challengeElapsed++;
+      refreshTimerFooter();
+    }, 1000);
+  }
+  refreshTimerFooter();
 }
 
 function startRestTimer(){
-  if(!timerSettings.restEnabled) return;
   if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
   if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
   timerMode = "rest";
   restRemaining = timerSettings.restDuration;
-  updateTimerDisplay(formatTime(restRemaining), false);
-  showTimerWidget();
-  restIntervalId = setInterval(() => {
-    restRemaining--;
-    if(restRemaining <= 0){
-      clearInterval(restIntervalId); restIntervalId = null;
-      updateTimerDisplay("Done ✓", true);
-      if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
-      setTimeout(() => hideTimerWidget(), 2500);
-    } else {
-      updateTimerDisplay(formatTime(restRemaining), false);
-    }
-  }, 1000);
+  lapCount = 0;
+  timerResumeInterval();
 }
 
 function startChallengeTimer(){
@@ -3170,17 +3467,34 @@ function startChallengeTimer(){
   if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
   timerMode = "challenge";
   challengeElapsed = 0;
-  updateTimerDisplay(formatTime(challengeElapsed), false);
-  showTimerWidget();
-  challengeIntervalId = setInterval(() => {
-    challengeElapsed++;
-    updateTimerDisplay(formatTime(challengeElapsed), false);
-  }, 1000);
+  lapCount = 0;
+  timerResumeInterval();
 }
 
-function restartTimer(){
-  if(timerMode === "rest") startRestTimer();
-  else startChallengeTimer();
+function timerStart(){
+  if(timerRunState === "paused"){ timerResumeInterval(); return; }
+  startRestTimer();
+}
+
+function timerPause(){
+  if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
+  if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
+  timerRunState = "paused";
+  refreshTimerFooter();
+}
+
+function timerStop(){
+  if(restIntervalId){ clearInterval(restIntervalId); restIntervalId = null; }
+  if(challengeIntervalId){ clearInterval(challengeIntervalId); challengeIntervalId = null; }
+  timerRunState = "idle";
+  refreshTimerFooter();
+}
+
+function timerLap(){
+  if(timerRunState !== "running") return;
+  lapCount++;
+  const t = timerMode === "rest" ? formatTime(timerSettings.restDuration - restRemaining) : formatTime(challengeElapsed);
+  showToast(`Lap ${lapCount} — ${t}`);
 }
 
 function renderTimerSettings(){
@@ -3208,6 +3522,7 @@ function handleRestTimerToggle(checked){
   timerSettings.restEnabled = checked;
   saveTimerSettings();
   renderTimerSettings();
+  refreshTimerFooter();
 }
 
 function handleChallengeTimerToggle(checked){
@@ -3280,6 +3595,7 @@ async function init(){
   backupSettingsCollapsed = loadBackupSettingsCollapsed();
   timerSettings = loadTimerSettings();
   exSetCounts = loadSetCounts();
+  defaultSetCount = loadDefaultSetCount();
   timerSettingsCollapsed = loadTimerSettingsCollapsed();
   creditsSettingsCollapsed = loadCreditsSettingsCollapsed();
   currentThemeState = loadTheme();
@@ -3289,6 +3605,7 @@ async function init(){
   renderStatStrip();
   renderForm();
   renderHistory();
+  refreshTimerFooter();
   if(isNewUser) showWelcome();
   setTimeout(()=> document.body.classList.add("transitions-ready"), 50);
 }
@@ -3342,6 +3659,30 @@ function openSettings(){
 
 function closeSettings(){
   closeModal("settingsOverlay");
+}
+
+function showChoice(message, cancelLabel, okLabel){
+  return new Promise(resolve => {
+    document.getElementById("confirmMessage").textContent = message;
+    const okBtn = document.getElementById("confirmOkBtn");
+    const cancelBtn = document.getElementById("confirmCancelBtn");
+    const prevOk = okBtn.textContent, prevCancel = cancelBtn.textContent;
+    okBtn.textContent = okLabel;
+    cancelBtn.textContent = cancelLabel;
+    openModal("confirmOverlay");
+    function cleanup(result){
+      closeModal("confirmOverlay");
+      okBtn.removeEventListener("click", onOk);
+      cancelBtn.removeEventListener("click", onCancel);
+      okBtn.textContent = prevOk;
+      cancelBtn.textContent = prevCancel;
+      resolve(result);
+    }
+    function onOk(){ cleanup(true); }
+    function onCancel(){ cleanup(false); }
+    okBtn.addEventListener("click", onOk);
+    cancelBtn.addEventListener("click", onCancel);
+  });
 }
 
 function showConfirm(message){
@@ -3601,13 +3942,25 @@ async function deleteAllData(){
   );
   if(!secondConfirm) return;
 
+  const keepProfile = await showChoice(
+    "Keep your profile (people, colours, theme, days, exercises, and settings) and only clear logged workout history? Or reset everything and go through setup again?",
+    "Reset everything",
+    "Keep my profile"
+  );
+
   try{
     Object.keys(CONFIG).forEach(tabKey => {
       localStorage.removeItem(CONFIG[tabKey].key);
     });
-    localStorage.removeItem(PEOPLE_KEY);
-    localStorage.removeItem(EXERCISES_KEY);
-    localStorage.removeItem(THEME_KEY);
+    if(!keepProfile){
+      localStorage.removeItem(PEOPLE_KEY);
+      localStorage.removeItem(EXERCISES_KEY);
+      localStorage.removeItem(THEME_KEY);
+      localStorage.removeItem(TIMER_SETTINGS_KEY);
+      localStorage.removeItem(SET_COUNT_KEY);
+      localStorage.removeItem(DEFAULT_SET_COUNT_KEY);
+      localStorage.removeItem(ACTIVE_DAYS_KEY);
+    }
     localStorage.removeItem("gymtracker:statsCollapsed");
     localStorage.removeItem("gymtracker:formCollapsed");
     localStorage.removeItem("gymtracker:historyCollapsed");
@@ -3615,17 +3968,14 @@ async function deleteAllData(){
     localStorage.removeItem("gymtracker:peopleSettingsCollapsed");
     localStorage.removeItem("gymtracker:exerciseSettingsCollapsed");
     localStorage.removeItem("gymtracker:backupSettingsCollapsed");
-    localStorage.removeItem(TIMER_SETTINGS_KEY);
     localStorage.removeItem("gymtracker:timerSettingsCollapsed");
     localStorage.removeItem("gymtracker:creditsSettingsCollapsed");
-    localStorage.removeItem(SET_COUNT_KEY);
-    localStorage.removeItem(ACTIVE_DAYS_KEY);
     localStorage.removeItem("gymtrackerGithubConfig");
   }catch(e){
     console.error("Couldn't clear storage", e);
   }
 
-  showToast("All data deleted");
+  showToast(keepProfile ? "Workout history deleted" : "All data deleted");
   setTimeout(() => { window.location.reload(); }, 600);
 }
 

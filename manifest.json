@@ -1,0 +1,12 @@
+{
+  "name": "GymTracker",
+  "short_name": "GymTracker",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0f1519",
+  "theme_color": "#0f1519",
+  "icons": [
+    { "src": "assets-src/icon-1024.png", "sizes": "1024x1024", "type": "image/png" },
+    { "src": "assets-src/icon-1024-maskable.png", "sizes": "1024x1024", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.5.1.13 — 2026-09-09
+### Added
+- **Proper Web App Manifest** (`manifest.json`, `display: standalone`) and a `theme-color` meta tag that follows the active in-app theme — the app previously relied only on the older Apple-specific meta tags with nothing backing them up
+
+### Fixed
+- **Further work on the iOS Home Screen dark-bar issue**: research turned up a confirmed Apple Developer Forums bug where Safari can return `0` for `env(safe-area-inset-bottom)` while its toolbar is in a "hidden" state (exactly what standalone mode mimics), which would make our own padding math under-shoot. `html`/`body` now use `100dvh` (dynamic viewport height, the modern fix for this whole problem class, with `100%` kept as a fallback), and the timer footer's bottom padding has a `max(24px, ...)` floor so it can't collapse to near-nothing if the inset misreports as zero
+
+---
+
 ## v0.5.1.12 — 2026-09-09
 ### Fixed
 - **Dark bar below the timer footer on iOS "Add to Home Screen" mode** — this turned out to be a known iOS Safari standalone-mode bug where `position:fixed` elements can desync from the true visual bottom after the on-screen keyboard opens/closes (which happens constantly while typing weights). Now uses the VisualViewport API to actively re-align the timer footer to the real visual bottom instead of papering over it with a strip (the v0.5.1.11 native Android fix was correct but irrelevant — that screenshot was from iOS, not the Android APK)

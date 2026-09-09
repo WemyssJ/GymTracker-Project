@@ -143,8 +143,6 @@
   .chart-legend{display:flex;gap:16px;margin-bottom:12px;}
   .legend-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:700;}
   .swatch{width:10px;height:10px;border-radius:3px;display:inline-block;}
-  .chart-view-toggles{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px;}
-  .chart-view-toggles .subtabs{margin-bottom:0;}
 
   #progressCanvas{width:100%;display:block;background:var(--panel);
     border:1px solid var(--line);border-radius:12px;}
@@ -442,6 +440,22 @@
   .ex-view-tab.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
   .ex-info-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:14px;}
 
+  /* ── Back to top ───────────────────────────────────── */
+  .back-to-top-btn{
+    position:fixed;right:16px;bottom:calc(20px + env(safe-area-inset-bottom));
+    width:44px;height:44px;border-radius:50%;
+    background:var(--panel);border:1px solid var(--line);color:var(--amber);
+    font-size:19px;font-weight:800;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 14px rgba(0,0,0,0.4);cursor:pointer;z-index:40;
+    opacity:0;pointer-events:none;transform:translateY(8px);
+    transition:opacity 0.2s ease,transform 0.2s ease;
+  }
+  .back-to-top-btn.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
+  body:has(main.has-timer-footer) .back-to-top-btn{bottom:calc(var(--timer-footer-h, 128px) + 16px);}
+  @media(min-width:500px){
+    .back-to-top-btn{right:calc(50% - 199px);}
+  }
+
   /* ── Timer footer ──────────────────────────────────── */
   main.has-timer-footer{padding-bottom:var(--timer-footer-h, 128px);}
   .timer-widget{
@@ -525,7 +539,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.4</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.5</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -560,10 +574,7 @@
     <nav class="subtabs collapsible-body" id="progressExerciseTabs"></nav>
 
     <div class="chart-legend" id="chartLegend"></div>
-    <div class="chart-view-toggles" id="chartViewToggles">
-      <nav class="subtabs" id="progressAssistedToggle" style="display:none;"></nav>
-      <nav class="subtabs" id="progressMetricToggle"></nav>
-    </div>
+    <nav class="subtabs" id="progressAssistedToggle" style="display:none;"></nav>
     <canvas id="progressCanvas" height="300"></canvas>
     <p id="progressChartCaption" style="font-size:11.5px;color:var(--muted);margin-top:10px;">Line shows weight (kg) logged each session over time.</p>
 
@@ -582,8 +593,6 @@
   </div>
 
   <div id="settingsView" style="display:none;">
-    <nav class="subtabs" id="settingsJumpNav" style="margin-bottom:20px;"></nav>
-
     <div class="section-label" id="settingsDaysLabel" style="margin-top:0;">Days</div>
     <div id="dayTogglesContainer" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;"></div>
     <p style="font-size:11.5px;color:var(--muted);margin:0 0 26px 0;line-height:1.5;">Toggle which workout days appear. Disabling a day hides its tab but keeps all logged data.</p>
@@ -685,6 +694,8 @@
 </main>
 
 <div id="toast"></div>
+
+<button type="button" id="backToTopBtn" class="back-to-top-btn" onclick="scrollToTop()" aria-label="Back to top">↑</button>
 
 <div id="timerWidget" class="timer-widget">
   <div class="timer-widget-info">
@@ -1595,7 +1606,10 @@ let activeTab = "push";
 let lastActiveDayTab = "push";
 let progressSubTab = "push";
 let progressExercise = null;
-let progressAssistedFilter = null; // null = no toggle needed (single mode); true/false = showing that mode only
+// null = not yet initialized for the current exercise (defaults to true once
+// renderProgressView sees this exercise has both modes logged)
+let progressShowUnassisted = null;
+let progressShowAssisted = null;
 let cache = {}; // { push: [session, ...], pull: [...], leg: [...] }
 const TAB_ORDER = [...Object.keys(CONFIG), "progress", "settings"];
 
@@ -2068,29 +2082,6 @@ async function saveTab(tabKey){
 function topSetWeight(sets){
   if(!sets) return null;
   const vals = sets.map(s => s.wt).filter(v => typeof v === "number");
-  return vals.length ? Math.max(...vals) : null;
-}
-
-// Epley formula — the standard estimate of a one-rep max from a set done
-// for more than one rep. A 1-rep set needs no extrapolation; sets with no
-// usable weight/reps (blank, "0", or old free-text notes) are skipped.
-function estimatedOneRepMax(wt, reps){
-  if(typeof wt !== "number" || wt <= 0) return null;
-  // Only a clean whole-number rep count is trustworthy here — plenty of
-  // older sessions have free-text reps notes ("57.5kg (4,4), 55kg (4)",
-  // "2x, 4r"), and parseInt would happily read "57" or "2" off the front
-  // of those and feed a nonsense rep count into the formula, producing
-  // wildly inflated 1RM spikes that were never actually lifted.
-  const trimmed = String(reps ?? "").trim();
-  if(!/^\d{1,3}$/.test(trimmed)) return null;
-  const r = parseInt(trimmed, 10);
-  if(r < 1 || r > 50) return null; // beyond this, a rep-max estimate isn't meaningful anyway
-  return r === 1 ? wt : wt * (1 + r / 30);
-}
-
-function topSetEstimated1RM(sets){
-  if(!sets) return null;
-  const vals = sets.map(s => estimatedOneRepMax(s.wt, s.reps)).filter(v => v !== null);
   return vals.length ? Math.max(...vals) : null;
 }
 
@@ -2908,7 +2899,6 @@ async function switchTab(tabKey){
 
   if(tabKey === "settings"){
     document.getElementById("settingsView").style.display = "block";
-    renderSettingsJumpNav();
     renderDaySettings();
     renderPeopleSettings();
     renderExerciseSettings();
@@ -3187,7 +3177,8 @@ function renderProgressSubTabs(){
     btn.onclick = () => {
       progressSubTab = key;
       progressExercise = null; // reset to first exercise of new day type
-      progressAssistedFilter = null;
+      progressShowUnassisted = null;
+      progressShowAssisted = null;
       renderProgressView();
     };
     nav.appendChild(btn);
@@ -3201,7 +3192,7 @@ function renderProgressExerciseTabs(cfg){
     const btn = document.createElement("button");
     btn.textContent = ex;
     btn.className = ex === progressExercise ? "active" : "";
-    btn.onclick = () => { progressExercise = ex; progressAssistedFilter = null; renderProgressView(); };
+    btn.onclick = () => { progressExercise = ex; progressShowUnassisted = null; progressShowAssisted = null; renderProgressView(); };
     nav.appendChild(btn);
   });
 }
@@ -3219,62 +3210,66 @@ function sessionModesForExercise(tabKey, exercise){
   return { hasAssisted, hasUnassisted };
 }
 
+// Independent on/off checkboxes rather than an either/or switch — assisted
+// and unassisted use unrelated weight scales, but the user may still want
+// to see both plotted at once (as two separately-styled lines per person)
+// rather than being forced to pick just one.
+function toggleProgressShowUnassisted(){
+  if(progressShowUnassisted && !progressShowAssisted){
+    showToast("At least one of Unassisted/Assisted has to stay on");
+    return;
+  }
+  progressShowUnassisted = !progressShowUnassisted;
+  renderProgressView();
+}
+function toggleProgressShowAssisted(){
+  if(progressShowAssisted && !progressShowUnassisted){
+    showToast("At least one of Unassisted/Assisted has to stay on");
+    return;
+  }
+  progressShowAssisted = !progressShowAssisted;
+  renderProgressView();
+}
+
 function renderProgressAssistedToggle(hasAssisted, hasUnassisted){
   const nav = document.getElementById("progressAssistedToggle");
   const showToggle = hasAssisted && hasUnassisted;
   nav.style.display = showToggle ? "flex" : "none";
   if(!showToggle) return;
   nav.innerHTML = "";
-  [["Unassisted", false], ["Assisted", true]].forEach(([label, val])=>{
+  [["Unassisted", progressShowUnassisted, toggleProgressShowUnassisted], ["Assisted", progressShowAssisted, toggleProgressShowAssisted]].forEach(([label, active, onToggle])=>{
     const btn = document.createElement("button");
     btn.textContent = label;
-    btn.className = progressAssistedFilter === val ? "active" : "";
-    btn.onclick = () => { progressAssistedFilter = val; renderProgressView(); };
+    btn.className = active ? "active" : "";
+    btn.onclick = onToggle;
     nav.appendChild(btn);
   });
 }
 
-function getExerciseSeries(tabKey, exercise, assistedFilter, metric){
+function getExerciseSeries(tabKey, exercise, showUnassisted, showAssisted){
   return [...cache[tabKey]]
     .filter(sess => sess.entries[exercise])
-    .filter(sess => assistedFilter === null || !!sess.entries[exercise].assisted === assistedFilter)
+    .filter(sess => !!sess.entries[exercise].assisted ? showAssisted : showUnassisted)
     .sort((a,b) => a.date.localeCompare(b.date))
     .map(sess => {
-      const point = { date: sess.date, values: {} };
+      const point = { date: sess.date, assisted: !!sess.entries[exercise].assisted, values: {} };
       people.forEach(p => {
-        const sets = getPersonSets(sess.entries[exercise], p.id);
-        point.values[p.id] = metric === "1rm" ? topSetEstimated1RM(sets) : topSetWeight(sets);
+        point.values[p.id] = topSetWeight(getPersonSets(sess.entries[exercise], p.id));
       });
       return point;
     });
 }
 
-let progressMetric = "weight"; // "weight" | "1rm"
-
-function renderProgressMetricToggle(){
-  const nav = document.getElementById("progressMetricToggle");
-  if(!nav) return;
-  nav.innerHTML = "";
-  [["Weight", "weight"], ["Est. 1RM", "1rm"]].forEach(([label, val])=>{
-    const btn = document.createElement("button");
-    btn.textContent = label;
-    btn.className = progressMetric === val ? "active" : "";
-    btn.onclick = () => { progressMetric = val; renderProgressView(); };
-    nav.appendChild(btn);
-  });
-}
-
-function renderChartLegend(){
+function renderChartLegend(showBothModes){
   const legend = document.getElementById("chartLegend");
   legend.innerHTML = people
-    .map(p => `<span class="legend-item"><span class="swatch" style="background:${p.color}"></span>${p.name}</span>`)
+    .map(p => `<span class="legend-item"><span class="swatch" style="background:${p.color}"></span>${p.name}${showBothModes ? ` <span style="opacity:0.55;">(faded = assisted)</span>` : ""}</span>`)
     .join("");
 }
 
 function renderProgressView(){
   if(!activeDays.includes(progressSubTab)) progressSubTab = activeDays[0];
   renderProgressSubTabs();
-  renderChartLegend();
   const cfg = CONFIG[progressSubTab];
   if(!progressExercise || !getExercises(progressSubTab).includes(progressExercise)){
     progressExercise = getExercises(progressSubTab)[0];
@@ -3283,21 +3278,29 @@ function renderProgressView(){
 
   const modes = sessionModesForExercise(progressSubTab, progressExercise);
   const hasBoth = modes.hasAssisted && modes.hasUnassisted;
-  if(hasBoth && progressAssistedFilter === null){
-    progressAssistedFilter = !!assistedState[progressExercise];
+  if(hasBoth){
+    if(progressShowUnassisted === null) progressShowUnassisted = true;
+    if(progressShowAssisted === null) progressShowAssisted = true;
+  } else {
+    progressShowUnassisted = modes.hasUnassisted;
+    progressShowAssisted = modes.hasAssisted;
   }
-  if(!hasBoth) progressAssistedFilter = null;
+  renderChartLegend(hasBoth && progressShowUnassisted && progressShowAssisted);
   renderProgressAssistedToggle(modes.hasAssisted, modes.hasUnassisted);
-  renderProgressMetricToggle();
 
-  const series = getExerciseSeries(progressSubTab, progressExercise, progressAssistedFilter, progressMetric);
-  drawLineChart(series, progressMetric);
+  const series = getExerciseSeries(progressSubTab, progressExercise, progressShowUnassisted, progressShowAssisted);
+  drawLineChart(series);
   const caption = document.getElementById("progressChartCaption");
   if(caption){
-    const metricLabel = progressMetric === "1rm" ? "estimated 1-rep max (kg)" : "weight (kg)";
-    const base = hasBoth
-      ? `Line shows ${metricLabel} logged each ${progressAssistedFilter ? "assisted" : "unassisted"} session over time.`
-      : `Line shows ${metricLabel} logged each session over time.`;
+    const showingBoth = hasBoth && progressShowUnassisted && progressShowAssisted;
+    let base;
+    if(showingBoth){
+      base = "Line shows weight (kg) logged each session over time — solid for unassisted, faded for assisted.";
+    } else if(hasBoth){
+      base = `Line shows weight (kg) logged each ${progressShowAssisted ? "assisted" : "unassisted"} session over time.`;
+    } else {
+      base = "Line shows weight (kg) logged each session over time.";
+    }
     caption.textContent = series.length >= 2
       ? base + " Dashed line projects the pace to aim for, based on your own trend so far."
       : base;
@@ -3362,7 +3365,7 @@ function linearTrend(points){
   return { a, b };
 }
 
-function drawLineChart(series, metric){
+function drawLineChart(series){
   const canvas = document.getElementById("progressCanvas");
   const dpr = window.devicePixelRatio || 1;
   const cssWidth = canvas.parentElement.clientWidth;
@@ -3391,7 +3394,7 @@ function drawLineChart(series, metric){
 
   const n = series.length;
   // Reserve the last quarter of the chart for a dashed "expected pace"
-  // projection, extrapolated from each person's own trend so far — real
+  // projection, extrapolated from each line's own trend so far — real
   // data is drawn at the same point-to-point spacing, just compressed into
   // the first three-quarters of the width instead of the full chart.
   const canProject = n >= 2;
@@ -3401,26 +3404,50 @@ function drawLineChart(series, metric){
   const xPos = i => paddingLeft + (n > 1 ? i * xStep : dataW / 2);
   const projIndex = (n - 1) + (n - 1) / 3; // same on-screen spacing as real points, extended
 
-  // Compute each person's projected endpoint up front so it can factor into
-  // the y-axis scale (otherwise a rising trend line could run off the top).
-  const projections = {}; // personId -> { fromI, fromVal, val }
+  // series may mix unassisted and assisted sessions (when the user has both
+  // toggled on) — one "line" per person per mode actually present, so each
+  // mode gets its own gap-aware path and its own trend/projection. Assisted
+  // is drawn at reduced opacity to distinguish it from unassisted, since
+  // dashing is already used for the projection.
+  const hasUnassistedPts = series.some(pt => !pt.assisted);
+  const hasAssistedPts = series.some(pt => pt.assisted);
+  const modes = [];
+  if(hasUnassistedPts) modes.push({ assisted: false, opacity: 1 });
+  if(hasAssistedPts) modes.push({ assisted: true, opacity: 0.5 });
+
+  // Each line only walks the indices belonging to its own mode — a date
+  // that belongs to the OTHER enabled mode is skipped over silently rather
+  // than breaking the line, since it isn't a real gap in this mode's own
+  // history. A break is still drawn for genuine gaps (this mode's own
+  // session with no usable weight, e.g. an untouched exercise entry).
+  const lines = [];
+  people.forEach(p => {
+    modes.forEach(mode => {
+      const ownIndices = [];
+      series.forEach((pt, i) => { if(pt.assisted === mode.assisted) ownIndices.push(i); });
+      const values = series.map(pt => pt.values[p.id]);
+      if(!ownIndices.some(i => typeof values[i] === "number")) return;
+      lines.push({ color: p.color, opacity: mode.opacity, ownIndices, values });
+    });
+  });
+
   if(canProject){
-    people.forEach(p => {
+    lines.forEach(line => {
       const pts = [];
       let lastI = null, lastVal = null;
-      series.forEach((pt, i) => {
-        const val = pt.values[p.id];
+      line.ownIndices.forEach(i => {
+        const val = line.values[i];
         if(typeof val === "number"){ pts.push({ i, val }); lastI = i; lastVal = val; }
       });
       const trend = linearTrend(pts);
       if(!trend || lastI === null) return;
       const projVal = trend.a + trend.b * projIndex;
-      projections[p.id] = { fromI: lastI, fromVal: lastVal, val: Math.max(0, projVal) };
+      line.projection = { fromI: lastI, fromVal: lastVal, val: Math.max(0, projVal) };
     });
   }
 
-  const allVals = series.flatMap(pt => people.map(p => pt.values[p.id]))
-    .concat(Object.values(projections).map(p => p.val))
+  const allVals = lines.flatMap(l => l.ownIndices.map(i => l.values[i]))
+    .concat(lines.filter(l => l.projection).map(l => l.projection.val))
     .filter(v => typeof v === "number");
   const maxVal = Math.max(1, ...allVals);
   const niceMax = Math.ceil(maxVal / 10) * 10 || 10;
@@ -3442,13 +3469,14 @@ function drawLineChart(series, metric){
     ctx.fillText(Math.round(val), paddingLeft - 6, y);
   }
 
-  function drawSeries(personId, color){
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
+  lines.forEach(line => {
+    ctx.strokeStyle = line.color;
+    ctx.fillStyle = line.color;
+    ctx.globalAlpha = line.opacity;
     ctx.lineWidth = 2.5;
     let drawing = false;
-    series.forEach((pt, i) => {
-      const val = pt.values[personId];
+    line.ownIndices.forEach(i => {
+      const val = line.values[i];
       const x = xPos(i);
       if(typeof val === "number"){
         const y = yFor(val);
@@ -3460,8 +3488,8 @@ function drawLineChart(series, metric){
       }
     });
     if(drawing) ctx.stroke();
-    series.forEach((pt, i) => {
-      const val = pt.values[personId];
+    line.ownIndices.forEach(i => {
+      const val = line.values[i];
       if(typeof val === "number"){
         const x = xPos(i);
         const y = yFor(val);
@@ -3470,22 +3498,20 @@ function drawLineChart(series, metric){
         ctx.fill();
       }
     });
-  }
-
-  people.forEach(p => drawSeries(p.id, p.color));
+    ctx.globalAlpha = 1;
+  });
 
   if(canProject){
     const projX = paddingLeft + dataW + projW;
-    people.forEach(p => {
-      const proj = projections[p.id];
-      if(!proj) return;
-      ctx.strokeStyle = p.color;
-      ctx.globalAlpha = 0.6;
+    lines.forEach(line => {
+      if(!line.projection) return;
+      ctx.strokeStyle = line.color;
+      ctx.globalAlpha = line.opacity * 0.6;
       ctx.lineWidth = 2;
       ctx.setLineDash([5, 4]);
       ctx.beginPath();
-      ctx.moveTo(xPos(proj.fromI), yFor(proj.fromVal));
-      ctx.lineTo(projX, yFor(proj.val));
+      ctx.moveTo(xPos(line.projection.fromI), yFor(line.projection.fromVal));
+      ctx.lineTo(projX, yFor(line.projection.val));
       ctx.stroke();
       ctx.setLineDash([]);
       ctx.globalAlpha = 1;
@@ -3543,7 +3569,7 @@ function drawLineChart(series, metric){
   ctx.rotate(-Math.PI / 2);
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
-  ctx.fillText(metric === "1rm" ? "Est. 1RM (kg)" : "Weight (kg)", 0, 0);
+  ctx.fillText("Weight (kg)", 0, 0);
   ctx.restore();
 }
 
@@ -3737,36 +3763,6 @@ function detectNewUser(){
   }catch(e){
     return false;
   }
-}
-
-const SETTINGS_JUMP_SECTIONS = [
-  { label: "Days", labelId: "settingsDaysLabel" },
-  { label: "Theme", labelId: "settingsThemeLabel", isCollapsed: () => themeSettingsCollapsed, toggle: toggleThemeCollapsed },
-  { label: "People", labelId: "settingsPeopleLabel", isCollapsed: () => peopleSettingsCollapsed, toggle: togglePeopleCollapsed },
-  { label: "Exercises", labelId: "settingsExerciseLabel", isCollapsed: () => exerciseSettingsCollapsed, toggle: toggleExerciseCollapsed },
-  { label: "Backup", labelId: "settingsBackupLabel", isCollapsed: () => backupSettingsCollapsed, toggle: toggleBackupCollapsed },
-  { label: "Timers", labelId: "settingsTimerLabel", isCollapsed: () => timerSettingsCollapsed, toggle: toggleTimerCollapsed },
-  { label: "Credits", labelId: "settingsCreditsLabel", isCollapsed: () => creditsSettingsCollapsed, toggle: toggleCreditsCollapsed }
-];
-// Function declarations are hoisted, so referencing toggleThemeCollapsed
-// etc. here is safe even though they're defined later in the file.
-
-function renderSettingsJumpNav(){
-  const nav = document.getElementById("settingsJumpNav");
-  if(!nav) return;
-  nav.innerHTML = "";
-  SETTINGS_JUMP_SECTIONS.forEach(section => {
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.textContent = section.label;
-    btn.onclick = () => jumpToSettingsSection(section);
-    nav.appendChild(btn);
-  });
-}
-
-function jumpToSettingsSection(section){
-  if(section.isCollapsed && section.isCollapsed() && section.toggle) section.toggle();
-  document.getElementById(section.labelId)?.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
 function toggleDay(key){
@@ -4631,6 +4627,19 @@ async function init(){
   setTimeout(()=> document.body.classList.add("transitions-ready"), 50);
   setupViewportFooterFix();
   setupTimerFooterObserver();
+  setupBackToTopButton();
+}
+
+function scrollToTop(){
+  document.body.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function setupBackToTopButton(){
+  const btn = document.getElementById("backToTopBtn");
+  if(!btn) return;
+  document.body.addEventListener("scroll", () => {
+    btn.classList.toggle("visible", document.body.scrollTop > 400);
+  }, { passive: true });
 }
 
 // If the app closed/crashed mid-session, formDrafts (persisted on every

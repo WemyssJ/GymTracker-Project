@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.7.5 — 2026-09-09
+### Removed
+- **Estimated 1RM** — removed the Weight/Est. 1RM toggle and its chart code entirely
+
+### Changed
+- **Assisted/Unassisted on Progress is now two independent on/off toggles instead of an either/or switch** — turn each on or off to see just one mode or both at once. With both on, each person gets two lines (solid for unassisted, faded for assisted), each with its own dashed pace projection; at least one has to stay on
+- **Settings jump nav removed** in favor of a persistent "back to top" button (bottom-right, appears once you've scrolled down, sits above the timer footer when it's showing)
+
+### Fixed
+- A date belonging to the other (currently also-shown) mode no longer breaks a line's path — it's skipped over rather than treated as a gap, so an unassisted and assisted line that alternate session-to-session both draw as continuous trends instead of scattered dots
+
+---
+
 ## v0.7.4 — 2026-09-09
 ### Fixed
 - **Estimated 1RM could spike to implausible numbers** — the formula was reading a rep count off the front of old free-text reps notes (e.g. "57.5kg (4,4), 55kg (4)" → read as 57 reps), producing wildly inflated estimates. It now only estimates from a clean whole-number rep count and skips anything else, same as it skips a blank set

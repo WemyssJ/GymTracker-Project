@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.2 — 2026-09-09
+### Added
+- **Projected pace line on Progress** — a dashed line now extends from your last logged point across the final quarter of the chart, showing where you'd land if you kept up your own historical rate of improvement (a simple linear trend fit to your actual data, not a fixed target). Needs at least 2 sessions logged for that exercise/person to appear; real data is drawn at the same point spacing, just fit into the first three-quarters of the chart to make room
+
+---
+
 ## v0.7.1 — 2026-09-09
 ### Changed
 - **Moved the Assisted/Unassisted and Weight/Est. 1RM toggles on Progress** — they sat as two more full-width pill rows between the Exercise picker and the chart, adding to an already tall stack of button rows before you reached the chart. They now sit together in one combined row directly above the chart, right after the people legend, grouping "how to view this chart" next to the chart itself instead of mixed in with "which exercise to view"

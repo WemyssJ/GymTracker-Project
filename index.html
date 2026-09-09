@@ -522,7 +522,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.1</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.2</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -3260,9 +3260,12 @@ function renderProgressView(){
   const caption = document.getElementById("progressChartCaption");
   if(caption){
     const metricLabel = progressMetric === "1rm" ? "estimated 1-rep max (kg)" : "weight (kg)";
-    caption.textContent = hasBoth
+    const base = hasBoth
       ? `Line shows ${metricLabel} logged each ${progressAssistedFilter ? "assisted" : "unassisted"} session over time.`
       : `Line shows ${metricLabel} logged each session over time.`;
+    caption.textContent = series.length >= 2
+      ? base + " Dashed line projects the pace to aim for, based on your own trend so far."
+      : base;
   }
   renderHeatmap();
   applyProgressWorkoutCollapsedState();
@@ -3310,6 +3313,20 @@ function renderHeatmap(){
   grid.innerHTML = html;
 }
 
+// Ordinary least-squares fit over (index, value) pairs — used to project a
+// "keep this pace up" trend line forward from a person's own history.
+function linearTrend(points){
+  const n = points.length;
+  if(n < 2) return null;
+  let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+  points.forEach(({i, val}) => { sumX += i; sumY += val; sumXY += i * val; sumXX += i * i; });
+  const denom = n * sumXX - sumX * sumX;
+  if(denom === 0) return null; // all points at the same index — no meaningful slope
+  const b = (n * sumXY - sumX * sumY) / denom;
+  const a = (sumY - b * sumX) / n;
+  return { a, b };
+}
+
 function drawLineChart(series){
   const canvas = document.getElementById("progressCanvas");
   const dpr = window.devicePixelRatio || 1;
@@ -3337,9 +3354,42 @@ function drawLineChart(series){
   const chartH = cssHeight - paddingTop - paddingBottom;
   const baseY = paddingTop + chartH;
 
-  const allVals = series.flatMap(pt => people.map(p => pt.values[p.id])).filter(v => typeof v === "number");
+  const n = series.length;
+  // Reserve the last quarter of the chart for a dashed "expected pace"
+  // projection, extrapolated from each person's own trend so far — real
+  // data is drawn at the same point-to-point spacing, just compressed into
+  // the first three-quarters of the width instead of the full chart.
+  const canProject = n >= 2;
+  const dataW = canProject ? chartW * 0.75 : chartW;
+  const projW = chartW - dataW;
+  const xStep = n > 1 ? dataW / (n - 1) : 0;
+  const xPos = i => paddingLeft + (n > 1 ? i * xStep : dataW / 2);
+  const projIndex = (n - 1) + (n - 1) / 3; // same on-screen spacing as real points, extended
+
+  // Compute each person's projected endpoint up front so it can factor into
+  // the y-axis scale (otherwise a rising trend line could run off the top).
+  const projections = {}; // personId -> { fromI, fromVal, val }
+  if(canProject){
+    people.forEach(p => {
+      const pts = [];
+      let lastI = null, lastVal = null;
+      series.forEach((pt, i) => {
+        const val = pt.values[p.id];
+        if(typeof val === "number"){ pts.push({ i, val }); lastI = i; lastVal = val; }
+      });
+      const trend = linearTrend(pts);
+      if(!trend || lastI === null) return;
+      const projVal = trend.a + trend.b * projIndex;
+      projections[p.id] = { fromI: lastI, fromVal: lastVal, val: Math.max(0, projVal) };
+    });
+  }
+
+  const allVals = series.flatMap(pt => people.map(p => pt.values[p.id]))
+    .concat(Object.values(projections).map(p => p.val))
+    .filter(v => typeof v === "number");
   const maxVal = Math.max(1, ...allVals);
   const niceMax = Math.ceil(maxVal / 10) * 10 || 10;
+  const yFor = val => baseY - (val / niceMax) * chartH;
 
   ctx.strokeStyle = "#2f4049";
   ctx.fillStyle = "#7d94a1";
@@ -3349,17 +3399,13 @@ function drawLineChart(series){
   const steps = 4;
   for(let i = 0; i <= steps; i++){
     const val = (niceMax / steps) * i;
-    const y = baseY - (val / niceMax) * chartH;
+    const y = yFor(val);
     ctx.beginPath();
     ctx.moveTo(paddingLeft, y);
     ctx.lineTo(paddingLeft + chartW, y);
     ctx.stroke();
     ctx.fillText(Math.round(val), paddingLeft - 6, y);
   }
-
-  const n = series.length;
-  const xStep = n > 1 ? chartW / (n - 1) : 0;
-  const xPos = i => paddingLeft + (n > 1 ? i * xStep : chartW / 2);
 
   function drawSeries(personId, color){
     ctx.strokeStyle = color;
@@ -3370,7 +3416,7 @@ function drawLineChart(series){
       const val = pt.values[personId];
       const x = xPos(i);
       if(typeof val === "number"){
-        const y = baseY - (val / niceMax) * chartH;
+        const y = yFor(val);
         if(!drawing){ ctx.beginPath(); ctx.moveTo(x, y); drawing = true; }
         else { ctx.lineTo(x, y); }
       } else if(drawing){
@@ -3383,7 +3429,7 @@ function drawLineChart(series){
       const val = pt.values[personId];
       if(typeof val === "number"){
         const x = xPos(i);
-        const y = baseY - (val / niceMax) * chartH;
+        const y = yFor(val);
         ctx.beginPath();
         ctx.arc(x, y, 3.2, 0, Math.PI * 2);
         ctx.fill();
@@ -3392,6 +3438,24 @@ function drawLineChart(series){
   }
 
   people.forEach(p => drawSeries(p.id, p.color));
+
+  if(canProject){
+    const projX = paddingLeft + dataW + projW;
+    people.forEach(p => {
+      const proj = projections[p.id];
+      if(!proj) return;
+      ctx.strokeStyle = p.color;
+      ctx.globalAlpha = 0.6;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      ctx.moveTo(xPos(proj.fromI), yFor(proj.fromVal));
+      ctx.lineTo(projX, yFor(proj.val));
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.globalAlpha = 1;
+    });
+  }
 
   ctx.fillStyle = "#7d94a1";
   ctx.font = "10px -apple-system, sans-serif";
@@ -3406,6 +3470,25 @@ function drawLineChart(series){
     ctx.fillText(d.toLocaleDateString(undefined, { day: "numeric", month: "short" }), 0, 0);
     ctx.restore();
   });
+
+  if(canProject){
+    // one label at the projection's far edge giving a rough sense of how
+    // far out this "keep this pace up" line is looking
+    const firstDate = new Date(series[0].date + "T00:00:00");
+    const lastDate = new Date(series[n - 1].date + "T00:00:00");
+    const avgIntervalDays = (lastDate - firstDate) / 86400000 / (n - 1);
+    const projDate = new Date(lastDate.getTime() + avgIntervalDays * ((n - 1) / 3) * 86400000);
+    ctx.save();
+    ctx.translate(paddingLeft + dataW + projW, baseY + 8);
+    ctx.rotate(-Math.PI / 4);
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.globalAlpha = 0.7;
+    ctx.font = "italic 10px -apple-system, sans-serif";
+    ctx.fillText("~" + projDate.toLocaleDateString(undefined, { day: "numeric", month: "short" }), 0, 0);
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
 
   ctx.strokeStyle = "#3d5561";
   ctx.beginPath();

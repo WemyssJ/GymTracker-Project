@@ -416,7 +416,17 @@
     font-size:32px;font-weight:800;color:var(--amber);
     font-variant-numeric:tabular-nums;letter-spacing:-0.02em;line-height:1.1;
   }
+  .timer-display.editable{cursor:pointer;display:inline-block;border-bottom:1px dashed var(--muted);}
   .timer-display.done{color:var(--green);}
+  .timer-inline-input{
+    width:46px;text-align:center;background:transparent;border:none;color:var(--amber);
+    font-size:32px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;
+    -moz-appearance:textfield;
+  }
+  .timer-inline-input::-webkit-inner-spin-button,.timer-inline-input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0;
+  }
+  .timer-inline-input:focus{outline:none;}
   .timer-controls{display:flex;gap:6px;}
   .timer-btn{
     flex:1;padding:7px 4px;border-radius:8px;border:1px solid var(--line);
@@ -452,7 +462,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.6</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.7</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -562,15 +572,7 @@
       <div id="timerModeSettings" style="display:none;padding:8px 0 4px;">
         <div class="p-label" style="margin-bottom:6px;">MODE</div>
         <nav class="subtabs" id="timerModeTabs"></nav>
-        <div id="timerDurationSetting" style="margin-top:10px;">
-          <div class="p-label" style="margin-bottom:6px;">COUNT DOWN FROM</div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <input type="number" id="timerDurationMin" min="0" max="59" style="width:56px;text-align:center;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 6px;font-size:14px;" onchange="handleTimerDurationInput()">
-            <span style="color:var(--muted);font-weight:700;font-size:12px;">min</span>
-            <input type="number" id="timerDurationSec" min="0" max="59" style="width:56px;text-align:center;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 6px;font-size:14px;" onchange="handleTimerDurationInput()">
-            <span style="color:var(--muted);font-weight:700;font-size:12px;">sec</span>
-          </div>
-        </div>
+        <p style="font-size:11.5px;color:var(--muted);margin:6px 0 0 0;line-height:1.5;">In Count down mode, tap the time on the timer footer itself to change how long it counts down from.</p>
       </div>
     </div>
 
@@ -599,7 +601,7 @@
 <div id="timerWidget" class="timer-widget">
   <div class="timer-widget-info">
     <button type="button" id="timerModeBtn" class="timer-mode-btn" onclick="cycleTimerModeInline()">⏱ TIMER ⇄</button>
-    <div id="timerDisplay" class="timer-display">1:30</div>
+    <div id="timerDisplay" class="timer-display" onclick="startEditTimerDuration()">1:30</div>
   </div>
   <div id="timerControls" class="timer-controls">
     <button type="button" id="timerStartBtn" class="timer-btn" onclick="timerStart()">Start</button>
@@ -3467,16 +3469,21 @@ function refreshTimerFooter(){
   modeBtn.textContent = (timerSettings.mode === "countdown" ? "⏱ TIMER" : "⏲ STOPWATCH") + " ⇄";
   modeBtn.disabled = timerRunState !== "idle";
 
-  if(timerRunState === "done"){
-    display.classList.add("done");
-    display.textContent = "Done ✓";
-  } else {
-    display.classList.remove("done");
-    if(timerSettings.mode === "countdown"){
-      display.textContent = formatTime(timerRunState === "idle" ? timerSettings.duration : Math.max(0, timerRemaining));
+  const isEditable = timerSettings.mode === "countdown" && timerRunState === "idle";
+  display.classList.toggle("editable", isEditable);
+
+  if(display.dataset.editing !== "1"){
+    if(timerRunState === "done"){
+      display.classList.add("done");
+      display.textContent = "Done ✓";
     } else {
-      const liveMs = timerElapsedMs + (timerRunState === "running" ? (Date.now() - timerSegmentStart) : 0);
-      display.textContent = formatStopwatch(liveMs);
+      display.classList.remove("done");
+      if(timerSettings.mode === "countdown"){
+        display.textContent = formatTime(timerRunState === "idle" ? timerSettings.duration : Math.max(0, timerRemaining));
+      } else {
+        const liveMs = timerElapsedMs + (timerRunState === "running" ? (Date.now() - timerSegmentStart) : 0);
+        display.textContent = formatStopwatch(liveMs);
+      }
     }
   }
 
@@ -3485,6 +3492,38 @@ function refreshTimerFooter(){
   pauseBtn.disabled = timerRunState !== "running";
   stopBtn.disabled = timerRunState === "idle";
   lapBtn.disabled = timerRunState !== "running";
+}
+
+function startEditTimerDuration(){
+  if(timerSettings.mode !== "countdown" || timerRunState !== "idle") return;
+  const display = document.getElementById("timerDisplay");
+  if(!display || display.dataset.editing === "1") return;
+  display.dataset.editing = "1";
+  const min = Math.floor(timerSettings.duration / 60);
+  const sec = timerSettings.duration % 60;
+  display.innerHTML = `
+    <input type="number" id="timerInlineMin" class="timer-inline-input" min="0" max="59" value="${min}" inputmode="numeric">:<input type="number" id="timerInlineSec" class="timer-inline-input" min="0" max="59" value="${String(sec).padStart(2,"0")}" inputmode="numeric">
+  `;
+  const minEl = document.getElementById("timerInlineMin");
+  const secEl = document.getElementById("timerInlineSec");
+  let committed = false;
+  function commit(){
+    if(committed) return;
+    committed = true;
+    const m = Math.max(0, parseInt(minEl.value, 10) || 0);
+    const s = Math.max(0, Math.min(59, parseInt(secEl.value, 10) || 0));
+    timerSettings.duration = Math.max(5, m * 60 + s);
+    saveTimerSettings();
+    display.dataset.editing = "";
+    refreshTimerFooter();
+    renderTimerSettings();
+  }
+  minEl.addEventListener("blur", () => setTimeout(() => { if(document.activeElement !== secEl) commit(); }, 0));
+  secEl.addEventListener("blur", () => setTimeout(() => { if(document.activeElement !== minEl) commit(); }, 0));
+  minEl.addEventListener("keydown", e => { if(e.key === "Enter") commit(); });
+  secEl.addEventListener("keydown", e => { if(e.key === "Enter") commit(); });
+  minEl.focus();
+  minEl.select();
 }
 
 function timerResumeInterval(){
@@ -3583,12 +3622,6 @@ function renderTimerSettings(){
   const modeWrap = document.getElementById("timerModeSettings");
   if(modeWrap) modeWrap.style.display = timerSettings.enabled ? "block" : "none";
   renderTimerModeTabs("timerModeTabs");
-  const durationWrap = document.getElementById("timerDurationSetting");
-  if(durationWrap) durationWrap.style.display = timerSettings.mode === "countdown" ? "block" : "none";
-  const minInput = document.getElementById("timerDurationMin");
-  const secInput = document.getElementById("timerDurationSec");
-  if(minInput) minInput.value = Math.floor(timerSettings.duration / 60);
-  if(secInput) secInput.value = timerSettings.duration % 60;
   applyTimerCollapsedState();
 }
 
@@ -3597,14 +3630,6 @@ function handleTimerEnabledToggle(checked){
   saveTimerSettings();
   if(!checked) timerStop();
   renderTimerSettings();
-  refreshTimerFooter();
-}
-
-function handleTimerDurationInput(){
-  const min = Math.max(0, parseInt(document.getElementById("timerDurationMin").value, 10) || 0);
-  const sec = Math.max(0, Math.min(59, parseInt(document.getElementById("timerDurationSec").value, 10) || 0));
-  timerSettings.duration = Math.max(5, min * 60 + sec);
-  saveTimerSettings();
   refreshTimerFooter();
 }
 

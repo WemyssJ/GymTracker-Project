@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.5.1.7 — 2026-09-09
+### Added
+- **Tap-to-edit timer duration** — tap the countdown time on the timer footer to edit it directly (minutes : seconds) without opening Settings; only available in Count down mode while idle
+
+### Changed
+- Removed the duration min/sec input from Settings → Timers — Count down / Count up mode selection stays there, but the duration itself is now set on-screen from the timer footer only
+
+---
+
 ## v0.5.1.6 — 2026-09-09
 ### Added
 - **Exercise collapse** — tap an exercise's name while logging to collapse it out of the way; its title turns green while collapsed; switching to that day tab uncollapses everything again

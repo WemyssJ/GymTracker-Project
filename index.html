@@ -490,7 +490,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.11</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.12</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -3776,6 +3776,24 @@ async function init(){
   refreshTimerFooter();
   if(isNewUser) showWelcome();
   setTimeout(()=> document.body.classList.add("transitions-ready"), 50);
+  setupViewportFooterFix();
+}
+
+// iOS Safari standalone mode can desync position:fixed elements from the
+// true visual bottom after the on-screen keyboard opens/closes, leaving a
+// gap below fixed-bottom elements. Compensate using the VisualViewport API.
+function setupViewportFooterFix(){
+  if(!window.visualViewport) return;
+  const vv = window.visualViewport;
+  function update(){
+    const footer = document.getElementById("timerWidget");
+    if(!footer) return;
+    const offset = window.innerHeight - vv.height - vv.offsetTop;
+    footer.style.transform = offset > 0.5 ? `translateY(-${offset}px)` : "";
+  }
+  vv.addEventListener("resize", update);
+  vv.addEventListener("scroll", update);
+  update();
 }
 
 // ---- GitHub backup ----

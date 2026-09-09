@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.1.12 — 2026-09-09
+### Fixed
+- **Dark bar below the timer footer on iOS "Add to Home Screen" mode** — this turned out to be a known iOS Safari standalone-mode bug where `position:fixed` elements can desync from the true visual bottom after the on-screen keyboard opens/closes (which happens constantly while typing weights). Now uses the VisualViewport API to actively re-align the timer footer to the real visual bottom instead of papering over it with a strip (the v0.5.1.11 native Android fix was correct but irrelevant — that screenshot was from iOS, not the Android APK)
+
+---
+
 ## v0.5.1.11 — 2026-09-09
 ### Fixed
 - **Removed the timer footer's "insurance strip"** — a stopgap added in v0.5.1.9 to patch an iOS gap issue, which itself showed up as an unwanted dark bar on other devices

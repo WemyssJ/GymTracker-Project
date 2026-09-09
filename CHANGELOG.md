@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.6.4 — 2026-09-09
+### Added
+- **Per-person default rep target** — each person now gets their own reps preset in Settings (previously it was one shared number for everyone), and the reps field's green/red colour coding compares against that person's own target
+- **Sets +/- buttons hide at the limits** — the "add set" button disappears at 6 sets and "remove set" disappears at 1, for the per-exercise counter and the default-set-count settings, instead of sitting there doing nothing once you hit the cap
+
+### Fixed
+- A CSS rule (`display:flex` on `.set-count-btn`) was overriding the browser's default hidden behaviour, so toggling a button's `hidden` attribute had no visible effect — this silently affected any future use of `hidden` on these buttons, not just the new limit-hiding above
+
+---
+
 ## v0.6.3 — 2026-09-09
 ### Changed
 - **Reps now always presets to your default rep target** (Settings, 8 by default) instead of carrying forward the last session's actual reps text — older sessions often have messy free-text notes ("3r", "2x, 4r", "3,3,2") that showed up as an inconsistent mix of blank/garbled prefills; weight still carries forward as before, only reps changed

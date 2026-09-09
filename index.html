@@ -416,6 +416,7 @@
   .set-count-btn{width:28px;height:28px;border-radius:7px;border:1px solid var(--line);
     background:var(--panel-2);color:var(--text);font-size:16px;font-weight:700;cursor:pointer;
     line-height:1;display:flex;align-items:center;justify-content:center;}
+  .set-count-btn[hidden]{display:none;}
   .set-count-label{font-size:11px;color:var(--muted);font-weight:700;min-width:40px;text-align:center;}
 
   .ex-picker-btn{width:100%;text-align:left;padding:10px 12px;border-radius:10px;
@@ -515,7 +516,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.6.3</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.6.4</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -1919,10 +1920,28 @@ function normalizeEntry(e){
   return { sets };
 }
 
+// Some old sessions recorded a whole exercise's reps as one comma-separated
+// string crammed into set 1 (e.g. "3,3,2") instead of one number per set —
+// split those back out into their proper per-set slots. Idempotent: once
+// split, set 1's reps is just a plain number and won't match again.
+function migrateCommaSeparatedReps(entry){
+  Object.values(entry.sets || {}).forEach(personSets => {
+    if(!Array.isArray(personSets) || personSets.length < 2) return;
+    const first = personSets[0];
+    if(!first || typeof first.reps !== "string") return;
+    const raw = first.reps.trim();
+    if(!/^\d+(\s*,\s*\d+){1,}$/.test(raw)) return;
+    raw.split(",").map(s => s.trim()).forEach((val, i) => {
+      if(i < personSets.length) personSets[i].reps = val;
+    });
+  });
+}
+
 function normalizeSessions(sessions){
   sessions.forEach(sess => {
     Object.keys(sess.entries).forEach(ex => {
       sess.entries[ex] = normalizeEntry(sess.entries[ex]);
+      migrateCommaSeparatedReps(sess.entries[ex]);
     });
   });
   return sessions;
@@ -2274,7 +2293,7 @@ function setBoxHtml(exIndex, person, setIndex, set, exName, personId){
         <input type="text" inputmode="numeric" placeholder="reps"
           class="${repsClass}" value="${repsVal}"
           data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="reps"
-          oninput="this.classList.remove('prefilled'); updateRepsInputColor(this); checkOverloadHint(${exIndex}); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'reps',this.value);" onfocus="this.select()">
+          oninput="this.classList.remove('prefilled'); updateRepsInputColor(this,'${personId}'); checkOverloadHint(${exIndex}); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'reps',this.value);" onfocus="this.select()">
       </div>
     </div>
   `;
@@ -2310,7 +2329,7 @@ function copySetOneToAll(exIndex, personId, exName){
   document.querySelectorAll(`[data-ex="${exIndex}"][data-person="${personId}"][data-field="reps"]`).forEach(inp=>{
     inp.value = repsVal;
     inp.classList.remove("prefilled");
-    updateRepsInputColor(inp);
+    updateRepsInputColor(inp, personId);
     recordDraftValue(activeTab, exName, personId, inp.dataset.set, "reps", repsVal);
   });
   checkOverloadHint(exIndex);
@@ -2326,12 +2345,13 @@ function updateWeightInputColor(input, exName, personId){
   else if(val < stats.best) input.classList.add("reg-val");
 }
 
-function updateRepsInputColor(input){
+function updateRepsInputColor(input, personId){
   input.classList.remove("pr-val", "reg-val");
   const val = parseInt(input.value, 10);
   if(isNaN(val)) return;
-  if(val > defaultRepsTarget) input.classList.add("pr-val");
-  else if(val < defaultRepsTarget) input.classList.add("reg-val");
+  const target = getPersonRepsTarget(personId);
+  if(val > target) input.classList.add("pr-val");
+  else if(val < target) input.classList.add("reg-val");
 }
 
 let collapsedExercises = {};
@@ -2403,7 +2423,7 @@ function renderForm(){
         // carrying forward the last session's actual reps text — historical
         // reps entries are often messy free-text notes ("3r", "2x, 4r"),
         // and a consistent clean default beats a mix of blank/garbled values.
-        const reps = repsIsDraft ? draftValues[repsDK] : String(defaultRepsTarget);
+        const reps = repsIsDraft ? draftValues[repsDK] : String(getPersonRepsTarget(p.id));
         return { wt, reps, wtIsDraft, repsIsDraft };
       });
       html += `
@@ -2417,9 +2437,9 @@ function renderForm(){
     html += `
       <div class="overload-hint" id="overloadHint-${i}" style="display:none;"></div>
       <div class="set-count-row">
-        <button type="button" class="set-count-btn" onclick="adjustSetCount('${safeName}',-1)" aria-label="Remove set">−</button>
+        ${count > 1 ? `<button type="button" class="set-count-btn" onclick="adjustSetCount('${safeName}',-1)" aria-label="Remove set">−</button>` : ""}
         <span class="set-count-label">${count} set${count!==1?"s":""}</span>
-        <button type="button" class="set-count-btn" onclick="adjustSetCount('${safeName}',1)" aria-label="Add set">+</button>
+        ${count < 6 ? `<button type="button" class="set-count-btn" onclick="adjustSetCount('${safeName}',1)" aria-label="Add set">+</button>` : ""}
       </div>
       </div>
     </div>`;
@@ -2854,28 +2874,31 @@ function renderExerciseSettings(containerId){
         <div class="settings-row-desc">Used for any exercise without a custom count</div>
       </div>
       <div class="set-count-row" style="margin-top:0;">
-        <button type="button" class="set-count-btn" onclick="adjustDefaultSetCount(-1)">−</button>
+        <button type="button" class="set-count-btn" id="defaultSetCountMinusBtn" onclick="adjustDefaultSetCount(-1)" ${defaultSetCount<=1?"hidden":""}>−</button>
         <span class="set-count-label" id="defaultSetCountLabel">${defaultSetCount} sets</span>
-        <button type="button" class="set-count-btn" onclick="adjustDefaultSetCount(1)">+</button>
+        <button type="button" class="set-count-btn" id="defaultSetCountPlusBtn" onclick="adjustDefaultSetCount(1)" ${defaultSetCount>=6?"hidden":""}>+</button>
       </div>
     `;
     container.appendChild(row);
 
-    const repsRow = document.createElement("div");
-    repsRow.className = "settings-row";
-    repsRow.style.marginBottom = "14px";
-    repsRow.innerHTML = `
-      <div class="settings-row-info">
-        <div class="settings-row-title">Default rep target</div>
-        <div class="settings-row-desc">Pre-fills reps the first time you log a new exercise</div>
-      </div>
-      <div class="set-count-row" style="margin-top:0;">
-        <button type="button" class="set-count-btn" onclick="adjustDefaultRepsTarget(-1)">−</button>
-        <span class="set-count-label" id="defaultRepsLabel">${defaultRepsTarget} reps</span>
-        <button type="button" class="set-count-btn" onclick="adjustDefaultRepsTarget(1)">+</button>
-      </div>
-    `;
-    container.appendChild(repsRow);
+    people.forEach(p=>{
+      const target = getPersonRepsTarget(p.id);
+      const repsRow = document.createElement("div");
+      repsRow.className = "settings-row";
+      repsRow.style.marginBottom = "14px";
+      repsRow.innerHTML = `
+        <div class="settings-row-info">
+          <div class="settings-row-title">Default rep target — <span style="color:${p.color};">${p.name}</span></div>
+          <div class="settings-row-desc">Reps presets to this every time a set is left blank</div>
+        </div>
+        <div class="set-count-row" style="margin-top:0;">
+          <button type="button" class="set-count-btn" id="defaultRepsMinusBtn-${p.id}" onclick="adjustPersonRepsTarget('${p.id}',-1)" ${target<=1?"hidden":""}>−</button>
+          <span class="set-count-label" id="defaultRepsLabel-${p.id}">${target} reps</span>
+          <button type="button" class="set-count-btn" id="defaultRepsPlusBtn-${p.id}" onclick="adjustPersonRepsTarget('${p.id}',1)" ${target>=30?"hidden":""}>+</button>
+        </div>
+      `;
+      container.appendChild(repsRow);
+    });
   }
   Object.keys(CONFIG).forEach(tabKey => {
     const section = document.createElement("div");
@@ -3602,9 +3625,9 @@ function renderWizardStepBody(){
   } else if(wizardStep === 7){
     body.innerHTML = `
       <div class="set-count-row" style="justify-content:center;gap:16px;margin-top:4px;">
-        <button type="button" class="set-count-btn" onclick="adjustDefaultSetCount(-1)">−</button>
+        <button type="button" class="set-count-btn" id="wizardSetCountMinusBtn" onclick="adjustDefaultSetCount(-1)" ${defaultSetCount<=1?"hidden":""}>−</button>
         <span class="set-count-label" id="wizardSetCountLabel" style="font-size:15px;">${defaultSetCount} sets</span>
-        <button type="button" class="set-count-btn" onclick="adjustDefaultSetCount(1)">+</button>
+        <button type="button" class="set-count-btn" id="wizardSetCountPlusBtn" onclick="adjustDefaultSetCount(1)" ${defaultSetCount>=6?"hidden":""}>+</button>
       </div>
     `;
   } else if(wizardStep === 8){
@@ -3763,25 +3786,60 @@ function adjustDefaultSetCount(delta){
   if(mainLabel) mainLabel.textContent = defaultSetCount + " sets";
   const wizardLabel = document.getElementById("wizardSetCountLabel");
   if(wizardLabel) wizardLabel.textContent = defaultSetCount + " sets";
+  ["defaultSetCountMinusBtn", "wizardSetCountMinusBtn"].forEach(id=>{
+    const btn = document.getElementById(id);
+    if(btn) btn.hidden = defaultSetCount <= 1;
+  });
+  ["defaultSetCountPlusBtn", "wizardSetCountPlusBtn"].forEach(id=>{
+    const btn = document.getElementById(id);
+    if(btn) btn.hidden = defaultSetCount >= 6;
+  });
   if(CONFIG[activeTab]) renderForm();
 }
 
-const DEFAULT_REPS_KEY = "gymtracker:defaultReps";
-let defaultRepsTarget = 8;
+const DEFAULT_REPS_KEY = "gymtracker:defaultRepsTargets";
+const LEGACY_DEFAULT_REPS_KEY = "gymtracker:defaultReps";
+let defaultRepsTargets = {}; // { personId: number } — each person can have their own preset
 
-function loadDefaultRepsTarget(){
+function loadDefaultRepsTargets(){
   try{
-    const v = parseInt(localStorage.getItem(DEFAULT_REPS_KEY), 10);
-    return (v >= 1 && v <= 30) ? v : 8;
-  }catch(e){ return 8; }
+    const raw = localStorage.getItem(DEFAULT_REPS_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === "object" && !Array.isArray(parsed)) return parsed;
+    }
+  }catch(e){}
+  // migrate the old single global value (shared across everyone) if present
+  try{
+    const legacy = parseInt(localStorage.getItem(LEGACY_DEFAULT_REPS_KEY), 10);
+    if(legacy >= 1 && legacy <= 30){
+      const migrated = {};
+      people.forEach(p => { migrated[p.id] = legacy; });
+      return migrated;
+    }
+  }catch(e){}
+  return {};
 }
-function saveDefaultRepsTarget(){ try{ localStorage.setItem(DEFAULT_REPS_KEY, String(defaultRepsTarget)); }catch(e){} }
+function saveDefaultRepsTargets(){
+  try{ localStorage.setItem(DEFAULT_REPS_KEY, JSON.stringify(defaultRepsTargets)); }catch(e){}
+}
 
-function adjustDefaultRepsTarget(delta){
-  defaultRepsTarget = Math.max(1, Math.min(30, defaultRepsTarget + delta));
-  saveDefaultRepsTarget();
-  const label = document.getElementById("defaultRepsLabel");
-  if(label) label.textContent = defaultRepsTarget + " reps";
+function getPersonRepsTarget(personId){
+  const v = defaultRepsTargets[personId];
+  return (v >= 1 && v <= 30) ? v : 8;
+}
+
+function adjustPersonRepsTarget(personId, delta){
+  const next = Math.max(1, Math.min(30, getPersonRepsTarget(personId) + delta));
+  defaultRepsTargets[personId] = next;
+  saveDefaultRepsTargets();
+  const label = document.getElementById(`defaultRepsLabel-${personId}`);
+  if(label) label.textContent = next + " reps";
+  const minusBtn = document.getElementById(`defaultRepsMinusBtn-${personId}`);
+  if(minusBtn) minusBtn.hidden = next <= 1;
+  const plusBtn = document.getElementById(`defaultRepsPlusBtn-${personId}`);
+  if(plusBtn) plusBtn.hidden = next >= 30;
+  if(CONFIG[activeTab]) renderForm();
 }
 
 // ---- Assisted mode (per exercise) ----
@@ -4183,7 +4241,7 @@ async function init(){
   timerSettings = loadTimerSettings();
   exSetCounts = loadSetCounts();
   defaultSetCount = loadDefaultSetCount();
-  defaultRepsTarget = loadDefaultRepsTarget();
+  defaultRepsTargets = loadDefaultRepsTargets();
   assistedState = loadAssistedState();
   formDrafts = loadFormDrafts();
   timerSettingsCollapsed = loadTimerSettingsCollapsed();
@@ -4685,6 +4743,7 @@ async function deleteAllData(){
       localStorage.removeItem(SET_COUNT_KEY);
       localStorage.removeItem(DEFAULT_SET_COUNT_KEY);
       localStorage.removeItem(DEFAULT_REPS_KEY);
+      localStorage.removeItem(LEGACY_DEFAULT_REPS_KEY);
       localStorage.removeItem(ASSISTED_STATE_KEY);
       localStorage.removeItem(ACTIVE_DAYS_KEY);
     }

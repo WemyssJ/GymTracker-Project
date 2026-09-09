@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.5.1.10 — 2026-09-09
+### Added
+- **Preset colour swatches everywhere** — Settings → People now uses the same boxed colour swatches as the setup wizard instead of the native picker
+- **Duplicate-colour prevention** — a colour already used by another person is now greyed out and unclickable, in both Settings and the wizard, so chart legends and history rows never show two people in the same colour
+
+### Fixed
+- **Timer footer layout bug** — the mode label ("TIMER"/"STOPWATCH") wasn't stacking above the digits in Count down mode (it sat beside them instead), caused by the tap-to-edit dashed-underline style switching the display to `inline-block`; now stacks correctly in both modes
+- **"kg"/"reps" input centering** — removed the browser's reserved number-spinner space that was skewing the centred placeholder text
+- Wizard intro: "Set up my profile" now sits above Restore from GitHub / Import from Excel, styled rounded and blue like the other buttons (was unstyled/boxy)
+- Wizard "Add a partner" renamed to "Add another user"; the person's name no longer crops off — it now sits on its own line above the colour swatches
+- Wizard Workouts step (6): each day is now collapsible and starts collapsed, with an exercise count
+- Wizard Timer step (8) now only asks Show timer / No timer — mode and duration are set from the footer itself, not during setup
+
+---
+
 ## v0.5.1.9 — 2026-09-09
 ### Fixed
 - **Dark gap below the timer footer on iOS "Add to Home Screen" mode** — added a background-matched insurance strip beneath the timer footer to cover the intermittent gap iOS standalone mode can leave when its safe-area-inset calculation doesn't quite reach the true bottom edge

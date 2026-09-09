@@ -209,9 +209,12 @@
   }
   .mini-box input{
     width:100%;text-align:center;background:transparent;border:none;
-    color:var(--text);padding:6px 2px;font-size:13px;
+    color:var(--text);padding:6px 2px;font-size:13px;-moz-appearance:textfield;
   }
   .mini-box input:focus{outline:none;}
+  .mini-box input::-webkit-inner-spin-button,.mini-box input::-webkit-outer-spin-button{
+    -webkit-appearance:none;margin:0;
+  }
   .reps-box input{font-size:11px;color:var(--muted);}
   .mini-box input.prefilled{color:var(--muted);}
   .reps-box input.prefilled{color:var(--faint);}
@@ -310,6 +313,15 @@
   }
   .color-swatch-input::-webkit-color-swatch-wrapper{padding:0;}
   .color-swatch-input::-webkit-color-swatch{border:none;border-radius:8px;}
+  .color-swatch-btn{
+    width:32px;height:32px;border-radius:8px;border:none;cursor:pointer;
+    padding:0;position:relative;flex-shrink:0;
+  }
+  .color-swatch-btn.selected::after{
+    content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    color:#fff;font-weight:900;font-size:14px;text-shadow:0 1px 2px rgba(0,0,0,0.6);
+  }
+  .color-swatch-btn.taken{opacity:0.25;cursor:not-allowed;}
   .person-name-input{
     flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
     border-radius:8px;padding:9px 10px;font-size:14px;min-width:0;
@@ -420,7 +432,7 @@
     font-size:32px;font-weight:800;color:var(--amber);
     font-variant-numeric:tabular-nums;letter-spacing:-0.02em;line-height:1.1;
   }
-  .timer-display.editable{cursor:pointer;display:inline-block;border-bottom:1px dashed var(--muted);}
+  .timer-display.editable{cursor:pointer;width:fit-content;margin:0 auto;border-bottom:1px dashed var(--muted);}
   .timer-display.done{color:var(--green);}
   .timer-controls{display:flex;gap:6px;}
   .timer-btn{
@@ -482,7 +494,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.9</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.10</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -590,9 +602,7 @@
         </label>
       </div>
       <div id="timerModeSettings" style="display:none;padding:8px 0 4px;">
-        <div class="p-label" style="margin-bottom:6px;">MODE</div>
-        <nav class="subtabs" id="timerModeTabs"></nav>
-        <p style="font-size:11.5px;color:var(--muted);margin:6px 0 0 0;line-height:1.5;">In Count down mode, tap the time on the timer footer itself to change how long it counts down from.</p>
+        <p style="font-size:11.5px;color:var(--muted);margin:0;line-height:1.5;">Switch between Count down and Count up, and set the countdown time, right on the timer footer itself.</p>
       </div>
     </div>
 
@@ -2547,19 +2557,33 @@ async function switchTab(tabKey){
   renderHistory();
 }
 
+function colorSwatchRowHtml(idx){
+  const p = people[idx];
+  return COLOR_PALETTE.map(c => {
+    const takenByOther = people.some((op, oi) => oi !== idx && op.color === c);
+    const classes = "color-swatch-btn" + (p.color === c ? " selected" : "") + (takenByOther ? " taken" : "");
+    return `<button type="button" class="${classes}" style="background:${c};" onclick="updatePersonColor(${idx}, '${c}')" aria-label="Choose colour"${takenByOther ? " disabled" : ""}></button>`;
+  }).join("");
+}
+
 function renderPeopleSettings(){
   const container = document.getElementById("peopleList");
   container.innerHTML = "";
   people.forEach((p, idx) => {
     const row = document.createElement("div");
     row.className = "person-row";
+    row.style.flexDirection = "column";
+    row.style.alignItems = "stretch";
     row.innerHTML = `
-      <input type="color" class="color-swatch-input" value="${p.color}"
-        oninput="updatePersonColor(${idx}, this.value)">
-      <input type="text" class="person-name-input" value="${p.name}"
-        oninput="updatePersonName(${idx}, this.value)">
-      <button type="button" class="delete-btn" onclick="removePerson(${idx})"
-        aria-label="Remove person" ${people.length <= 1 ? "disabled" : ""}>🗑</button>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <input type="text" class="person-name-input" value="${p.name}"
+          oninput="updatePersonName(${idx}, this.value)">
+        <button type="button" class="delete-btn" onclick="removePerson(${idx})"
+          aria-label="Remove person" ${people.length <= 1 ? "disabled" : ""}>🗑</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        ${colorSwatchRowHtml(idx)}
+      </div>
     `;
     container.appendChild(row);
   });
@@ -2574,6 +2598,8 @@ function updatePersonName(idx, value){
 function updatePersonColor(idx, value){
   people[idx].color = value;
   savePeople();
+  if(document.getElementById("peopleList")) renderPeopleSettings();
+  if(wizardStep === 3) renderWizardStepBody();
 }
 
 function addPerson(){
@@ -2641,7 +2667,22 @@ function renderExerciseSettings(containerId){
   Object.keys(CONFIG).forEach(tabKey => {
     const section = document.createElement("div");
     section.style.marginBottom = "18px";
-    let inner = `<div class="p-label" style="margin-bottom:8px;">${CONFIG[tabKey].label.toUpperCase()} DAY</div>`;
+    const exCount = getExercises(tabKey).length;
+    let headerHtml, isCollapsed = false;
+    if(isMain){
+      headerHtml = `<div class="p-label" style="margin-bottom:8px;">${CONFIG[tabKey].label.toUpperCase()} DAY</div>`;
+    } else {
+      if(!(tabKey in wizardDayCollapsed)) wizardDayCollapsed[tabKey] = true;
+      isCollapsed = wizardDayCollapsed[tabKey];
+      headerHtml = `
+        <div class="p-label" style="margin-bottom:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="toggleWizardDayCollapse('${tabKey}')">
+          <span>${CONFIG[tabKey].label.toUpperCase()} DAY <span style="color:var(--muted);font-weight:400;">· ${exCount} exercise${exCount!==1?"s":""}</span></span>
+          <span style="color:var(--muted);">${isCollapsed ? "▸" : "▾"}</span>
+        </div>
+      `;
+    }
+    let inner = headerHtml;
+    inner += `<div${isCollapsed ? ' style="display:none;"' : ""}>`;
     inner += `<div class="exercise-drag-list" data-day="${tabKey}">`;
     getExercises(tabKey, true).forEach((ex, idx) => {
       const label = ex || "Select exercise…";
@@ -2660,10 +2701,18 @@ function renderExerciseSettings(containerId){
     });
     inner += `</div>`;
     inner += `<button type="button" class="icon-btn" style="width:100%;margin-top:4px;" onclick="openExercisePicker('${tabKey}',-1)">+ Add exercise</button>`;
+    inner += `</div>`;
     section.innerHTML = inner;
     container.appendChild(section);
   });
   if(isMain) applyExerciseSettingsCollapsedState();
+}
+
+let wizardDayCollapsed = {};
+
+function toggleWizardDayCollapse(day){
+  wizardDayCollapsed[day] = !wizardDayCollapsed[day];
+  renderExerciseSettings("wizardExerciseContainer");
 }
 
 function refreshExerciseUIs(){
@@ -3137,6 +3186,7 @@ const WIZARD_STEPS = [
 
 function showWelcome(){
   wizardStep = 0;
+  wizardDayCollapsed = {};
   renderWizardStep();
   openModal("welcomeOverlay");
 }
@@ -3150,6 +3200,7 @@ function wizardIntroHtml(){
     <h2 style="margin-bottom:4px;">👋 Welcome to GymTracker</h2>
     <p class="confirm-message" style="margin-bottom:18px;font-size:13px;">Let's get you set up, or import any existing data instead.</p>
     <div style="display:flex;flex-direction:column;gap:8px;">
+      <button type="button" class="icon-btn btn-primary" style="width:100%;text-align:center;border:none;" onclick="startFreshWizard()">Set up my profile</button>
       <button type="button" class="icon-btn" style="width:100%;text-align:left;" onclick="toggleWelcomeGithubForm()">⤵ Restore from GitHub</button>
       <div id="welcomeGithubForm" style="display:none;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;">
         <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;">Personal access token</label>
@@ -3165,7 +3216,6 @@ function wizardIntroHtml(){
         </div>
       </div>
       <button type="button" class="icon-btn" style="width:100%;text-align:left;" onclick="handleWelcomeExcel()">⤒ Import from Excel</button>
-      <button type="button" class="btn-primary" style="width:100%;" onclick="startFreshWizard()">Start fresh — set up my account</button>
     </div>
   `;
 }
@@ -3209,7 +3259,7 @@ function renderWizardStepBody(){
     body.innerHTML = `
       <div class="wizard-yesno">
         <button type="button" class="${!hasPartner?"active":""}" onclick="setWizardPartner(false)">Just me</button>
-        <button type="button" class="${hasPartner?"active":""}" onclick="setWizardPartner(true)">Add a partner</button>
+        <button type="button" class="${hasPartner?"active":""}" onclick="setWizardPartner(true)">Add another user</button>
       </div>
       ${hasPartner ? `
         <label for="wizardPartnerName">Their name</label>
@@ -3219,9 +3269,11 @@ function renderWizardStepBody(){
     `;
   } else if(wizardStep === 3){
     body.innerHTML = people.map((p, idx) => `
-      <div class="person-row">
-        <input type="color" class="color-swatch-input" value="${p.color}" oninput="updatePersonColor(${idx}, this.value)">
-        <div style="flex:1;font-size:14px;font-weight:700;color:var(--text);">${p.name || "(unnamed)"}</div>
+      <div class="person-row" style="flex-direction:column;align-items:stretch;">
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:10px;overflow-wrap:break-word;">${p.name || "(unnamed)"}</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          ${colorSwatchRowHtml(idx)}
+        </div>
       </div>
     `).join("");
   } else if(wizardStep === 4){
@@ -3250,26 +3302,8 @@ function renderWizardStepBody(){
         <button type="button" class="${!timerSettings.enabled?"active":""}" onclick="setWizardTimerEnabled(false)">No timer</button>
         <button type="button" class="${timerSettings.enabled?"active":""}" onclick="setWizardTimerEnabled(true)">Show timer</button>
       </div>
-      ${timerSettings.enabled ? `
-        <nav class="subtabs" id="wizardTimerModeTabs"></nav>
-        <div id="wizardTimerDurationWrap" style="${timerSettings.mode==='countdown'?'':'display:none;'}margin-top:10px;">
-          <div class="p-label" style="margin-bottom:6px;">COUNT DOWN FROM</div>
-          <div style="display:flex;align-items:center;gap:6px;">
-            <input type="number" id="wizardTimerMin" min="0" max="59" style="width:56px;text-align:center;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 6px;font-size:14px;" onchange="handleWizardTimerDurationInput()">
-            <span style="color:var(--muted);font-weight:700;font-size:12px;">min</span>
-            <input type="number" id="wizardTimerSec" min="0" max="59" style="width:56px;text-align:center;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:9px 6px;font-size:14px;" onchange="handleWizardTimerDurationInput()">
-            <span style="color:var(--muted);font-weight:700;font-size:12px;">sec</span>
-          </div>
-        </div>
-      ` : ""}
+      ${timerSettings.enabled ? `<p style="font-size:11.5px;color:var(--muted);margin:6px 0 0 0;line-height:1.5;">You can switch it between counting down and counting up, and set how long it counts down from, right on the timer footer itself.</p>` : ""}
     `;
-    if(timerSettings.enabled){
-      renderTimerModeTabs("wizardTimerModeTabs");
-      const minEl = document.getElementById("wizardTimerMin");
-      const secEl = document.getElementById("wizardTimerSec");
-      if(minEl) minEl.value = Math.floor(timerSettings.duration / 60);
-      if(secEl) secEl.value = timerSettings.duration % 60;
-    }
   }
 }
 
@@ -3301,15 +3335,6 @@ function setWizardTimerEnabled(on){
   renderTimerSettings();
   renderWizardStepBody();
   refreshTimerFooter();
-}
-
-function handleWizardTimerDurationInput(){
-  const min = Math.max(0, parseInt(document.getElementById("wizardTimerMin").value, 10) || 0);
-  const sec = Math.max(0, Math.min(59, parseInt(document.getElementById("wizardTimerSec").value, 10) || 0));
-  timerSettings.duration = Math.max(5, min * 60 + sec);
-  saveTimerSettings();
-  refreshTimerFooter();
-  renderTimerSettings();
 }
 
 function toggleTokenVisibility(){
@@ -3425,7 +3450,7 @@ function adjustDefaultSetCount(delta){
 const TIMER_SETTINGS_KEY = "gymtracker:timerSettings";
 let timerSettings = { enabled: false, mode: "countdown", duration: 90 };
 let timerIntervalId = null;
-let timerRemaining = 0;
+let timerRemainingMs = 0;
 let timerElapsedMs = 0;
 let timerSegmentStart = 0;
 let timerSettingsCollapsed = true;
@@ -3449,12 +3474,6 @@ function loadTimerSettings(){
 
 function saveTimerSettings(){
   try{ localStorage.setItem(TIMER_SETTINGS_KEY, JSON.stringify(timerSettings)); }catch(e){}
-}
-
-function formatTime(secs){
-  const m = Math.floor(secs / 60);
-  const s = secs % 60;
-  return m + ":" + String(s).padStart(2, "0");
 }
 
 function formatStopwatch(ms){
@@ -3497,7 +3516,14 @@ function refreshTimerFooter(){
     } else {
       display.classList.remove("done");
       if(timerSettings.mode === "countdown"){
-        display.textContent = formatTime(timerRunState === "idle" ? timerSettings.duration : Math.max(0, timerRemaining));
+        if(timerRunState === "idle"){
+          display.textContent = formatStopwatch(timerSettings.duration * 1000);
+        } else {
+          const liveRemaining = timerRunState === "running"
+            ? Math.max(0, timerRemainingMs - (Date.now() - timerSegmentStart))
+            : timerRemainingMs;
+          display.textContent = formatStopwatch(liveRemaining);
+        }
       } else {
         const liveMs = timerElapsedMs + (timerRunState === "running" ? (Date.now() - timerSegmentStart) : 0);
         display.textContent = formatStopwatch(liveMs);
@@ -3580,31 +3606,30 @@ function commitTimerDurationEdit(){
 
 function timerResumeInterval(){
   timerRunState = "running";
-  if(timerSettings.mode === "countdown"){
-    timerIntervalId = setInterval(() => {
-      timerRemaining--;
-      if(timerRemaining <= 0){
+  timerSegmentStart = Date.now();
+  timerIntervalId = setInterval(() => {
+    if(timerSettings.mode === "countdown"){
+      const liveRemaining = timerRemainingMs - (Date.now() - timerSegmentStart);
+      if(liveRemaining <= 0){
         clearInterval(timerIntervalId); timerIntervalId = null;
+        timerRemainingMs = 0;
         timerRunState = "done";
         if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
         refreshTimerFooter();
         setTimeout(() => {
           if(timerRunState === "done"){ timerRunState = "idle"; refreshTimerFooter(); }
         }, 2500);
-      } else {
-        refreshTimerFooter();
+        return;
       }
-    }, 1000);
-  } else {
-    timerSegmentStart = Date.now();
-    timerIntervalId = setInterval(refreshTimerFooter, 50);
-  }
+    }
+    refreshTimerFooter();
+  }, 50);
   refreshTimerFooter();
 }
 
 function startRestTimer(){
   if(timerIntervalId){ clearInterval(timerIntervalId); timerIntervalId = null; }
-  timerRemaining = timerSettings.duration;
+  timerRemainingMs = timerSettings.duration * 1000;
   timerElapsedMs = 0;
   lapCount = 0;
   timerResumeInterval();
@@ -3624,9 +3649,9 @@ function timerPauseOrResume(){
 
 function timerPause(){
   if(timerIntervalId){ clearInterval(timerIntervalId); timerIntervalId = null; }
-  if(timerSettings.mode === "countup"){
-    timerElapsedMs += Date.now() - timerSegmentStart;
-  }
+  const elapsed = Date.now() - timerSegmentStart;
+  if(timerSettings.mode === "countup") timerElapsedMs += elapsed;
+  else timerRemainingMs = Math.max(0, timerRemainingMs - elapsed);
   timerRunState = "paused";
   refreshTimerFooter();
 }
@@ -3635,15 +3660,20 @@ function timerStop(){
   if(timerIntervalId){ clearInterval(timerIntervalId); timerIntervalId = null; }
   timerRunState = "idle";
   timerElapsedMs = 0;
+  timerRemainingMs = 0;
   refreshTimerFooter();
 }
 
 function timerLap(){
   if(timerRunState !== "running") return;
   lapCount++;
-  const t = timerSettings.mode === "countdown"
-    ? formatTime(timerSettings.duration - timerRemaining)
-    : formatStopwatch(timerElapsedMs + (Date.now() - timerSegmentStart));
+  let t;
+  if(timerSettings.mode === "countdown"){
+    const liveRemaining = Math.max(0, timerRemainingMs - (Date.now() - timerSegmentStart));
+    t = formatStopwatch(timerSettings.duration * 1000 - liveRemaining);
+  } else {
+    t = formatStopwatch(timerElapsedMs + (Date.now() - timerSegmentStart));
+  }
   showToast(`Lap ${lapCount} — ${t}`);
 }
 
@@ -3658,31 +3688,11 @@ function cycleTimerModeInline(){
   if(wizardStep === 8) renderWizardStepBody();
 }
 
-function renderTimerModeTabs(navId){
-  const nav = document.getElementById(navId);
-  if(!nav) return;
-  nav.innerHTML = "";
-  [["countdown","Count down"], ["countup","Count up"]].forEach(([key, label]) => {
-    const btn = document.createElement("button");
-    btn.textContent = label;
-    btn.className = timerSettings.mode === key ? "active" : "";
-    btn.onclick = () => {
-      timerSettings.mode = key;
-      saveTimerSettings();
-      refreshTimerFooter();
-      renderTimerSettings();
-      if(wizardStep === 8) renderWizardStepBody();
-    };
-    nav.appendChild(btn);
-  });
-}
-
 function renderTimerSettings(){
   const toggle = document.getElementById("timerEnabledToggle");
   if(toggle) toggle.checked = timerSettings.enabled;
   const modeWrap = document.getElementById("timerModeSettings");
   if(modeWrap) modeWrap.style.display = timerSettings.enabled ? "block" : "none";
-  renderTimerModeTabs("timerModeTabs");
   applyTimerCollapsedState();
 }
 

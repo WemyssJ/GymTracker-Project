@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.5.1.9 — 2026-09-09
+### Fixed
+- **Dark gap below the timer footer on iOS "Add to Home Screen" mode** — added a background-matched insurance strip beneath the timer footer to cover the intermittent gap iOS standalone mode can leave when its safe-area-inset calculation doesn't quite reach the true bottom edge
+
+---
+
 ## v0.5.1.8 — 2026-09-09
 ### Added
 - **Scroll-wheel duration picker** — tapping the countdown time now opens two scrollable minute/second wheels (like iOS) instead of a keyboard-based input, so the on-screen keyboard never covers what you're editing; tap ✓ to confirm

@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.1.11 — 2026-09-09
+### Fixed
+- **Removed the timer footer's "insurance strip"** — a stopgap added in v0.5.1.9 to patch an iOS gap issue, which itself showed up as an unwanted dark bar on other devices
+- **Fixed a pre-existing dark bar below the timer footer on Android** — the project had no `colors.xml`, so Android's system navigation bar fell back to an unstyled default colour instead of matching the app; added `colors.xml` and set `navigationBarColor`/`statusBarColor` in `styles.xml` to the app's dark navy theme colour (note: this is a static native colour and won't follow in-app theme switching — Chalk & Iron, Burnt Red, etc. — since that would need a native bridge)
+
+---
+
 ## v0.5.1.10 — 2026-09-09
 ### Added
 - **Preset colour swatches everywhere** — Settings → People now uses the same boxed colour swatches as the setup wizard instead of the native picker

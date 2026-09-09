@@ -417,10 +417,6 @@
     display:none;flex-direction:column;gap:6px;
   }
   .timer-widget.visible{display:flex;}
-  .timer-widget::after{
-    content:"";position:absolute;left:0;right:0;top:100%;height:50px;
-    background:var(--panel);
-  }
   .timer-widget-info{text-align:center;}
   .timer-mode-btn{
     background:none;border:none;color:var(--muted);font-size:10px;font-weight:800;
@@ -494,7 +490,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.10</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.11</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>

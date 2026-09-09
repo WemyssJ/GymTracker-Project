@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.5 — 2026-09-09
+### Changed
+- Added "Workout" and "Exercise" section headers above their respective button rows on the Progress tab, matching the "Consistency" label style already used for the heatmap below
+
+---
+
 ## v0.6.4 — 2026-09-09
 ### Added
 - **Per-person default rep target** — each person now gets their own reps preset in Settings (previously it was one shared number for everyone), and the reps field's green/red colour coding compares against that person's own target

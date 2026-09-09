@@ -201,6 +201,9 @@
     font-weight:700;margin-bottom:10px;cursor:pointer;user-select:none;}
   .assisted-toggle input{width:14px;height:14px;accent-color:var(--amber);cursor:pointer;}
   .overload-hint{font-size:11.5px;color:var(--amber);font-weight:600;line-height:1.4;margin:8px 0 0 0;}
+  .note-input{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
+    border-radius:8px;padding:7px 10px;font-size:12.5px;margin-top:6px;}
+  .note-input::placeholder{color:var(--faint);}
 
   .people-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .person-col .p-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px;}
@@ -321,6 +324,7 @@
   .hex .vals{display:flex;gap:10px;}
   .hex .vals span{min-width:56px;text-align:right;}
   .hex-sets{font-size:10.5px;color:var(--faint);padding:0 0 6px 0;margin-top:-2px;}
+  .hex-note{font-size:10.5px;color:var(--muted);font-style:italic;padding:0 0 6px 0;}
   .hex-sets .who-sam, .hex-sets .who-joe{font-size:10.5px;}
   .pr-val{color:var(--green);font-weight:800;}
   .reg-val{color:var(--red);font-weight:800;}
@@ -516,7 +520,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.6.6</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.0</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -551,6 +555,7 @@
     <nav class="subtabs collapsible-body" id="progressExerciseTabs"></nav>
 
     <nav class="subtabs" id="progressAssistedToggle" style="display:none;"></nav>
+    <nav class="subtabs" id="progressMetricToggle"></nav>
     <div class="chart-legend" id="chartLegend"></div>
     <canvas id="progressCanvas" height="300"></canvas>
     <p id="progressChartCaption" style="font-size:11.5px;color:var(--muted);margin-top:10px;">Line shows weight (kg) logged each session over time.</p>
@@ -2056,6 +2061,22 @@ function topSetWeight(sets){
   return vals.length ? Math.max(...vals) : null;
 }
 
+// Epley formula — the standard estimate of a one-rep max from a set done
+// for more than one rep. A 1-rep set needs no extrapolation; sets with no
+// usable weight/reps (blank, "0", or old free-text notes) are skipped.
+function estimatedOneRepMax(wt, reps){
+  if(typeof wt !== "number" || wt <= 0) return null;
+  const r = parseInt(reps, 10);
+  if(isNaN(r) || r < 1) return null;
+  return r === 1 ? wt : wt * (1 + r / 30);
+}
+
+function topSetEstimated1RM(sets){
+  if(!sets) return null;
+  const vals = sets.map(s => estimatedOneRepMax(s.wt, s.reps)).filter(v => v !== null);
+  return vals.length ? Math.max(...vals) : null;
+}
+
 function computeStatsFor(tabKey, exercise, personId){
   const sessions = cache[tabKey];
   const wantAssisted = !!assistedState[exercise];
@@ -2499,12 +2520,17 @@ function renderForm(){
         const reps = repsIsDraft ? draftValues[repsDK] : String(getPersonRepsTarget(p.id));
         return { wt, reps, wtIsDraft, repsIsDraft };
       });
+      // Notes never carry forward from the last session — they're specific
+      // to what happened this time, not a stable training parameter.
+      const noteDK = noteDraftKey(ex, p.id);
+      const noteVal = noteDK in draftValues ? draftValues[noteDK] : "";
       html += `
         <div class="p-label" style="color:${p.color};${pi > 0 ? "margin-top:10px;" : ""}">${p.name.toUpperCase()}</div>
         <div class="set-row">
           ${sets.map((set, si) => setBoxHtml(i, p.id, si, set, ex, p.id)).join("")}
           ${count > 1 ? `<div class="set-col copy-set-col"><div class="set-label">&nbsp;</div><button type="button" class="copy-set-btn" onclick="copySetOneToAll(${i},'${p.id}','${safeName}')" aria-label="Copy set 1 into all sets" title="Copy set 1 into all sets">⧉</button></div>` : ""}
         </div>
+        ${commentsEnabled ? `<input type="text" class="note-input" placeholder="Notes (optional)" value="${noteVal.replace(/"/g,"&quot;")}" data-ex="${i}" data-person="${p.id}" data-field="note" oninput="recordDraftNote(activeTab,'${safeName}','${p.id}',this.value)">` : ""}
       `;
     });
     html += `
@@ -2614,6 +2640,7 @@ function renderHistory(){
       if(setsHtml){
         inner += `<div class="hex-sets">${setsHtml}</div>`;
       }
+      inner += notesSummaryHtml(e);
     });
     row.innerHTML = inner;
     container.appendChild(row);
@@ -2636,6 +2663,19 @@ function setsSummary(sets){
     .join(", ");
 }
 
+function escapeHtmlText(str){
+  return String(str || "")
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function notesSummaryHtml(entry){
+  if(!entry || !entry.notes) return "";
+  const parts = people
+    .filter(p => entry.notes[p.id])
+    .map(p => `<span style="color:${p.color};font-weight:700;">${p.name}:</span> ${escapeHtmlText(entry.notes[p.id])}`);
+  return parts.length ? `<div class="hex-note">${parts.join(" · ")}</div>` : "";
+}
+
 function editSession(tabKey, date){
   const sess = (cache[tabKey] || []).find(s => s.date === date);
   if(!sess) return;
@@ -2651,6 +2691,7 @@ function editSession(tabKey, date){
         values[draftKey(ex, p.id, si, "wt")] = (s.wt !== null && s.wt !== undefined) ? String(s.wt) : "";
         values[draftKey(ex, p.id, si, "reps")] = s.reps || "";
       });
+      values[noteDraftKey(ex, p.id)] = (entry.notes && entry.notes[p.id]) || "";
     });
   });
   saveAssistedState();
@@ -2730,6 +2771,7 @@ async function handleSave(evt){
   let anyValue = false;
   getExercises(activeTab).forEach((ex, i)=>{
     const sets = {};
+    const notes = {};
     const count = exSetCounts[ex] ?? defaultSetCount;
     people.forEach(p => {
       const personSets = readSets(i, p.id, count);
@@ -2747,6 +2789,13 @@ async function handleSave(evt){
       }
       sets[p.id] = personSets.map(({wt, reps}) => ({wt, reps}));
 
+      const noteInput = document.querySelector(`[data-ex="${i}"][data-person="${p.id}"][data-field="note"]`);
+      const noteVal = noteInput ? noteInput.value.trim() : "";
+      if(noteVal){
+        notes[p.id] = noteVal;
+        anyValue = true;
+      }
+
       const top = topSetWeight(sets[p.id]);
       const st = computeStatsFor(activeTab, ex, p.id);
       if(top !== null){
@@ -2754,7 +2803,7 @@ async function handleSave(evt){
         if(st.last !== null && top < st.last) regCount++;
       }
     });
-    entries[ex] = { sets, assisted: !!assistedState[ex] };
+    entries[ex] = { sets, assisted: !!assistedState[ex], notes };
   });
 
   if(!anyValue){
@@ -2972,6 +3021,21 @@ function renderExerciseSettings(containerId){
       `;
       container.appendChild(repsRow);
     });
+
+    const commentsRow = document.createElement("div");
+    commentsRow.className = "settings-row";
+    commentsRow.style.marginBottom = "14px";
+    commentsRow.innerHTML = `
+      <div class="settings-row-info">
+        <div class="settings-row-title">Comments</div>
+        <div class="settings-row-desc">Adds an optional notes field per person under each exercise</div>
+      </div>
+      <label class="toggle-switch" aria-label="Comments">
+        <input type="checkbox" id="commentsEnabledToggle" ${commentsEnabled ? "checked" : ""} onchange="handleCommentsEnabledToggle(this.checked)">
+        <span class="toggle-slider"></span>
+      </label>
+    `;
+    container.appendChild(commentsRow);
   }
   Object.keys(CONFIG).forEach(tabKey => {
     const section = document.createElement("div");
@@ -3131,7 +3195,7 @@ function renderProgressAssistedToggle(hasAssisted, hasUnassisted){
   });
 }
 
-function getExerciseSeries(tabKey, exercise, assistedFilter){
+function getExerciseSeries(tabKey, exercise, assistedFilter, metric){
   return [...cache[tabKey]]
     .filter(sess => sess.entries[exercise])
     .filter(sess => assistedFilter === null || !!sess.entries[exercise].assisted === assistedFilter)
@@ -3139,10 +3203,26 @@ function getExerciseSeries(tabKey, exercise, assistedFilter){
     .map(sess => {
       const point = { date: sess.date, values: {} };
       people.forEach(p => {
-        point.values[p.id] = topSetWeight(getPersonSets(sess.entries[exercise], p.id));
+        const sets = getPersonSets(sess.entries[exercise], p.id);
+        point.values[p.id] = metric === "1rm" ? topSetEstimated1RM(sets) : topSetWeight(sets);
       });
       return point;
     });
+}
+
+let progressMetric = "weight"; // "weight" | "1rm"
+
+function renderProgressMetricToggle(){
+  const nav = document.getElementById("progressMetricToggle");
+  if(!nav) return;
+  nav.innerHTML = "";
+  [["Weight", "weight"], ["Est. 1RM", "1rm"]].forEach(([label, val])=>{
+    const btn = document.createElement("button");
+    btn.textContent = label;
+    btn.className = progressMetric === val ? "active" : "";
+    btn.onclick = () => { progressMetric = val; renderProgressView(); };
+    nav.appendChild(btn);
+  });
 }
 
 function renderChartLegend(){
@@ -3169,14 +3249,16 @@ function renderProgressView(){
   }
   if(!hasBoth) progressAssistedFilter = null;
   renderProgressAssistedToggle(modes.hasAssisted, modes.hasUnassisted);
+  renderProgressMetricToggle();
 
-  const series = getExerciseSeries(progressSubTab, progressExercise, progressAssistedFilter);
+  const series = getExerciseSeries(progressSubTab, progressExercise, progressAssistedFilter, progressMetric);
   drawLineChart(series);
   const caption = document.getElementById("progressChartCaption");
   if(caption){
+    const metricLabel = progressMetric === "1rm" ? "estimated 1-rep max (kg)" : "weight (kg)";
     caption.textContent = hasBoth
-      ? `Line shows weight (kg) logged each ${progressAssistedFilter ? "assisted" : "unassisted"} session over time.`
-      : "Line shows weight (kg) logged each session over time.";
+      ? `Line shows ${metricLabel} logged each ${progressAssistedFilter ? "assisted" : "unassisted"} session over time.`
+      : `Line shows ${metricLabel} logged each session over time.`;
   }
   renderHeatmap();
   applyProgressWorkoutCollapsedState();
@@ -3935,6 +4017,33 @@ function toggleAssisted(exName, checked){
   renderForm();
 }
 
+// ---- Optional per-person comments/notes on each exercise ----
+const COMMENTS_ENABLED_KEY = "gymtracker:commentsEnabled";
+let commentsEnabled = true;
+
+function loadCommentsEnabled(){
+  try{ return localStorage.getItem(COMMENTS_ENABLED_KEY) !== "0"; }catch(e){ return true; }
+}
+function saveCommentsEnabled(){
+  try{ localStorage.setItem(COMMENTS_ENABLED_KEY, commentsEnabled ? "1" : "0"); }catch(e){}
+}
+function handleCommentsEnabledToggle(checked){
+  commentsEnabled = checked;
+  saveCommentsEnabled();
+  if(CONFIG[activeTab]) renderForm();
+}
+
+function noteDraftKey(exName, personId){
+  return exName + "|" + personId + "|note";
+}
+function recordDraftNote(tabKey, exName, personId, value){
+  if(!formDrafts[tabKey]){
+    formDrafts[tabKey] = { date: document.getElementById("sessionDate")?.value || todayStr(), values: {} };
+  }
+  formDrafts[tabKey].values[noteDraftKey(exName, personId)] = value;
+  saveFormDrafts();
+}
+
 // ---- In-progress session drafts ----
 // Captures every keystroke in the log form so switching tabs, collapsing an
 // exercise, or the browser closing/crashing never wipes unsaved sets.
@@ -4322,6 +4431,7 @@ async function init(){
   defaultSetCount = loadDefaultSetCount();
   defaultRepsTargets = loadDefaultRepsTargets();
   assistedState = loadAssistedState();
+  commentsEnabled = loadCommentsEnabled();
   formDrafts = loadFormDrafts();
   timerSettingsCollapsed = loadTimerSettingsCollapsed();
   creditsSettingsCollapsed = loadCreditsSettingsCollapsed();
@@ -4823,6 +4933,7 @@ async function deleteAllData(){
       localStorage.removeItem(DEFAULT_SET_COUNT_KEY);
       localStorage.removeItem(DEFAULT_REPS_KEY);
       localStorage.removeItem(LEGACY_DEFAULT_REPS_KEY);
+      localStorage.removeItem(COMMENTS_ENABLED_KEY);
       localStorage.removeItem(ASSISTED_STATE_KEY);
       localStorage.removeItem(ACTIVE_DAYS_KEY);
     }
@@ -4926,6 +5037,7 @@ function buildExInfoRecentHtml(exName){
     return `<div class="history-row" style="padding:10px 12px;">
       <div class="hdate-row" style="margin-bottom:4px;"><span class="hdate">${fmtDate(r.date)}${r.entry.assisted ? " · assisted" : ""}</span></div>
       <div class="hex-sets">${parts || "–"}</div>
+      ${notesSummaryHtml(r.entry)}
     </div>`;
   }).join("");
 }

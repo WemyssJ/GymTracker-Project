@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.7.0 — 2026-09-09
+### Added
+- **Comments** — an optional "Notes (optional)" field per person under each exercise, for things like "watch form" or "felt tired" that don't belong in the reps field. Notes never carry forward between sessions, show up in History and in the exercise info History tab, and restore correctly when editing a past session. Toggle it off in Settings → Exercises if you don't want it (on by default)
+- **Estimated 1RM trend on Progress** — a Weight/Est. 1RM switch above the chart lets you view either your logged top-set weight or an estimated one-rep max (Epley formula) over time, so you can compare sessions with different weight/rep combos on one consistent number
+
+---
+
 ## v0.6.6 — 2026-09-09
 ### Added
 - **Workout, Exercise, and Consistency headers on Progress are now collapsible** (tap to expand/collapse, state remembered), matching every other section header in the app

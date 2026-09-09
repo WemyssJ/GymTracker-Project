@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.6 — 2026-09-09
+### Added
+- **Simple/Advanced mode** — a new toggle at the top of Settings (off by default). Simple mode hides the assisted-mode checkbox, notes field, plate calculator, per-person default-reps fine-tuning, and GitHub sync, so the app is just weight/reps logging for anyone who doesn't need the extra options. Turning Advanced mode on reveals all of it again exactly as configured — switching modes never resets or clears anything, it only shows/hides the controls
+
+---
+
 ## v0.7.5 — 2026-09-09
 ### Removed
 - **Estimated 1RM** — removed the Weight/Est. 1RM toggle and its chart code entirely

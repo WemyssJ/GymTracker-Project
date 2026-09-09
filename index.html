@@ -539,7 +539,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.5</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.6</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -593,6 +593,17 @@
   </div>
 
   <div id="settingsView" style="display:none;">
+    <div class="settings-row" style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line);">
+      <div class="settings-row-info">
+        <div class="settings-row-title">Advanced mode</div>
+        <div class="settings-row-desc">Reveals extra options: assisted mode, notes, plate calculator, GitHub sync, and per-person fine-tuning. Off by default to keep things simple.</div>
+      </div>
+      <label class="toggle-switch" aria-label="Advanced mode">
+        <input type="checkbox" id="advancedModeToggle" onchange="handleAdvancedModeToggle(this.checked)">
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
     <div class="section-label" id="settingsDaysLabel" style="margin-top:0;">Days</div>
     <div id="dayTogglesContainer" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;"></div>
     <p style="font-size:11.5px;color:var(--muted);margin:0 0 26px 0;line-height:1.5;">Toggle which workout days appear. Disabling a day hides its tab but keeps all logged data.</p>
@@ -639,10 +650,12 @@
       <span id="backupToggleIcon">▾</span> Backup &amp; Sync
     </div>
     <div id="backupSettingsBody" class="collapsible-body">
-      <button type="button" class="icon-btn" style="width:100%;margin-bottom:8px;" onclick="openSettings()">🔑 Configure GitHub</button>
-      <div class="header-actions" style="padding:0 0 8px 0;">
-        <button id="pushBtn" class="icon-btn push-btn" onclick="pushToGithub()">⤴ Push to GitHub</button>
-        <button id="pullBtn" class="icon-btn push-btn" onclick="pullFromGithub()">⤵ Load from GitHub</button>
+      <div id="githubSyncControls" style="display:none;">
+        <button type="button" class="icon-btn" style="width:100%;margin-bottom:8px;" onclick="openSettings()">🔑 Configure GitHub</button>
+        <div class="header-actions" style="padding:0 0 8px 0;">
+          <button id="pushBtn" class="icon-btn push-btn" onclick="pushToGithub()">⤴ Push to GitHub</button>
+          <button id="pullBtn" class="icon-btn push-btn" onclick="pullFromGithub()">⤵ Load from GitHub</button>
+        </div>
       </div>
       <div class="header-actions" style="padding:0 0 18px 0;">
         <button id="exportBtn" class="icon-btn backup-btn" onclick="exportExcel()">⤓ Backup (Excel)</button>
@@ -2501,7 +2514,7 @@ function renderForm(){
     const infoBtn = EXERCISE_INFO[ex]
       ? `<button type="button" class="ex-info-btn" onclick="showExerciseInfo('${safeName}')" aria-label="Exercise info">i</button>`
       : "";
-    const plateBtn = `<button type="button" class="ex-info-btn" style="font-style:normal;" onclick="openPlateCalc('${safeName}')" aria-label="Plate calculator">🏋</button>`;
+    const plateBtn = advancedMode ? `<button type="button" class="ex-info-btn" style="font-style:normal;" onclick="openPlateCalc('${safeName}')" aria-label="Plate calculator">🏋</button>` : "";
     const btnGroup = `<div style="display:flex;gap:6px;">${infoBtn}${plateBtn}</div>`;
     const isCollapsed = !!collapsedExercises[ex];
     html += `<div class="exercise-block${isCollapsed?" ex-collapsed":""}" data-ex-name="${safeName}">
@@ -2510,10 +2523,10 @@ function renderForm(){
         ${btnGroup}
       </div>
       <div class="exercise-collapsible">
-        <label class="assisted-toggle">
+        ${advancedMode ? `<label class="assisted-toggle">
           <input type="checkbox" ${assisted ? "checked" : ""} onchange="toggleAssisted('${safeName}', this.checked)">
           <span>Assisted</span>
-        </label>`;
+        </label>` : ""}`;
     people.forEach((p, pi) => {
       const lastSets = lastEntry ? fillForwardSets(getPersonSets(lastEntry, p.id)) : [];
       const sets = Array.from({length: count}, (_, si) => {
@@ -2540,7 +2553,7 @@ function renderForm(){
       const noteFieldKey = ex + "|" + p.id;
       const showNoteInput = !!noteVal || !!revealedNoteFields[noteFieldKey];
       let noteHtml = "";
-      if(commentsEnabled){
+      if(advancedMode && commentsEnabled){
         noteHtml = showNoteInput
           ? `<input type="text" class="note-input" placeholder="Notes (optional)" value="${noteVal.replace(/"/g,"&quot;")}" data-ex="${i}" data-person="${p.id}" data-field="note" oninput="recordDraftNote(activeTab,'${safeName}','${p.id}',this.value)">`
           : `<button type="button" class="add-note-link" onclick="revealNoteField(${i},'${p.id}')">+ Add note</button>`;
@@ -2899,6 +2912,7 @@ async function switchTab(tabKey){
 
   if(tabKey === "settings"){
     document.getElementById("settingsView").style.display = "block";
+    applyAdvancedModeVisibility();
     renderDaySettings();
     renderPeopleSettings();
     renderExerciseSettings();
@@ -2947,14 +2961,14 @@ function renderPeopleSettings(){
       <div style="display:flex;flex-wrap:wrap;gap:8px;">
         ${colorSwatchRowHtml(idx)}
       </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--line);">
+      ${advancedMode ? `<div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--line);">
         <span style="font-size:12px;color:var(--muted);font-weight:700;">Default reps</span>
         <div class="set-count-row" style="margin-top:0;">
           <button type="button" class="set-count-btn" id="defaultRepsMinusBtn-${p.id}" onclick="adjustPersonRepsTarget('${p.id}',-1)" ${target<=1?"hidden":""}>−</button>
           <span class="set-count-label" id="defaultRepsLabel-${p.id}">${target} reps</span>
           <button type="button" class="set-count-btn" id="defaultRepsPlusBtn-${p.id}" onclick="adjustPersonRepsTarget('${p.id}',1)" ${target>=30?"hidden":""}>+</button>
         </div>
-      </div>
+      </div>` : ""}
     `;
     container.appendChild(row);
   });
@@ -3018,7 +3032,7 @@ function renderExerciseSettings(containerId){
   if(!container) return;
   container.innerHTML = "";
   const isMain = containerId === "exerciseSettingsContainer";
-  if(isMain){
+  if(isMain && advancedMode){
     const row = document.createElement("div");
     row.className = "settings-row";
     row.style.marginBottom = "14px";
@@ -4180,6 +4194,36 @@ function toggleAssisted(exName, checked){
   renderForm();
 }
 
+// ---- Simple/Advanced mode ----
+// Simple (default) hides extra controls — assisted mode, notes, plate
+// calculator, GitHub sync, per-person fine-tuning — without resetting
+// whatever they were set to; switching back to Advanced brings them back
+// exactly as configured.
+const ADVANCED_MODE_KEY = "gymtracker:advancedMode";
+let advancedMode = false;
+
+function loadAdvancedMode(){
+  try{ return localStorage.getItem(ADVANCED_MODE_KEY) === "1"; }catch(e){ return false; }
+}
+function saveAdvancedMode(){
+  try{ localStorage.setItem(ADVANCED_MODE_KEY, advancedMode ? "1" : "0"); }catch(e){}
+}
+function applyAdvancedModeVisibility(){
+  const el = document.getElementById("githubSyncControls");
+  if(el) el.style.display = advancedMode ? "" : "none";
+  const toggle = document.getElementById("advancedModeToggle");
+  if(toggle) toggle.checked = advancedMode;
+}
+
+function handleAdvancedModeToggle(checked){
+  advancedMode = checked;
+  saveAdvancedMode();
+  if(CONFIG[activeTab]) renderForm();
+  renderPeopleSettings();
+  renderExerciseSettings();
+  applyAdvancedModeVisibility();
+}
+
 // ---- Optional per-person comments/notes on each exercise ----
 const COMMENTS_ENABLED_KEY = "gymtracker:commentsEnabled";
 let commentsEnabled = true;
@@ -4608,6 +4652,7 @@ async function init(){
   defaultRepsTargets = loadDefaultRepsTargets();
   assistedState = loadAssistedState();
   commentsEnabled = loadCommentsEnabled();
+  advancedMode = loadAdvancedMode();
   formDrafts = loadFormDrafts();
   timerSettingsCollapsed = loadTimerSettingsCollapsed();
   creditsSettingsCollapsed = loadCreditsSettingsCollapsed();

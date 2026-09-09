@@ -516,7 +516,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.6.5</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.6.6</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -540,23 +540,33 @@
   </div>
 
   <div id="progressView" style="display:none;">
-    <div class="section-label">Workout</div>
-    <nav class="subtabs" id="progressSubTabs"></nav>
-    <div class="section-label">Exercise</div>
-    <nav class="subtabs" id="progressExerciseTabs"></nav>
+    <div class="section-label collapsible" onclick="toggleProgressWorkoutCollapsed()">
+      <span id="progressWorkoutToggleIcon">▾</span> Workout
+    </div>
+    <nav class="subtabs collapsible-body" id="progressSubTabs"></nav>
+
+    <div class="section-label collapsible" onclick="toggleProgressExerciseCollapsed()">
+      <span id="progressExerciseToggleIcon">▾</span> Exercise
+    </div>
+    <nav class="subtabs collapsible-body" id="progressExerciseTabs"></nav>
+
     <nav class="subtabs" id="progressAssistedToggle" style="display:none;"></nav>
     <div class="chart-legend" id="chartLegend"></div>
     <canvas id="progressCanvas" height="300"></canvas>
     <p id="progressChartCaption" style="font-size:11.5px;color:var(--muted);margin-top:10px;">Line shows weight (kg) logged each session over time.</p>
 
-    <div class="section-label" style="margin-top:26px;">Consistency</div>
-    <div class="heatmap-nav">
-      <button type="button" class="set-count-btn" onclick="shiftHeatmapMonth(-1)" aria-label="Previous month">‹</button>
-      <span id="heatmapMonthLabel"></span>
-      <button type="button" class="set-count-btn" onclick="shiftHeatmapMonth(1)" aria-label="Next month">›</button>
+    <div class="section-label collapsible" style="margin-top:26px;" onclick="toggleProgressConsistencyCollapsed()">
+      <span id="progressConsistencyToggleIcon">▾</span> Consistency
     </div>
-    <div id="heatmapGrid" class="heatmap-grid"></div>
-    <p style="font-size:11.5px;color:var(--muted);margin-top:10px;">Highlighted days had a session logged, in any split.</p>
+    <div id="consistencyBody" class="collapsible-body">
+      <div class="heatmap-nav">
+        <button type="button" class="set-count-btn" onclick="shiftHeatmapMonth(-1)" aria-label="Previous month">‹</button>
+        <span id="heatmapMonthLabel"></span>
+        <button type="button" class="set-count-btn" onclick="shiftHeatmapMonth(1)" aria-label="Next month">›</button>
+      </div>
+      <div id="heatmapGrid" class="heatmap-grid"></div>
+      <p style="font-size:11.5px;color:var(--muted);margin-top:10px;">Highlighted days had a session logged, in any split.</p>
+    </div>
   </div>
 
   <div id="settingsView" style="display:none;">
@@ -748,10 +758,10 @@
       <div id="exInfoMusclesView">
         <img id="exInfoImg" class="muscle-img" src="" alt="Muscle diagram" style="display:none;">
         <div id="exInfoMuscles"></div>
-        <div id="exInfoTips"></div>
       </div>
       <div id="exInfoExerciseView" style="display:none;">
         <div id="exInfoRepdbImgs"></div>
+        <div id="exInfoTips"></div>
       </div>
       <div id="exInfoRecentView" style="display:none;"></div>
     </div>
@@ -2177,6 +2187,67 @@ function applyHistoryCollapsedState(){
   icon.textContent = historyCollapsed ? "▸" : "▾";
 }
 
+let progressWorkoutCollapsed = false;
+let progressExerciseCollapsed = false;
+let progressConsistencyCollapsed = false;
+
+function loadProgressWorkoutCollapsed(){
+  try{ return localStorage.getItem("gymtracker:progressWorkoutCollapsed") === "1"; }catch(e){ return false; }
+}
+function saveProgressWorkoutCollapsed(){
+  try{ localStorage.setItem("gymtracker:progressWorkoutCollapsed", progressWorkoutCollapsed ? "1" : "0"); }catch(e){}
+}
+function toggleProgressWorkoutCollapsed(){
+  progressWorkoutCollapsed = !progressWorkoutCollapsed;
+  saveProgressWorkoutCollapsed();
+  applyProgressWorkoutCollapsedState();
+}
+function applyProgressWorkoutCollapsedState(){
+  const nav = document.getElementById("progressSubTabs");
+  const icon = document.getElementById("progressWorkoutToggleIcon");
+  if(!nav || !icon) return;
+  nav.classList.toggle("is-collapsed", progressWorkoutCollapsed);
+  icon.textContent = progressWorkoutCollapsed ? "▸" : "▾";
+}
+
+function loadProgressExerciseCollapsed(){
+  try{ return localStorage.getItem("gymtracker:progressExerciseCollapsed") === "1"; }catch(e){ return false; }
+}
+function saveProgressExerciseCollapsed(){
+  try{ localStorage.setItem("gymtracker:progressExerciseCollapsed", progressExerciseCollapsed ? "1" : "0"); }catch(e){}
+}
+function toggleProgressExerciseCollapsed(){
+  progressExerciseCollapsed = !progressExerciseCollapsed;
+  saveProgressExerciseCollapsed();
+  applyProgressExerciseCollapsedState();
+}
+function applyProgressExerciseCollapsedState(){
+  const nav = document.getElementById("progressExerciseTabs");
+  const icon = document.getElementById("progressExerciseToggleIcon");
+  if(!nav || !icon) return;
+  nav.classList.toggle("is-collapsed", progressExerciseCollapsed);
+  icon.textContent = progressExerciseCollapsed ? "▸" : "▾";
+}
+
+function loadProgressConsistencyCollapsed(){
+  try{ return localStorage.getItem("gymtracker:progressConsistencyCollapsed") === "1"; }catch(e){ return false; }
+}
+function saveProgressConsistencyCollapsed(){
+  try{ localStorage.setItem("gymtracker:progressConsistencyCollapsed", progressConsistencyCollapsed ? "1" : "0"); }catch(e){}
+}
+function toggleProgressConsistencyCollapsed(){
+  progressConsistencyCollapsed = !progressConsistencyCollapsed;
+  saveProgressConsistencyCollapsed();
+  applyProgressConsistencyCollapsedState();
+}
+function applyProgressConsistencyCollapsedState(){
+  const body = document.getElementById("consistencyBody");
+  const icon = document.getElementById("progressConsistencyToggleIcon");
+  if(!body || !icon) return;
+  body.classList.toggle("is-collapsed", progressConsistencyCollapsed);
+  icon.textContent = progressConsistencyCollapsed ? "▸" : "▾";
+}
+
 let themeSettingsCollapsed = false;
 let peopleSettingsCollapsed = false;
 let exerciseSettingsCollapsed = false;
@@ -3108,6 +3179,9 @@ function renderProgressView(){
       : "Line shows weight (kg) logged each session over time.";
   }
   renderHeatmap();
+  applyProgressWorkoutCollapsedState();
+  applyProgressExerciseCollapsedState();
+  applyProgressConsistencyCollapsedState();
 }
 
 let heatmapMonthOffset = 0;
@@ -4236,6 +4310,9 @@ async function init(){
   statsCollapsed = loadStatsCollapsed();
   formCollapsed = loadFormCollapsed();
   historyCollapsed = loadHistoryCollapsed();
+  progressWorkoutCollapsed = loadProgressWorkoutCollapsed();
+  progressExerciseCollapsed = loadProgressExerciseCollapsed();
+  progressConsistencyCollapsed = loadProgressConsistencyCollapsed();
   themeSettingsCollapsed = loadThemeSettingsCollapsed();
   peopleSettingsCollapsed = loadPeopleSettingsCollapsed();
   exerciseSettingsCollapsed = loadExerciseSettingsCollapsed();
@@ -4754,6 +4831,9 @@ async function deleteAllData(){
     localStorage.removeItem("gymtracker:statsCollapsed");
     localStorage.removeItem("gymtracker:formCollapsed");
     localStorage.removeItem("gymtracker:historyCollapsed");
+    localStorage.removeItem("gymtracker:progressWorkoutCollapsed");
+    localStorage.removeItem("gymtracker:progressExerciseCollapsed");
+    localStorage.removeItem("gymtracker:progressConsistencyCollapsed");
     localStorage.removeItem("gymtracker:themeSettingsCollapsed");
     localStorage.removeItem("gymtracker:peopleSettingsCollapsed");
     localStorage.removeItem("gymtracker:exerciseSettingsCollapsed");
@@ -4797,13 +4877,13 @@ async function showExerciseInfo(exName){
     </div>
   `;
 
-  // Exercise view (RepDB images)
+  // Exercise view (RepDB images + form tips — form tips live here rather
+  // than on Muscles so the two tabs are closer in height and the modal
+  // doesn't visibly jump size when switching between them)
   const repdb = EXERCISE_REPDB[exName];
   const viewTabs = document.getElementById("exInfoViewTabs");
-  const exerciseTabBtn = document.getElementById("exerciseViewTab");
   viewTabs.style.display = "flex";
   if(repdb){
-    exerciseTabBtn.style.display = "";
     const multi = repdb.poses.length > 1;
     const imgsHtml = repdb.poses.map((pose, i) =>
       `<div style="flex:1;min-width:0;text-align:center;">
@@ -4813,9 +4893,9 @@ async function showExerciseInfo(exName){
     ).join("");
     document.getElementById("exInfoRepdbImgs").innerHTML =
       `<div style="display:flex;gap:10px;margin-bottom:10px;">${imgsHtml}</div>` +
-      `<p style="font-size:11px;color:var(--muted);text-align:center;margin:0;">Images via <a href="https://github.com/RepDB/exercise-dataset" target="_blank" rel="noopener" style="color:var(--amber);">RepDB</a></p>`;
+      `<p style="font-size:11px;color:var(--muted);text-align:center;margin:0 0 14px 0;">Images via <a href="https://github.com/RepDB/exercise-dataset" target="_blank" rel="noopener" style="color:var(--amber);">RepDB</a></p>`;
   } else {
-    exerciseTabBtn.style.display = "none";
+    document.getElementById("exInfoRepdbImgs").innerHTML = "";
   }
 
   // Recent view (last several logged sessions for this exercise)

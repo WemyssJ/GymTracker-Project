@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.6.6 — 2026-09-09
+### Added
+- **Workout, Exercise, and Consistency headers on Progress are now collapsible** (tap to expand/collapse, state remembered), matching every other section header in the app
+
+### Changed
+- **Exercise info modal no longer visibly resizes when switching Muscles/Exercise tabs** — Form Tips moved from the Muscles tab to the Exercise tab (alongside the RepDB images), balancing the two tabs' heights so the modal doesn't noticeably jump size when tapping between them; the Exercise tab is also no longer hidden for exercises without RepDB images, since it can always show at least Form Tips now
+
+---
+
 ## v0.6.5 — 2026-09-09
 ### Changed
 - Added "Workout" and "Exercise" section headers above their respective button rows on the Progress tab, matching the "Consistency" label style already used for the heatmap below

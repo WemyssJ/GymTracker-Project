@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.5.1.8 — 2026-09-09
+### Added
+- **Scroll-wheel duration picker** — tapping the countdown time now opens two scrollable minute/second wheels (like iOS) instead of a keyboard-based input, so the on-screen keyboard never covers what you're editing; tap ✓ to confirm
+
+### Changed
+- **Timer controls redesigned**: Start now turns into a red "Reset" button once running or paused; Pause/Resume freezes the display in place without clearing it; only pressing the red Reset button clears the timer back to zero and reverts the button to "Start" (removed the separate Stop button)
+- Toned down the timer footer's top border from a bright 2px accent line to a subtle 1px line, consistent with dividers used elsewhere in the app
+
+---
+
 ## v0.5.1.7 — 2026-09-09
 ### Added
 - **Tap-to-edit timer duration** — tap the countdown time on the timer footer to edit it directly (minutes : seconds) without opening Settings; only available in Count down mode while idle

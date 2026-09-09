@@ -399,7 +399,7 @@
   main.has-timer-footer{padding-bottom:112px;}
   .timer-widget{
     position:fixed;left:0;right:0;bottom:0;
-    background:var(--panel);border-top:2px solid var(--amber);
+    background:var(--panel);border-top:1px solid var(--line);
     padding:8px 14px calc(8px + env(safe-area-inset-bottom));
     z-index:45;box-shadow:0 -4px 20px rgba(0,0,0,0.4);
     display:none;flex-direction:column;gap:6px;
@@ -418,15 +418,6 @@
   }
   .timer-display.editable{cursor:pointer;display:inline-block;border-bottom:1px dashed var(--muted);}
   .timer-display.done{color:var(--green);}
-  .timer-inline-input{
-    width:46px;text-align:center;background:transparent;border:none;color:var(--amber);
-    font-size:32px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-0.02em;
-    -moz-appearance:textfield;
-  }
-  .timer-inline-input::-webkit-inner-spin-button,.timer-inline-input::-webkit-outer-spin-button{
-    -webkit-appearance:none;margin:0;
-  }
-  .timer-inline-input:focus{outline:none;}
   .timer-controls{display:flex;gap:6px;}
   .timer-btn{
     flex:1;padding:7px 4px;border-radius:8px;border:1px solid var(--line);
@@ -435,6 +426,31 @@
   }
   .timer-btn:disabled{opacity:0.35;cursor:default;}
   .timer-btn:not(:disabled):active{opacity:0.7;}
+  .timer-btn.danger{background:var(--red-bg);color:var(--red);border-color:#5a2320;}
+
+  /* ── Timer duration wheel picker ─────────────────────────── */
+  .timer-wheel-picker{position:relative;display:flex;align-items:center;justify-content:center;gap:2px;height:104px;}
+  .timer-wheel{
+    height:104px;width:50px;overflow-y:scroll;scroll-snap-type:y mandatory;
+    -webkit-overflow-scrolling:touch;scrollbar-width:none;padding:36px 0;
+  }
+  .timer-wheel::-webkit-scrollbar{display:none;}
+  .timer-wheel-item{
+    height:32px;line-height:32px;text-align:center;font-size:19px;font-weight:700;
+    color:var(--muted);scroll-snap-align:center;font-variant-numeric:tabular-nums;
+  }
+  .timer-wheel-item.active{color:var(--amber);font-size:23px;}
+  .timer-wheel-colon{font-size:24px;font-weight:800;color:var(--amber);}
+  .timer-wheel-highlight{
+    position:absolute;top:50%;left:0;right:40px;height:32px;margin-top:-16px;
+    border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+    pointer-events:none;
+  }
+  .timer-wheel-done{
+    background:var(--amber-dim);color:var(--amber);border:1px solid var(--amber);
+    border-radius:8px;width:32px;height:32px;font-size:15px;font-weight:800;
+    cursor:pointer;flex-shrink:0;margin-left:6px;
+  }
 
   /* ── Timer & credits settings rows ────────────────── */
   .settings-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid var(--line);}
@@ -462,7 +478,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.7</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.8</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -604,9 +620,8 @@
     <div id="timerDisplay" class="timer-display" onclick="startEditTimerDuration()">1:30</div>
   </div>
   <div id="timerControls" class="timer-controls">
-    <button type="button" id="timerStartBtn" class="timer-btn" onclick="timerStart()">Start</button>
-    <button type="button" id="timerPauseBtn" class="timer-btn" onclick="timerPause()" disabled>Pause</button>
-    <button type="button" id="timerStopBtn" class="timer-btn" onclick="timerStop()" disabled>Stop</button>
+    <button type="button" id="timerStartBtn" class="timer-btn" onclick="timerStartOrReset()">Start</button>
+    <button type="button" id="timerPauseBtn" class="timer-btn" onclick="timerPauseOrResume()" disabled>Pause</button>
     <button type="button" id="timerLapBtn" class="timer-btn" onclick="timerLap()" disabled>Lap</button>
   </div>
 </div>
@@ -3462,7 +3477,6 @@ function refreshTimerFooter(){
   const display = document.getElementById("timerDisplay");
   const startBtn = document.getElementById("timerStartBtn");
   const pauseBtn = document.getElementById("timerPauseBtn");
-  const stopBtn = document.getElementById("timerStopBtn");
   const lapBtn = document.getElementById("timerLapBtn");
   if(!modeBtn || !display || !startBtn) return;
 
@@ -3487,43 +3501,77 @@ function refreshTimerFooter(){
     }
   }
 
-  startBtn.textContent = timerRunState === "paused" ? "Resume" : "Start";
-  startBtn.disabled = timerRunState === "running";
-  pauseBtn.disabled = timerRunState !== "running";
-  stopBtn.disabled = timerRunState === "idle";
+  if(timerRunState === "idle"){
+    startBtn.textContent = "Start";
+    startBtn.classList.remove("danger");
+  } else {
+    startBtn.textContent = "Reset";
+    startBtn.classList.add("danger");
+  }
+  pauseBtn.textContent = timerRunState === "paused" ? "Resume" : "Pause";
+  pauseBtn.disabled = timerRunState === "idle" || timerRunState === "done";
   lapBtn.disabled = timerRunState !== "running";
 }
+
+const TIMER_WHEEL_ITEM_H = 32;
 
 function startEditTimerDuration(){
   if(timerSettings.mode !== "countdown" || timerRunState !== "idle") return;
   const display = document.getElementById("timerDisplay");
   if(!display || display.dataset.editing === "1") return;
   display.dataset.editing = "1";
-  const min = Math.floor(timerSettings.duration / 60);
-  const sec = timerSettings.duration % 60;
+  const curMin = Math.floor(timerSettings.duration / 60);
+  const curSec = timerSettings.duration % 60;
+
+  const minItems = Array.from({length:60}, (_,i)=> `<div class="timer-wheel-item">${i}</div>`).join("");
+  const secItems = Array.from({length:60}, (_,i)=> `<div class="timer-wheel-item">${String(i).padStart(2,"0")}</div>`).join("");
+
   display.innerHTML = `
-    <input type="number" id="timerInlineMin" class="timer-inline-input" min="0" max="59" value="${min}" inputmode="numeric">:<input type="number" id="timerInlineSec" class="timer-inline-input" min="0" max="59" value="${String(sec).padStart(2,"0")}" inputmode="numeric">
+    <div class="timer-wheel-picker">
+      <div class="timer-wheel-highlight"></div>
+      <div class="timer-wheel" id="timerWheelMin">${minItems}</div>
+      <span class="timer-wheel-colon">:</span>
+      <div class="timer-wheel" id="timerWheelSec">${secItems}</div>
+      <button type="button" class="timer-wheel-done" onclick="event.stopPropagation(); commitTimerDurationEdit()" aria-label="Done">✓</button>
+    </div>
   `;
-  const minEl = document.getElementById("timerInlineMin");
-  const secEl = document.getElementById("timerInlineSec");
-  let committed = false;
-  function commit(){
-    if(committed) return;
-    committed = true;
-    const m = Math.max(0, parseInt(minEl.value, 10) || 0);
-    const s = Math.max(0, Math.min(59, parseInt(secEl.value, 10) || 0));
-    timerSettings.duration = Math.max(5, m * 60 + s);
-    saveTimerSettings();
-    display.dataset.editing = "";
-    refreshTimerFooter();
-    renderTimerSettings();
+
+  const minEl = document.getElementById("timerWheelMin");
+  const secEl = document.getElementById("timerWheelSec");
+
+  setTimeout(() => {
+    minEl.scrollTop = curMin * TIMER_WHEEL_ITEM_H;
+    secEl.scrollTop = curSec * TIMER_WHEEL_ITEM_H;
+    highlightWheelItem(minEl);
+    highlightWheelItem(secEl);
+  }, 0);
+
+  let scrollSettleTimer = null;
+  function onWheelScroll(el){
+    highlightWheelItem(el);
+    clearTimeout(scrollSettleTimer);
+    scrollSettleTimer = setTimeout(() => {
+      const m = Math.round(minEl.scrollTop / TIMER_WHEEL_ITEM_H);
+      const s = Math.round(secEl.scrollTop / TIMER_WHEEL_ITEM_H);
+      timerSettings.duration = Math.max(5, m * 60 + s);
+      saveTimerSettings();
+      renderTimerSettings();
+    }, 120);
   }
-  minEl.addEventListener("blur", () => setTimeout(() => { if(document.activeElement !== secEl) commit(); }, 0));
-  secEl.addEventListener("blur", () => setTimeout(() => { if(document.activeElement !== minEl) commit(); }, 0));
-  minEl.addEventListener("keydown", e => { if(e.key === "Enter") commit(); });
-  secEl.addEventListener("keydown", e => { if(e.key === "Enter") commit(); });
-  minEl.focus();
-  minEl.select();
+  minEl.addEventListener("scroll", () => onWheelScroll(minEl));
+  secEl.addEventListener("scroll", () => onWheelScroll(secEl));
+}
+
+function highlightWheelItem(el){
+  const idx = Math.round(el.scrollTop / TIMER_WHEEL_ITEM_H);
+  [...el.children].forEach((child, i) => child.classList.toggle("active", i === idx));
+}
+
+function commitTimerDurationEdit(){
+  const display = document.getElementById("timerDisplay");
+  if(!display) return;
+  display.dataset.editing = "";
+  refreshTimerFooter();
 }
 
 function timerResumeInterval(){
@@ -3558,9 +3606,16 @@ function startRestTimer(){
   timerResumeInterval();
 }
 
-function timerStart(){
-  if(timerRunState === "paused"){ timerResumeInterval(); return; }
-  startRestTimer();
+function timerStartOrReset(){
+  const display = document.getElementById("timerDisplay");
+  if(display && display.dataset.editing === "1") display.dataset.editing = "";
+  if(timerRunState === "idle"){ startRestTimer(); return; }
+  timerStop();
+}
+
+function timerPauseOrResume(){
+  if(timerRunState === "running") timerPause();
+  else if(timerRunState === "paused") timerResumeInterval();
 }
 
 function timerPause(){
@@ -3590,6 +3645,8 @@ function timerLap(){
 
 function cycleTimerModeInline(){
   if(timerRunState !== "idle") return;
+  const display = document.getElementById("timerDisplay");
+  if(display && display.dataset.editing === "1") return;
   timerSettings.mode = timerSettings.mode === "countdown" ? "countup" : "countdown";
   saveTimerSettings();
   refreshTimerFooter();

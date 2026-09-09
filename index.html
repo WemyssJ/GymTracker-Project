@@ -146,6 +146,18 @@
   #progressCanvas{width:100%;display:block;background:var(--panel);
     border:1px solid var(--line);border-radius:12px;}
 
+  .heatmap-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:10px;}
+  .heatmap-nav span{font-size:13px;font-weight:700;color:var(--text);min-width:120px;text-align:center;}
+  .heatmap-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+  .heatmap-dow{text-align:center;font-size:9px;color:var(--muted);font-weight:700;padding-bottom:2px;}
+  .heatmap-day{
+    aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;
+    font-size:10.5px;font-weight:700;background:var(--panel-2);color:var(--muted);
+    border:1px solid transparent;
+  }
+  .heatmap-day.trained{background:var(--amber-dim);color:var(--amber);}
+  .heatmap-day.today{border-color:var(--amber);}
+
   main{padding:16px;max-width:520px;margin:0 auto;overflow-x:hidden;}
 
   .stat-strip{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
@@ -169,7 +181,7 @@
   .section-label.collapsible{cursor:pointer;user-select:none;}
   .section-label.collapsible span{display:inline-block;width:12px;color:var(--amber);}
 
-  form#logForm{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;}
+  .log-form-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;}
 
   .date-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
   .date-row label{font-size:13px;color:var(--muted);font-weight:600;}
@@ -184,6 +196,10 @@
   .exercise-block.ex-collapsed .exercise-collapsible{display:none;}
   .exercise-title{font-size:14px;font-weight:700;margin-bottom:8px;cursor:pointer;user-select:none;}
   .exercise-title.ex-title-collapsed{color:var(--green);}
+  .assisted-toggle{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted);
+    font-weight:700;margin-bottom:10px;cursor:pointer;user-select:none;}
+  .assisted-toggle input{width:14px;height:14px;accent-color:var(--amber);cursor:pointer;}
+  .overload-hint{font-size:11.5px;color:var(--amber);font-weight:600;line-height:1.4;margin:8px 0 0 0;}
 
   .people-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .person-col .p-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px;}
@@ -222,6 +238,12 @@
   .reps-box input.prefilled{color:var(--faint);}
   .mini-box input.pr-val{color:var(--green);}
   .mini-box input.reg-val{color:var(--red);}
+  .copy-set-col{flex:0 0 30px;}
+  .copy-set-btn{
+    flex:1;width:100%;background:var(--panel-2);border:1px solid var(--line);
+    border-radius:8px;color:var(--muted);font-size:14px;cursor:pointer;padding:0;
+  }
+  .copy-set-btn:active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
 
   button#saveBtn{
     width:100%;margin-top:16px;padding:14px;border:none;border-radius:10px;
@@ -401,10 +423,10 @@
   .ex-picker-btn-placeholder{color:var(--muted);}
 
   /* ── Exercise info view tabs ───────────────────────── */
-  .ex-view-tabs{display:flex;gap:6px;margin:8px 0 4px;flex-shrink:0;}
+  .ex-view-tabs{display:flex;gap:5px;margin:8px 0 4px;flex-shrink:0;}
   .ex-view-tab{
-    flex:1;padding:8px;border-radius:8px;border:1px solid var(--line);
-    background:var(--panel-2);color:var(--muted);font-size:12px;font-weight:700;cursor:pointer;
+    flex:1;padding:8px 4px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel-2);color:var(--muted);font-size:11px;font-weight:700;cursor:pointer;
   }
   .ex-view-tab.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
   .ex-info-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:14px;}
@@ -492,7 +514,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.13</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.6.0</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -521,6 +543,15 @@
     <div class="chart-legend" id="chartLegend"></div>
     <canvas id="progressCanvas" height="300"></canvas>
     <p style="font-size:11.5px;color:var(--muted);margin-top:10px;">Line shows weight (kg) logged each session over time.</p>
+
+    <div class="section-label" style="margin-top:26px;">Consistency</div>
+    <div class="heatmap-nav">
+      <button type="button" class="set-count-btn" onclick="shiftHeatmapMonth(-1)" aria-label="Previous month">‹</button>
+      <span id="heatmapMonthLabel"></span>
+      <button type="button" class="set-count-btn" onclick="shiftHeatmapMonth(1)" aria-label="Next month">›</button>
+    </div>
+    <div id="heatmapGrid" class="heatmap-grid"></div>
+    <p style="font-size:11.5px;color:var(--muted);margin-top:10px;">Highlighted days had a session logged, in any split.</p>
   </div>
 
   <div id="settingsView" style="display:none;">
@@ -654,6 +685,17 @@
   </div>
 </div>
 
+<div id="resumeOverlay" class="modal-overlay">
+  <div class="modal-box">
+    <h2 style="font-size:17px;">Unfinished Session</h2>
+    <p id="resumeMessage" class="confirm-message"></p>
+    <div class="modal-actions">
+      <button type="button" id="resumeClearBtn" style="background:var(--red-bg);color:var(--red);border:1px solid #5a2320;">Clear</button>
+      <button type="button" id="resumeContinueBtn" style="background:var(--green);color:#fff;">Continue</button>
+    </div>
+  </div>
+</div>
+
 <div id="settingsOverlay" class="modal-overlay">
   <div class="modal-box">
     <div class="modal-header-row">
@@ -695,6 +737,8 @@
     <div id="exInfoViewTabs" class="ex-view-tabs" style="display:none;">
       <button class="ex-view-tab active" id="musclesViewTab" onclick="switchExInfoView('muscles')">Muscles</button>
       <button class="ex-view-tab" id="exerciseViewTab" onclick="switchExInfoView('exercise')">Exercise</button>
+      <button class="ex-view-tab" id="workoutViewTab" onclick="switchExInfoView('workout')">Workout</button>
+      <button class="ex-view-tab" id="recentViewTab" onclick="switchExInfoView('recent')">Recent</button>
     </div>
     <div class="ex-info-body">
       <div id="exInfoMusclesView">
@@ -705,6 +749,25 @@
       <div id="exInfoExerciseView" style="display:none;">
         <div id="exInfoRepdbImgs"></div>
       </div>
+      <div id="exInfoWorkoutView" style="display:none;"></div>
+      <div id="exInfoRecentView" style="display:none;"></div>
+    </div>
+  </div>
+</div>
+
+<div id="plateCalcOverlay" class="modal-overlay" onclick="closePlateCalcIfBg(event)">
+  <div class="modal-box">
+    <div class="modal-header-row">
+      <h2 id="plateCalcTitle" style="font-size:17px;">Plate Calculator</h2>
+      <button class="help-btn" onclick="closePlateCalc()" aria-label="Close" style="font-style:normal;">✕</button>
+    </div>
+    <label for="plateCalcWeight">Target weight (kg)</label>
+    <input type="number" step="0.1" inputmode="decimal" id="plateCalcWeight" oninput="updatePlateCalc()">
+    <label for="plateCalcBarWeight">Bar weight (kg)</label>
+    <input type="number" step="0.5" inputmode="decimal" id="plateCalcBarWeight" oninput="updatePlateCalc()">
+    <div id="plateCalcResult" style="margin-top:16px;"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-secondary" style="flex:1;" onclick="closePlateCalc()">Close</button>
     </div>
   </div>
 </div>
@@ -1962,10 +2025,12 @@ function topSetWeight(sets){
 
 function computeStatsFor(tabKey, exercise, personId){
   const sessions = cache[tabKey];
+  const wantAssisted = !!assistedState[exercise];
   let best = null, last = null;
   for(const s of sessions){
     const e = s.entries[exercise];
     if(!e) continue;
+    if(!!e.assisted !== wantAssisted) continue;
     const top = topSetWeight(getPersonSets(e, personId));
     if(top !== null){
       if(best === null || top > best) best = top;
@@ -1976,10 +2041,18 @@ function computeStatsFor(tabKey, exercise, personId){
 }
 
 function getLastEntry(tabKey, exercise){
-  const sessions = [...cache[tabKey]]
+  const wantAssisted = !!assistedState[exercise];
+  const matching = [...cache[tabKey]]
+    .filter(s => s.entries[exercise] && !!s.entries[exercise].assisted === wantAssisted)
+    .sort((a, b) => b.date.localeCompare(a.date));
+  if(matching.length) return matching[0].entries[exercise];
+  // No history yet in this mode (e.g. just switched assisted/unassisted) —
+  // fall back to the most recent entry in any mode as a rough starting
+  // suggestion rather than leaving the form completely blank.
+  const any = [...cache[tabKey]]
     .filter(s => s.entries[exercise])
     .sort((a, b) => b.date.localeCompare(a.date));
-  return sessions.length ? sessions[0].entries[exercise] : null;
+  return any.length ? any[0].entries[exercise] : null;
 }
 
 function getNextSessionType(){
@@ -2184,10 +2257,10 @@ function renderStatStrip(){
 }
 
 function setBoxHtml(exIndex, person, setIndex, set, exName, personId){
-  const wtVal = set.wt !== null ? set.wt : "";
+  const wtVal = set.wt !== null && set.wt !== undefined ? set.wt : "";
   const repsVal = set.reps || "";
-  const wtClass = set.wt !== null ? "prefilled" : "";
-  const repsClass = set.reps ? "prefilled" : "";
+  const wtClass = (set.wt !== null && set.wt !== undefined && !set.wtIsDraft) ? "prefilled" : "";
+  const repsClass = (set.reps && !set.repsIsDraft) ? "prefilled" : "";
   const safeExName = (exName || "").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
   return `
     <div class="set-col">
@@ -2196,16 +2269,51 @@ function setBoxHtml(exIndex, person, setIndex, set, exName, personId){
         <input type="number" step="0.1" inputmode="decimal" placeholder="kg"
           class="${wtClass}" value="${wtVal}"
           data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="wt"
-          oninput="this.classList.remove('prefilled'); updateWeightInputColor(this,'${safeExName}','${personId}')" onfocus="this.select()">
+          oninput="this.classList.remove('prefilled'); updateWeightInputColor(this,'${safeExName}','${personId}'); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'wt',this.value);" onfocus="this.select()">
       </div>
       <div class="mini-box reps-box">
-        <input type="text" placeholder="reps"
+        <input type="text" inputmode="numeric" placeholder="reps"
           class="${repsClass}" value="${repsVal}"
           data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="reps"
-          oninput="this.classList.remove('prefilled')" onfocus="this.select()">
+          oninput="this.classList.remove('prefilled'); checkOverloadHint(${exIndex}); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'reps',this.value);" onfocus="this.select()">
       </div>
     </div>
   `;
+}
+
+function checkOverloadHint(exIndex){
+  const hint = document.getElementById(`overloadHint-${exIndex}`);
+  if(!hint) return;
+  let maxReps = 0;
+  document.querySelectorAll(`[data-ex="${exIndex}"][data-field="reps"]`).forEach(inp=>{
+    const n = parseInt(inp.value, 10);
+    if(!isNaN(n) && n > maxReps) maxReps = n;
+  });
+  if(maxReps >= 15){
+    hint.style.display = "block";
+    hint.textContent = `💡 ${maxReps} reps is high — try adding weight and aiming for ~5–8 reps next session.`;
+  } else {
+    hint.style.display = "none";
+  }
+}
+
+function copySetOneToAll(exIndex, personId, exName){
+  const wt0 = document.querySelector(`[data-ex="${exIndex}"][data-person="${personId}"][data-set="0"][data-field="wt"]`);
+  const reps0 = document.querySelector(`[data-ex="${exIndex}"][data-person="${personId}"][data-set="0"][data-field="reps"]`);
+  if(!wt0) return;
+  const wtVal = wt0.value, repsVal = reps0 ? reps0.value : "";
+  document.querySelectorAll(`[data-ex="${exIndex}"][data-person="${personId}"][data-field="wt"]`).forEach(inp=>{
+    inp.value = wtVal;
+    inp.classList.remove("prefilled");
+    updateWeightInputColor(inp, exName, personId);
+    recordDraftValue(activeTab, exName, personId, inp.dataset.set, "wt", wtVal);
+  });
+  document.querySelectorAll(`[data-ex="${exIndex}"][data-person="${personId}"][data-field="reps"]`).forEach(inp=>{
+    inp.value = repsVal;
+    inp.classList.remove("prefilled");
+    recordDraftValue(activeTab, exName, personId, inp.dataset.set, "reps", repsVal);
+  });
+  checkOverloadHint(exIndex);
 }
 
 function updateWeightInputColor(input, exName, personId){
@@ -2244,38 +2352,58 @@ function fillForwardSets(sets){
 function renderForm(){
   const cfg = CONFIG[activeTab];
   const form = document.getElementById("logForm");
+  const draft = formDrafts[activeTab];
+  const draftValues = (draft && draft.values) || {};
+  const dateVal = (draft && draft.date) || todayStr();
   let html = `
     <div class="date-row">
       <label for="sessionDate">Date</label>
-      <input type="date" id="sessionDate" value="${todayStr()}">
+      <input type="date" id="sessionDate" value="${dateVal}" onchange="recordDraftDate(activeTab, this.value)">
     </div>
   `;
   getExercises(activeTab).forEach((ex, i)=>{
     const lastEntry = getLastEntry(activeTab, ex);
     const safeName = ex.replace(/\\/g,"\\\\").replace(/'/g,"\\'");
     const count = exSetCounts[ex] ?? defaultSetCount;
+    const assisted = !!assistedState[ex];
     const infoBtn = EXERCISE_INFO[ex]
       ? `<button type="button" class="ex-info-btn" onclick="showExerciseInfo('${safeName}')" aria-label="Exercise info">i</button>`
       : "";
-    const btnGroup = infoBtn ? `<div style="display:flex;gap:6px;">${infoBtn}</div>` : "";
+    const plateBtn = `<button type="button" class="ex-info-btn" style="font-style:normal;" onclick="openPlateCalc('${safeName}')" aria-label="Plate calculator">🏋</button>`;
+    const btnGroup = `<div style="display:flex;gap:6px;">${infoBtn}${plateBtn}</div>`;
     const isCollapsed = !!collapsedExercises[ex];
     html += `<div class="exercise-block${isCollapsed?" ex-collapsed":""}" data-ex-name="${safeName}">
       <div class="exercise-title-row">
         <div class="exercise-title${isCollapsed?" ex-title-collapsed":""}" onclick="toggleExerciseCollapse('${safeName}')">${ex}</div>
         ${btnGroup}
       </div>
-      <div class="exercise-collapsible">`;
+      <div class="exercise-collapsible">
+        <label class="assisted-toggle">
+          <input type="checkbox" ${assisted ? "checked" : ""} onchange="toggleAssisted('${safeName}', this.checked)">
+          <span>Assisted</span>
+        </label>`;
     people.forEach((p, pi) => {
-      const lastSets = lastEntry ? fillForwardSets(getPersonSets(lastEntry, p.id)) : emptySets();
-      const sets = Array.from({length: count}, (_, si) => lastSets[si] || {wt:null, reps:""});
+      const lastSets = lastEntry ? fillForwardSets(getPersonSets(lastEntry, p.id)) : [];
+      const sets = Array.from({length: count}, (_, si) => {
+        const base = lastSets[si] || { wt: null, reps: String(defaultRepsTarget) };
+        const wtDK = draftKey(ex, p.id, si, "wt");
+        const repsDK = draftKey(ex, p.id, si, "reps");
+        const wtIsDraft = wtDK in draftValues;
+        const repsIsDraft = repsDK in draftValues;
+        const wt = wtIsDraft ? (draftValues[wtDK] === "" ? null : parseFloat(draftValues[wtDK])) : base.wt;
+        const reps = repsIsDraft ? draftValues[repsDK] : base.reps;
+        return { wt, reps, wtIsDraft, repsIsDraft };
+      });
       html += `
         <div class="p-label" style="color:${p.color};${pi > 0 ? "margin-top:10px;" : ""}">${p.name.toUpperCase()}</div>
         <div class="set-row">
           ${sets.map((set, si) => setBoxHtml(i, p.id, si, set, ex, p.id)).join("")}
+          ${count > 1 ? `<div class="set-col copy-set-col"><div class="set-label">&nbsp;</div><button type="button" class="copy-set-btn" onclick="copySetOneToAll(${i},'${p.id}','${safeName}')" aria-label="Copy set 1 into all sets" title="Copy set 1 into all sets">⧉</button></div>` : ""}
         </div>
       `;
     });
     html += `
+      <div class="overload-hint" id="overloadHint-${i}" style="display:none;"></div>
       <div class="set-count-row">
         <button type="button" class="set-count-btn" onclick="adjustSetCount('${safeName}',-1)" aria-label="Remove set">−</button>
         <span class="set-count-label">${count} set${count!==1?"s":""}</span>
@@ -2298,9 +2426,10 @@ function renderForm(){
     html += `<p style="text-align:center;font-size:12px;color:var(--muted);margin:10px 0 2px 0;">${lastMsg}</p>`;
   }
   html += `<button type="submit" id="saveBtn">Log ${cfg.label} Session</button>`;
-  form.innerHTML = html;
+  form.innerHTML = `<div class="log-form-card">${html}</div>`;
   form.onsubmit = handleSave;
   applyFormCollapsedState();
+  getExercises(activeTab).forEach((ex, i) => checkOverloadHint(i));
 }
 
 function renderHistory(){
@@ -2347,7 +2476,10 @@ function renderHistory(){
     let inner = `
       <div class="hdate-row">
         <span class="hdate">${fmtDate(s.date)}</span>
-        <button class="delete-btn" onclick="deleteSession('${activeTab}','${s.date}')" aria-label="Delete session">🗑</button>
+        <div style="display:flex;gap:2px;">
+          <button class="delete-btn" onclick="editSession('${activeTab}','${s.date}')" aria-label="Edit session" title="Edit session">✎</button>
+          <button class="delete-btn" onclick="deleteSession('${activeTab}','${s.date}')" aria-label="Delete session">🗑</button>
+        </div>
       </div>
     `;
     getExercises(activeTab).forEach(ex=>{
@@ -2399,6 +2531,37 @@ function setsSummary(sets){
     .join(", ");
 }
 
+function editSession(tabKey, date){
+  const sess = (cache[tabKey] || []).find(s => s.date === date);
+  if(!sess) return;
+  const values = {};
+  getExercises(tabKey).forEach(ex=>{
+    const entry = sess.entries[ex];
+    if(!entry) return;
+    assistedState[ex] = !!entry.assisted;
+    people.forEach(p=>{
+      const sets = getPersonSets(entry, p.id);
+      sets.forEach((s, si)=>{
+        values[draftKey(ex, p.id, si, "wt")] = (s.wt !== null && s.wt !== undefined) ? String(s.wt) : "";
+        values[draftKey(ex, p.id, si, "reps")] = s.reps || "";
+      });
+    });
+  });
+  saveAssistedState();
+  formDrafts[tabKey] = { date: sess.date, values };
+  saveFormDrafts();
+  const openEdit = () => {
+    renderForm();
+    showToast(`Editing ${fmtDate(date)} — adjust values, then save to update`);
+    document.getElementById("logForm")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  if(activeTab !== tabKey){
+    switchTab(tabKey).then(openEdit);
+  } else {
+    openEdit();
+  }
+}
+
 async function deleteSession(tabKey, date){
   const label = fmtDate(date);
   if(!(await showConfirm(`Delete the ${label} session? This can't be undone.`))) return;
@@ -2437,10 +2600,16 @@ async function handleSave(evt){
     return Array.from({length: count}, (_, si) => {
       const wtInput = document.querySelector(`[data-ex="${exIndex}"][data-person="${personId}"][data-set="${si}"][data-field="wt"]`);
       const repsInput = document.querySelector(`[data-ex="${exIndex}"][data-person="${personId}"][data-set="${si}"][data-field="reps"]`);
-      if(!wtInput) return { wt:null, reps:"" };
+      if(!wtInput) return { wt:null, reps:"", wtReal:false, repsReal:false };
       return {
         wt: wtInput.value === "" ? null : parseFloat(wtInput.value),
-        reps: repsInput?.value || ""
+        reps: repsInput?.value || "",
+        // "real" = actually entered this session (or restored via edit), as
+        // opposed to just sitting on a carried-forward/default suggestion —
+        // used below so an untouched exercise doesn't get logged with a
+        // phantom 0kg just because its rep target was pre-filled
+        wtReal: wtInput.value !== "" && !wtInput.classList.contains("prefilled"),
+        repsReal: !!(repsInput && repsInput.value !== "" && !repsInput.classList.contains("prefilled"))
       };
     });
   }
@@ -2453,20 +2622,28 @@ async function handleSave(evt){
     const count = exSetCounts[ex] ?? defaultSetCount;
     people.forEach(p => {
       const personSets = readSets(i, p.id, count);
-      sets[p.id] = personSets;
-
       if(personSets.some(s => s.wt !== null || s.reps.trim() !== "")){
         anyValue = true;
       }
+      if(personSets.some(s => s.wtReal || s.repsReal)){
+        // any field still blank at save time on an exercise the user
+        // actually engaged with this session defaults to 0 rather than
+        // being left null/blank
+        personSets.forEach(s => {
+          if(s.wt === null) s.wt = 0;
+          if(s.reps.trim() === "") s.reps = "0";
+        });
+      }
+      sets[p.id] = personSets.map(({wt, reps}) => ({wt, reps}));
 
-      const top = topSetWeight(personSets);
+      const top = topSetWeight(sets[p.id]);
       const st = computeStatsFor(activeTab, ex, p.id);
       if(top !== null){
         if(st.best !== null && top > st.best) prCount++;
         if(st.last !== null && top < st.last) regCount++;
       }
     });
-    entries[ex] = { sets };
+    entries[ex] = { sets, assisted: !!assistedState[ex] };
   });
 
   if(!anyValue){
@@ -2484,6 +2661,8 @@ async function handleSave(evt){
   saveBtn.disabled = true;
   await saveTab(activeTab);
   saveBtn.disabled = false;
+
+  clearDraft(activeTab);
 
   renderTabs();
   renderStatStrip();
@@ -2663,6 +2842,22 @@ function renderExerciseSettings(containerId){
       </div>
     `;
     container.appendChild(row);
+
+    const repsRow = document.createElement("div");
+    repsRow.className = "settings-row";
+    repsRow.style.marginBottom = "14px";
+    repsRow.innerHTML = `
+      <div class="settings-row-info">
+        <div class="settings-row-title">Default rep target</div>
+        <div class="settings-row-desc">Pre-fills reps the first time you log a new exercise</div>
+      </div>
+      <div class="set-count-row" style="margin-top:0;">
+        <button type="button" class="set-count-btn" onclick="adjustDefaultRepsTarget(-1)">−</button>
+        <span class="set-count-label" id="defaultRepsLabel">${defaultRepsTarget} reps</span>
+        <button type="button" class="set-count-btn" onclick="adjustDefaultRepsTarget(1)">+</button>
+      </div>
+    `;
+    container.appendChild(repsRow);
   }
   Object.keys(CONFIG).forEach(tabKey => {
     const section = document.createElement("div");
@@ -2824,6 +3019,47 @@ function renderProgressView(){
   renderProgressExerciseTabs(cfg);
   const series = getExerciseSeries(progressSubTab, progressExercise);
   drawLineChart(series);
+  renderHeatmap();
+}
+
+let heatmapMonthOffset = 0;
+
+function shiftHeatmapMonth(delta){
+  heatmapMonthOffset += delta;
+  renderHeatmap();
+}
+
+function getAllSessionDatesSet(){
+  const set = new Set();
+  Object.keys(CONFIG).forEach(tabKey => {
+    (cache[tabKey] || []).forEach(sess => set.add(sess.date));
+  });
+  return set;
+}
+
+function renderHeatmap(){
+  const grid = document.getElementById("heatmapGrid");
+  const label = document.getElementById("heatmapMonthLabel");
+  if(!grid || !label) return;
+
+  const now = new Date();
+  const viewDate = new Date(now.getFullYear(), now.getMonth() + heatmapMonthOffset, 1);
+  const year = viewDate.getFullYear(), month = viewDate.getMonth();
+  label.textContent = viewDate.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+
+  const firstDayDow = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const sessionDates = getAllSessionDatesSet();
+  const todayIso = todayStr();
+
+  let html = ["S","M","T","W","T","F","S"].map(d => `<div class="heatmap-dow">${d}</div>`).join("");
+  for(let i = 0; i < firstDayDow; i++) html += `<div></div>`;
+  for(let d = 1; d <= daysInMonth; d++){
+    const dateStr = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+    const classes = "heatmap-day" + (sessionDates.has(dateStr) ? " trained" : "") + (dateStr === todayIso ? " today" : "");
+    html += `<div class="${classes}">${d}</div>`;
+  }
+  grid.innerHTML = html;
 }
 
 function drawLineChart(series){
@@ -3310,6 +3546,14 @@ function renderWizardStepBody(){
 function wizardBack(){ wizardStep = Math.max(0, wizardStep - 1); renderWizardStep(); }
 function wizardNext(){ wizardStep = Math.min(8, wizardStep + 1); renderWizardStep(); }
 function wizardFinish(){
+  // Persist even untouched defaults so detectNewUser() sees setup as done —
+  // otherwise a user who accepted every default gets the wizard again
+  // instead of the resume prompt on their next launch.
+  savePeople();
+  saveExercises();
+  saveActiveDays();
+  saveDefaultSetCount();
+  saveTimerSettings();
   closeWelcome();
   showToast("You're all set 💪");
   switchTab(activeDays.includes(activeTab) ? activeTab : activeDays[0]);
@@ -3445,6 +3689,74 @@ function adjustDefaultSetCount(delta){
   const wizardLabel = document.getElementById("wizardSetCountLabel");
   if(wizardLabel) wizardLabel.textContent = defaultSetCount + " sets";
   if(CONFIG[activeTab]) renderForm();
+}
+
+const DEFAULT_REPS_KEY = "gymtracker:defaultReps";
+let defaultRepsTarget = 8;
+
+function loadDefaultRepsTarget(){
+  try{
+    const v = parseInt(localStorage.getItem(DEFAULT_REPS_KEY), 10);
+    return (v >= 1 && v <= 30) ? v : 8;
+  }catch(e){ return 8; }
+}
+function saveDefaultRepsTarget(){ try{ localStorage.setItem(DEFAULT_REPS_KEY, String(defaultRepsTarget)); }catch(e){} }
+
+function adjustDefaultRepsTarget(delta){
+  defaultRepsTarget = Math.max(1, Math.min(30, defaultRepsTarget + delta));
+  saveDefaultRepsTarget();
+  const label = document.getElementById("defaultRepsLabel");
+  if(label) label.textContent = defaultRepsTarget + " reps";
+}
+
+// ---- Assisted mode (per exercise) ----
+// Exercises like assisted pull-ups/dips use a completely different weight
+// scale than their unassisted counterpart, so presets must be looked up
+// separately per mode rather than always carrying the last-logged number
+// forward.
+const ASSISTED_STATE_KEY = "gymtracker:assistedState";
+let assistedState = {};
+
+function loadAssistedState(){ try{ return JSON.parse(localStorage.getItem(ASSISTED_STATE_KEY)) || {}; }catch(e){ return {}; } }
+function saveAssistedState(){ try{ localStorage.setItem(ASSISTED_STATE_KEY, JSON.stringify(assistedState)); }catch(e){} }
+
+function toggleAssisted(exName, checked){
+  assistedState[exName] = checked;
+  saveAssistedState();
+  renderForm();
+}
+
+// ---- In-progress session drafts ----
+// Captures every keystroke in the log form so switching tabs, collapsing an
+// exercise, or the browser closing/crashing never wipes unsaved sets.
+// Cleared once the session is actually saved.
+const FORM_DRAFTS_KEY = "gymtracker:formDrafts";
+let formDrafts = {};
+
+function loadFormDrafts(){ try{ return JSON.parse(localStorage.getItem(FORM_DRAFTS_KEY)) || {}; }catch(e){ return {}; } }
+function saveFormDrafts(){ try{ localStorage.setItem(FORM_DRAFTS_KEY, JSON.stringify(formDrafts)); }catch(e){} }
+
+function draftKey(exName, personId, setIndex, field){
+  return exName + "|" + personId + "|" + setIndex + "|" + field;
+}
+
+function recordDraftValue(tabKey, exName, personId, setIndex, field, value){
+  if(!formDrafts[tabKey]){
+    formDrafts[tabKey] = { date: document.getElementById("sessionDate")?.value || todayStr(), values: {} };
+  }
+  formDrafts[tabKey].values[draftKey(exName, personId, setIndex, field)] = value;
+  saveFormDrafts();
+}
+
+function recordDraftDate(tabKey, date){
+  if(!formDrafts[tabKey]) formDrafts[tabKey] = { date, values: {} };
+  else formDrafts[tabKey].date = date;
+  saveFormDrafts();
+}
+
+function clearDraft(tabKey){
+  delete formDrafts[tabKey];
+  saveFormDrafts();
 }
 
 const TIMER_SETTINGS_KEY = "gymtracker:timerSettings";
@@ -3745,10 +4057,12 @@ function applyCreditsCollapsedState(){
 // ── Exercise info view ─────────────────────────────────────────────────────────
 
 function switchExInfoView(view){
-  document.getElementById("exInfoMusclesView").style.display = view === "muscles" ? "" : "none";
-  document.getElementById("exInfoExerciseView").style.display = view === "exercise" ? "" : "none";
-  document.getElementById("musclesViewTab").className = "ex-view-tab" + (view === "muscles" ? " active" : "");
-  document.getElementById("exerciseViewTab").className = "ex-view-tab" + (view === "exercise" ? " active" : "");
+  ["muscles","exercise","workout","recent"].forEach(v=>{
+    const panel = document.getElementById(`exInfo${v.charAt(0).toUpperCase()}${v.slice(1)}View`);
+    if(panel) panel.style.display = v === view ? "" : "none";
+    const tab = document.getElementById(`${v}ViewTab`);
+    if(tab) tab.className = "ex-view-tab" + (v === view ? " active" : "");
+  });
   document.getElementById("exInfoOverlay").querySelector(".ex-info-body").scrollTop = 0;
 }
 
@@ -3768,6 +4082,9 @@ async function init(){
   timerSettings = loadTimerSettings();
   exSetCounts = loadSetCounts();
   defaultSetCount = loadDefaultSetCount();
+  defaultRepsTarget = loadDefaultRepsTarget();
+  assistedState = loadAssistedState();
+  formDrafts = loadFormDrafts();
   timerSettingsCollapsed = loadTimerSettingsCollapsed();
   creditsSettingsCollapsed = loadCreditsSettingsCollapsed();
   currentThemeState = loadTheme();
@@ -3779,8 +4096,54 @@ async function init(){
   renderHistory();
   refreshTimerFooter();
   if(isNewUser) showWelcome();
+  else await checkResumePrompt();
   setTimeout(()=> document.body.classList.add("transitions-ready"), 50);
   setupViewportFooterFix();
+}
+
+// If the app closed/crashed mid-session, formDrafts (persisted on every
+// keystroke) still holds the unsaved sets — offer to resume or discard them.
+async function checkResumePrompt(){
+  const draftTabs = Object.keys(formDrafts).filter(k =>
+    CONFIG[k] && formDrafts[k] && Object.keys(formDrafts[k].values || {}).length > 0
+  );
+  if(draftTabs.length === 0) return;
+  const labels = draftTabs.map(k => CONFIG[k].label).join(" & ");
+  const choice = await showResumeChoice(
+    `You have an unfinished ${labels} session with unsaved sets from last time. Continue where you left off, or clear it?`
+  );
+  if(choice === "clear"){
+    const sure = await showConfirm(
+      "This will permanently discard the unsaved sets from that session. This can't be undone."
+    );
+    if(sure){
+      formDrafts = {};
+      saveFormDrafts();
+      renderForm();
+      showToast("Unsaved session cleared");
+    }
+  } else if(choice === "continue" && draftTabs[0] !== activeTab){
+    await switchTab(draftTabs[0]);
+  }
+}
+
+function showResumeChoice(message){
+  return new Promise(resolve => {
+    document.getElementById("resumeMessage").textContent = message;
+    openModal("resumeOverlay");
+    const contBtn = document.getElementById("resumeContinueBtn");
+    const clearBtn = document.getElementById("resumeClearBtn");
+    function cleanup(result){
+      closeModal("resumeOverlay");
+      contBtn.removeEventListener("click", onCont);
+      clearBtn.removeEventListener("click", onClear);
+      resolve(result);
+    }
+    function onCont(){ cleanup("continue"); }
+    function onClear(){ cleanup("clear"); }
+    contBtn.addEventListener("click", onCont);
+    clearBtn.addEventListener("click", onClear);
+  });
 }
 
 // iOS Safari standalone mode can desync position:fixed elements from the
@@ -4149,8 +4512,11 @@ async function deleteAllData(){
       localStorage.removeItem(TIMER_SETTINGS_KEY);
       localStorage.removeItem(SET_COUNT_KEY);
       localStorage.removeItem(DEFAULT_SET_COUNT_KEY);
+      localStorage.removeItem(DEFAULT_REPS_KEY);
+      localStorage.removeItem(ASSISTED_STATE_KEY);
       localStorage.removeItem(ACTIVE_DAYS_KEY);
     }
+    localStorage.removeItem(FORM_DRAFTS_KEY);
     localStorage.removeItem("gymtracker:statsCollapsed");
     localStorage.removeItem("gymtracker:formCollapsed");
     localStorage.removeItem("gymtracker:historyCollapsed");
@@ -4169,7 +4535,7 @@ async function deleteAllData(){
   setTimeout(() => { window.location.reload(); }, 600);
 }
 
-function showExerciseInfo(exName){
+async function showExerciseInfo(exName){
   const info = EXERCISE_INFO[exName];
   if(!info) return;
   document.getElementById("exInfoTitle").textContent = exName;
@@ -4200,8 +4566,10 @@ function showExerciseInfo(exName){
   // Exercise view (RepDB images)
   const repdb = EXERCISE_REPDB[exName];
   const viewTabs = document.getElementById("exInfoViewTabs");
+  const exerciseTabBtn = document.getElementById("exerciseViewTab");
+  viewTabs.style.display = "flex";
   if(repdb){
-    viewTabs.style.display = "flex";
+    exerciseTabBtn.style.display = "";
     const multi = repdb.poses.length > 1;
     const imgsHtml = repdb.poses.map((pose, i) =>
       `<div style="flex:1;min-width:0;text-align:center;">
@@ -4213,17 +4581,61 @@ function showExerciseInfo(exName){
       `<div style="display:flex;gap:10px;margin-bottom:10px;">${imgsHtml}</div>` +
       `<p style="font-size:11px;color:var(--muted);text-align:center;margin:0;">Images via <a href="https://github.com/RepDB/exercise-dataset" target="_blank" rel="noopener" style="color:var(--amber);">RepDB</a></p>`;
   } else {
-    viewTabs.style.display = "none";
+    exerciseTabBtn.style.display = "none";
   }
 
-  // Reset to muscles view
-  document.getElementById("exInfoMusclesView").style.display = "";
-  document.getElementById("exInfoExerciseView").style.display = "none";
-  document.getElementById("musclesViewTab").className = "ex-view-tab active";
-  document.getElementById("exerciseViewTab").className = "ex-view-tab";
+  // Workout view (which day it belongs to + current per-exercise settings)
+  await ensureAllLoaded();
+  document.getElementById("exInfoWorkoutView").innerHTML = buildExInfoWorkoutHtml(exName);
+  document.getElementById("exInfoRecentView").innerHTML = buildExInfoRecentHtml(exName);
 
+  switchExInfoView("muscles");
   openModal("exInfoOverlay");
   document.getElementById("exInfoOverlay").querySelector(".ex-info-body").scrollTop = 0;
+}
+
+function buildExInfoWorkoutHtml(exName){
+  const days = Object.keys(CONFIG).filter(k => CONFIG[k].exercises.includes(exName));
+  const count = exSetCounts[exName] ?? defaultSetCount;
+  const assisted = !!assistedState[exName];
+  return `
+    <div class="muscle-section">
+      <div class="muscle-section-label">WORKOUT DAY</div>
+      <div class="muscle-tags">${
+        days.length
+          ? days.map(k=>`<span class="muscle-tag primary">${CONFIG[k].label}</span>`).join("")
+          : `<span style="color:var(--muted);font-size:12.5px;">Not assigned to a day</span>`
+      }</div>
+    </div>
+    <div class="muscle-section">
+      <div class="muscle-section-label">CURRENT SETTINGS</div>
+      <p class="hint" style="margin-top:0;">${count} set${count!==1?"s":""} per session · ${assisted ? "Assisted" : "Unassisted"}</p>
+    </div>
+  `;
+}
+
+function buildExInfoRecentHtml(exName){
+  const rows = [];
+  Object.keys(CONFIG).forEach(tabKey=>{
+    (cache[tabKey] || []).forEach(s=>{
+      if(s.entries[exName]) rows.push({ date: s.date, entry: s.entries[exName] });
+    });
+  });
+  rows.sort((a, b) => b.date.localeCompare(a.date));
+  const top = rows.slice(0, 6);
+  if(top.length === 0){
+    return `<p class="hint" style="margin-top:0;">No sessions logged for this exercise yet.</p>`;
+  }
+  return top.map(r=>{
+    const parts = people.map(p=>{
+      const summary = setsSummary(getPersonSets(r.entry, p.id));
+      return summary ? `<span style="color:${p.color};font-weight:700;">${p.name}:</span> ${summary}` : "";
+    }).filter(Boolean).join(" · ");
+    return `<div class="history-row" style="padding:10px 12px;">
+      <div class="hdate-row" style="margin-bottom:4px;"><span class="hdate">${fmtDate(r.date)}${r.entry.assisted ? " · assisted" : ""}</span></div>
+      <div class="hex-sets">${parts || "–"}</div>
+    </div>`;
+  }).join("");
 }
 
 function closeExerciseInfo(){
@@ -4232,6 +4644,74 @@ function closeExerciseInfo(){
 
 function closeExInfoIfBg(evt){
   if(evt.target === document.getElementById("exInfoOverlay")) closeExerciseInfo();
+}
+
+const PLATE_SIZES_KG = [25, 20, 15, 10, 5, 2.5, 1.25];
+const PLATE_BAR_WEIGHT_KEY = "gymtracker:plateBarWeight";
+
+function loadPlateBarWeight(){
+  try{
+    const v = parseFloat(localStorage.getItem(PLATE_BAR_WEIGHT_KEY));
+    return isNaN(v) ? 20 : v;
+  }catch(e){ return 20; }
+}
+function savePlateBarWeight(v){
+  try{ localStorage.setItem(PLATE_BAR_WEIGHT_KEY, String(v)); }catch(e){}
+}
+
+function openPlateCalc(exName){
+  document.getElementById("plateCalcTitle").textContent = "Plate Calculator — " + exName;
+  const stats = computeStatsFor(activeTab, exName, people[0].id);
+  const prefill = stats.last ?? stats.best;
+  document.getElementById("plateCalcWeight").value = prefill !== null && prefill !== undefined ? prefill : "";
+  document.getElementById("plateCalcBarWeight").value = loadPlateBarWeight();
+  updatePlateCalc();
+  openModal("plateCalcOverlay");
+}
+
+function closePlateCalc(){
+  closeModal("plateCalcOverlay");
+}
+
+function closePlateCalcIfBg(evt){
+  if(evt.target === document.getElementById("plateCalcOverlay")) closePlateCalc();
+}
+
+function updatePlateCalc(){
+  const weight = parseFloat(document.getElementById("plateCalcWeight").value);
+  const barWeight = parseFloat(document.getElementById("plateCalcBarWeight").value) || 20;
+  savePlateBarWeight(barWeight);
+  const resultEl = document.getElementById("plateCalcResult");
+
+  if(isNaN(weight)){
+    resultEl.innerHTML = `<p class="hint" style="margin-top:0;">Enter a target weight above.</p>`;
+    return;
+  }
+  if(weight < barWeight){
+    resultEl.innerHTML = `<p class="hint" style="margin-top:0;">Target is lighter than the bar itself (${barWeight}kg).</p>`;
+    return;
+  }
+
+  let perSide = (weight - barWeight) / 2;
+  const used = [];
+  PLATE_SIZES_KG.forEach(plate => {
+    let count = 0;
+    while(perSide >= plate - 0.001){ perSide -= plate; count++; }
+    if(count > 0) used.push({ plate, count });
+  });
+
+  let html = `<div class="p-label" style="margin-bottom:8px;">PER SIDE</div>`;
+  if(used.length === 0){
+    html += `<p class="hint" style="margin-top:0;">Just the bar — no plates needed.</p>`;
+  } else {
+    html += `<div style="display:flex;flex-wrap:wrap;gap:8px;">` +
+      used.map(u => `<div style="background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-weight:700;font-size:13px;">${u.plate}kg × ${u.count}</div>`).join("") +
+      `</div>`;
+  }
+  if(perSide > 0.01){
+    html += `<p class="hint">Closest match with standard plates is ${(weight - perSide * 2).toFixed(2)}kg (short by ${(perSide * 2).toFixed(2)}kg).</p>`;
+  }
+  resultEl.innerHTML = html;
 }
 
 init();

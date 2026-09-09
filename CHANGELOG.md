@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.6.0 — 2026-09-09
+### Added
+- **Session drafts persist automatically** — every weight/reps keystroke is saved as you type, so minimising a workout (tapping its name), switching tabs, or the app closing/crashing mid-session no longer wipes what you'd entered
+- **Resume prompt on relaunch** — if there's an unfinished session sitting in a draft, the app now asks on open whether to continue where you left off (green) or clear it (red, with a confirmation warning before it discards anything)
+- **"Assisted" checkbox per exercise** — for assisted pull-ups/dips etc. that use a machine with a completely different weight scale to the unassisted version; toggling it switches which history the preset weight and PR/regression colouring are pulled from
+- **Copy-to-all-sets button** — a button at the end of each set row copies set 1's weight and reps into every other set for that exercise/person in one tap
+- **Overload hint** — logging 15+ reps on a set now shows an inline suggestion to add weight and aim for ~5–8 reps next time, instead of just adding more reps indefinitely
+- **Default rep target** (Settings, 8 by default) — pre-fills the reps field the first time you log a brand-new exercise with no history yet
+- **Edit past sessions** — a pencil icon next to each history entry's delete button reopens that session's numbers in the log form for correction, then overwrites it on save
+- **Workout & Recent tabs** in the exercise info panel (alongside Muscles/Exercise) — Workout shows which day it's assigned to and its current set-count/assisted setting; Recent lists the last several logged sessions for that exercise
+- **Plate calculator** — a button next to each exercise's info button works out which plates to load per side for a target weight and bar weight
+- **Consistency heatmap** on the Progress tab — a monthly calendar highlighting days with a logged session, regardless of split
+- Reps field now opens the numeric keypad on mobile (was the default text keyboard)
+
+### Fixed
+- Unfilled sets on an exercise you engaged with this session now save as 0 instead of being left blank, so stats/history don't show gaps for sets you just forgot to fill in
+- The setup wizard now saves your choices (even untouched defaults) the moment you finish it, rather than only when you touch a specific field — previously, accepting every default meant the app still considered you a "new user" on your next visit and showed the wizard again instead of the resume prompt
+
+---
+
 ## v0.5.1.13 — 2026-09-09
 ### Added
 - **Proper Web App Manifest** (`manifest.json`, `display: standalone`) and a `theme-color` meta tag that follows the active in-app theme — the app previously relied only on the older Apple-specific meta tags with nothing backing them up

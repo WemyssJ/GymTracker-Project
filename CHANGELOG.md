@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.6.1 — 2026-09-09
+### Added
+- **Progress chart assisted/unassisted toggle** — for an exercise logged in both modes, Progress now shows an Unassisted/Assisted switch instead of silently plotting both weight scales as one misleading line; defaults to whichever mode you last used
+- **Plate calculator per person** — when tracking more than one person, the calculator now has a tab per person so each gets their own target-weight prefill and per-side breakdown, instead of always using the first person's numbers
+- **Auto-detect newer GitHub data on launch** — if you log from more than one device, opening the app now checks whether GitHub has data this device hasn't seen yet and offers to pull it in, instead of silently sitting behind
+
+### Fixed
+- **Background no longer scrolls behind an open modal** — exercise info, plate calculator, and other popups used to let the page underneath keep scrolling with them; the background is now frozen while a modal is open and unfrozen when it closes
+- **Editing a past session while "Log today's session" was collapsed did nothing visible** — the values were populated into the form correctly, but the section stayed visually collapsed (zero height) so it looked like the edit button didn't work; editing now force-expands the section (and the specific exercise, if it was individually collapsed) so the values are actually on screen
+- **Timer footer could overlap/clip the last bit of content** — the space reserved above the fixed timer footer was a guessed fixed value; it's now measured from the footer's actual rendered height (which varies by device font scaling and safe-area insets) and kept in sync live
+- Removed the "Workout" tab from the exercise info panel — it only repeated info already visible elsewhere on the log form
+
+---
+
 ## v0.6.0 — 2026-09-09
 ### Added
 - **Session drafts persist automatically** — every weight/reps keystroke is saved as you type, so minimising a workout (tapping its name), switching tabs, or the app closing/crashing mid-session no longer wipes what you'd entered

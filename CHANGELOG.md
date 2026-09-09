@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.3 — 2026-09-09
+### Changed
+- **Reps now always presets to your default rep target** (Settings, 8 by default) instead of carrying forward the last session's actual reps text — older sessions often have messy free-text notes ("3r", "2x, 4r", "3,3,2") that showed up as an inconsistent mix of blank/garbled prefills; weight still carries forward as before, only reps changed
+- **Reps input is now colour-coded like weight** — green if you log more than your default rep target, red if fewer, matching the existing PR/regression colouring on the weight field
+- **Assisted toggle no longer reuses the other mode's weight** — switching Assisted on/off for an exercise with no history yet in that mode now clears the weight field instead of silently showing the other mode's number, which made it look like the toggle wasn't doing anything. Once you've logged in both modes, switching correctly shows each mode's own last weight
+
+---
+
 ## v0.6.2 — 2026-09-09
 ### Changed
 - **Exercise info "Recent" tab renamed to "History" and no longer capped at 6 sessions** — it now lists every logged session for that exercise, scrollable within the panel, instead of just the last few

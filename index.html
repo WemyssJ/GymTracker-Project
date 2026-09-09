@@ -515,7 +515,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.6.2</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.6.3</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -2047,14 +2047,11 @@ function getLastEntry(tabKey, exercise){
   const matching = [...cache[tabKey]]
     .filter(s => s.entries[exercise] && !!s.entries[exercise].assisted === wantAssisted)
     .sort((a, b) => b.date.localeCompare(a.date));
-  if(matching.length) return matching[0].entries[exercise];
-  // No history yet in this mode (e.g. just switched assisted/unassisted) —
-  // fall back to the most recent entry in any mode as a rough starting
-  // suggestion rather than leaving the form completely blank.
-  const any = [...cache[tabKey]]
-    .filter(s => s.entries[exercise])
-    .sort((a, b) => b.date.localeCompare(a.date));
-  return any.length ? any[0].entries[exercise] : null;
+  // Deliberately no fallback to the other mode's entry: assisted and
+  // unassisted use unrelated weight scales (e.g. counterweight vs added
+  // load), so reusing one mode's number as a "starting suggestion" for the
+  // other is actively misleading — it looks like the toggle did nothing.
+  return matching.length ? matching[0].entries[exercise] : null;
 }
 
 function getNextSessionType(){
@@ -2277,7 +2274,7 @@ function setBoxHtml(exIndex, person, setIndex, set, exName, personId){
         <input type="text" inputmode="numeric" placeholder="reps"
           class="${repsClass}" value="${repsVal}"
           data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="reps"
-          oninput="this.classList.remove('prefilled'); checkOverloadHint(${exIndex}); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'reps',this.value);" onfocus="this.select()">
+          oninput="this.classList.remove('prefilled'); updateRepsInputColor(this); checkOverloadHint(${exIndex}); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'reps',this.value);" onfocus="this.select()">
       </div>
     </div>
   `;
@@ -2313,6 +2310,7 @@ function copySetOneToAll(exIndex, personId, exName){
   document.querySelectorAll(`[data-ex="${exIndex}"][data-person="${personId}"][data-field="reps"]`).forEach(inp=>{
     inp.value = repsVal;
     inp.classList.remove("prefilled");
+    updateRepsInputColor(inp);
     recordDraftValue(activeTab, exName, personId, inp.dataset.set, "reps", repsVal);
   });
   checkOverloadHint(exIndex);
@@ -2326,6 +2324,14 @@ function updateWeightInputColor(input, exName, personId){
   if(stats.best === null) return;
   if(val > stats.best) input.classList.add("pr-val");
   else if(val < stats.best) input.classList.add("reg-val");
+}
+
+function updateRepsInputColor(input){
+  input.classList.remove("pr-val", "reg-val");
+  const val = parseInt(input.value, 10);
+  if(isNaN(val)) return;
+  if(val > defaultRepsTarget) input.classList.add("pr-val");
+  else if(val < defaultRepsTarget) input.classList.add("reg-val");
 }
 
 let collapsedExercises = {};
@@ -2387,13 +2393,17 @@ function renderForm(){
     people.forEach((p, pi) => {
       const lastSets = lastEntry ? fillForwardSets(getPersonSets(lastEntry, p.id)) : [];
       const sets = Array.from({length: count}, (_, si) => {
-        const base = lastSets[si] || { wt: null, reps: String(defaultRepsTarget) };
+        const base = lastSets[si] || { wt: null };
         const wtDK = draftKey(ex, p.id, si, "wt");
         const repsDK = draftKey(ex, p.id, si, "reps");
         const wtIsDraft = wtDK in draftValues;
         const repsIsDraft = repsDK in draftValues;
         const wt = wtIsDraft ? (draftValues[wtDK] === "" ? null : parseFloat(draftValues[wtDK])) : base.wt;
-        const reps = repsIsDraft ? draftValues[repsDK] : base.reps;
+        // Reps always preset to the user's default target rather than
+        // carrying forward the last session's actual reps text — historical
+        // reps entries are often messy free-text notes ("3r", "2x, 4r"),
+        // and a consistent clean default beats a mix of blank/garbled values.
+        const reps = repsIsDraft ? draftValues[repsDK] : String(defaultRepsTarget);
         return { wt, reps, wtIsDraft, repsIsDraft };
       });
       html += `

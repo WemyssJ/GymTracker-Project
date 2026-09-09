@@ -146,7 +146,7 @@
 
   main{padding:16px;max-width:520px;margin:0 auto;overflow-x:hidden;}
 
-  .stat-strip{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:18px;}
+  .stat-strip{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
   .stat-card{
     background:var(--panel);border:1px solid var(--line);
     border-radius:10px;padding:8px 12px;min-width:0;
@@ -178,7 +178,10 @@
 
   .exercise-block{border-top:1px solid var(--line);padding:12px 0;}
   .exercise-block:first-of-type{border-top:none;padding-top:0;}
-  .exercise-title{font-size:14px;font-weight:700;margin-bottom:8px;}
+  .exercise-block.ex-collapsed{padding-bottom:0;}
+  .exercise-block.ex-collapsed .exercise-collapsible{display:none;}
+  .exercise-title{font-size:14px;font-weight:700;margin-bottom:8px;cursor:pointer;user-select:none;}
+  .exercise-title.ex-title-collapsed{color:var(--green);}
 
   .people-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
   .person-col .p-label{font-size:11px;color:var(--muted);font-weight:700;margin-bottom:4px;}
@@ -212,6 +215,8 @@
   .reps-box input{font-size:11px;color:var(--muted);}
   .mini-box input.prefilled{color:var(--muted);}
   .reps-box input.prefilled{color:var(--faint);}
+  .mini-box input.pr-val{color:var(--green);}
+  .mini-box input.reg-val{color:var(--red);}
 
   button#saveBtn{
     width:100%;margin-top:16px;padding:14px;border:none;border-radius:10px;
@@ -272,7 +277,6 @@
   .exercise-row.dragging{opacity:0.45;}
   .ex-picker-already{font-size:11px;font-weight:600;color:var(--muted);margin-left:6px;}
 
-  .history{margin-top:8px;}
   .history-row{
     background:var(--panel);border:1px solid var(--line);border-radius:10px;
     padding:10px 12px;margin-bottom:8px;
@@ -392,26 +396,31 @@
   .ex-info-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-top:14px;}
 
   /* ── Timer footer ──────────────────────────────────── */
-  main.has-timer-footer{padding-bottom:150px;}
+  main.has-timer-footer{padding-bottom:112px;}
   .timer-widget{
     position:fixed;left:0;right:0;bottom:0;
     background:var(--panel);border-top:2px solid var(--amber);
-    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+    padding:8px 14px calc(8px + env(safe-area-inset-bottom));
     z-index:45;box-shadow:0 -4px 20px rgba(0,0,0,0.4);
-    display:none;flex-direction:column;gap:8px;
+    display:none;flex-direction:column;gap:6px;
   }
   .timer-widget.visible{display:flex;}
   .timer-widget-info{text-align:center;}
-  .timer-label{font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-bottom:2px;}
+  .timer-mode-btn{
+    background:none;border:none;color:var(--muted);font-size:10px;font-weight:800;
+    letter-spacing:0.08em;cursor:pointer;padding:2px 8px;border-radius:10px;
+  }
+  .timer-mode-btn:not(:disabled):active{background:var(--panel-2);}
+  .timer-mode-btn:disabled{cursor:default;opacity:0.7;}
   .timer-display{
-    font-size:42px;font-weight:800;color:var(--amber);
-    font-variant-numeric:tabular-nums;letter-spacing:-0.02em;line-height:1;
+    font-size:32px;font-weight:800;color:var(--amber);
+    font-variant-numeric:tabular-nums;letter-spacing:-0.02em;line-height:1.1;
   }
   .timer-display.done{color:var(--green);}
-  .timer-controls{display:flex;gap:8px;}
+  .timer-controls{display:flex;gap:6px;}
   .timer-btn{
-    flex:1;padding:10px 4px;border-radius:8px;border:1px solid var(--line);
-    background:var(--panel-2);color:var(--text);font-size:12.5px;font-weight:700;
+    flex:1;padding:7px 4px;border-radius:8px;border:1px solid var(--line);
+    background:var(--panel-2);color:var(--text);font-size:12px;font-weight:700;
     cursor:pointer;white-space:nowrap;
   }
   .timer-btn:disabled{opacity:0.35;cursor:default;}
@@ -443,7 +452,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.5</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.5.1.6</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -461,7 +470,7 @@
     <form id="logForm" class="collapsible-body"></form>
 
     <div class="section-label collapsible" onclick="toggleHistoryCollapsed()">
-      <span id="historyToggleIcon">▾</span> Recent sessions
+      <span id="historyToggleIcon">▾</span> Past sessions
     </div>
     <div class="history collapsible-body" id="history"><div class="loading">Loading…</div></div>
   </div>
@@ -589,7 +598,7 @@
 
 <div id="timerWidget" class="timer-widget">
   <div class="timer-widget-info">
-    <div id="timerLabel" class="timer-label">REST TIMER</div>
+    <button type="button" id="timerModeBtn" class="timer-mode-btn" onclick="cycleTimerModeInline()">⏱ TIMER ⇄</button>
     <div id="timerDisplay" class="timer-display">1:30</div>
   </div>
   <div id="timerControls" class="timer-controls">
@@ -1969,7 +1978,7 @@ function renderTabs(){
       btn.setAttribute("aria-label", "Settings");
       btn.className = "settings-tab" + (key === activeTab ? " active" : "");
     } else {
-      const label = key === "progress" ? "Progress" : CONFIG[key].label + " Day";
+      const label = key === "progress" ? "Progress" : CONFIG[key].label;
       btn.innerHTML = label + (isNext ? ' <span class="due-dot" title="Next session due"></span>' : "");
       btn.className = key === activeTab ? "active" : "";
     }
@@ -2004,7 +2013,7 @@ function applyStatsCollapsedState(){
 }
 
 let formCollapsed = false;
-let historyCollapsed = false;
+let historyCollapsed = true;
 
 function loadFormCollapsed(){
   try{ return localStorage.getItem("gymtracker:formCollapsed") === "1"; }catch(e){ return false; }
@@ -2026,7 +2035,7 @@ function applyFormCollapsedState(){
 }
 
 function loadHistoryCollapsed(){
-  try{ return localStorage.getItem("gymtracker:historyCollapsed") === "1"; }catch(e){ return false; }
+  try{ return localStorage.getItem("gymtracker:historyCollapsed") !== "0"; }catch(e){ return true; }
 }
 function saveHistoryCollapsed(){
   try{ localStorage.setItem("gymtracker:historyCollapsed", historyCollapsed ? "1" : "0"); }catch(e){}
@@ -2143,11 +2152,12 @@ function renderStatStrip(){
   applyStatsCollapsedState();
 }
 
-function setBoxHtml(exIndex, person, setIndex, set){
+function setBoxHtml(exIndex, person, setIndex, set, exName, personId){
   const wtVal = set.wt !== null ? set.wt : "";
   const repsVal = set.reps || "";
   const wtClass = set.wt !== null ? "prefilled" : "";
   const repsClass = set.reps ? "prefilled" : "";
+  const safeExName = (exName || "").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
   return `
     <div class="set-col">
       <div class="set-label">SET ${setIndex + 1}</div>
@@ -2155,7 +2165,7 @@ function setBoxHtml(exIndex, person, setIndex, set){
         <input type="number" step="0.1" inputmode="decimal" placeholder="kg"
           class="${wtClass}" value="${wtVal}"
           data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="wt"
-          oninput="this.classList.remove('prefilled')" onfocus="this.select()">
+          oninput="this.classList.remove('prefilled'); updateWeightInputColor(this,'${safeExName}','${personId}')" onfocus="this.select()">
       </div>
       <div class="mini-box reps-box">
         <input type="text" placeholder="reps"
@@ -2165,6 +2175,23 @@ function setBoxHtml(exIndex, person, setIndex, set){
       </div>
     </div>
   `;
+}
+
+function updateWeightInputColor(input, exName, personId){
+  input.classList.remove("pr-val", "reg-val");
+  const val = parseFloat(input.value);
+  if(isNaN(val)) return;
+  const stats = computeStatsFor(activeTab, exName, personId);
+  if(stats.best === null) return;
+  if(val > stats.best) input.classList.add("pr-val");
+  else if(val < stats.best) input.classList.add("reg-val");
+}
+
+let collapsedExercises = {};
+
+function toggleExerciseCollapse(exName){
+  collapsedExercises[exName] = !collapsedExercises[exName];
+  renderForm();
 }
 
 function fillForwardSets(sets){
@@ -2200,14 +2227,20 @@ function renderForm(){
       ? `<button type="button" class="ex-info-btn" onclick="showExerciseInfo('${safeName}')" aria-label="Exercise info">i</button>`
       : "";
     const btnGroup = infoBtn ? `<div style="display:flex;gap:6px;">${infoBtn}</div>` : "";
-    html += `<div class="exercise-block"><div class="exercise-title-row"><div class="exercise-title">${ex}</div>${btnGroup}</div>`;
+    const isCollapsed = !!collapsedExercises[ex];
+    html += `<div class="exercise-block${isCollapsed?" ex-collapsed":""}" data-ex-name="${safeName}">
+      <div class="exercise-title-row">
+        <div class="exercise-title${isCollapsed?" ex-title-collapsed":""}" onclick="toggleExerciseCollapse('${safeName}')">${ex}</div>
+        ${btnGroup}
+      </div>
+      <div class="exercise-collapsible">`;
     people.forEach((p, pi) => {
       const lastSets = lastEntry ? fillForwardSets(getPersonSets(lastEntry, p.id)) : emptySets();
       const sets = Array.from({length: count}, (_, si) => lastSets[si] || {wt:null, reps:""});
       html += `
         <div class="p-label" style="color:${p.color};${pi > 0 ? "margin-top:10px;" : ""}">${p.name.toUpperCase()}</div>
         <div class="set-row">
-          ${sets.map((set, si) => setBoxHtml(i, p.id, si, set)).join("")}
+          ${sets.map((set, si) => setBoxHtml(i, p.id, si, set, ex, p.id)).join("")}
         </div>
       `;
     });
@@ -2216,6 +2249,7 @@ function renderForm(){
         <button type="button" class="set-count-btn" onclick="adjustSetCount('${safeName}',-1)" aria-label="Remove set">−</button>
         <span class="set-count-label">${count} set${count!==1?"s":""}</span>
         <button type="button" class="set-count-btn" onclick="adjustSetCount('${safeName}',1)" aria-label="Add set">+</button>
+      </div>
       </div>
     </div>`;
   });
@@ -2450,6 +2484,7 @@ async function ensureAllLoaded(){
 async function switchTab(tabKey){
   activeTab = tabKey;
   historyShowAll = false;
+  collapsedExercises = {};
   renderTabs();
   refreshTimerFooter();
 
@@ -2663,7 +2698,7 @@ function endExerciseDrag(){
 function renderProgressSubTabs(){
   const nav = document.getElementById("progressSubTabs");
   nav.innerHTML = "";
-  Object.keys(CONFIG).forEach(key=>{
+  activeDays.forEach(key=>{
     const btn = document.createElement("button");
     btn.textContent = CONFIG[key].label;
     btn.className = key === progressSubTab ? "active" : "";
@@ -2709,6 +2744,7 @@ function renderChartLegend(){
 }
 
 function renderProgressView(){
+  if(!activeDays.includes(progressSubTab)) progressSubTab = activeDays[0];
   renderProgressSubTabs();
   renderChartLegend();
   const cfg = CONFIG[progressSubTab];
@@ -3240,6 +3276,7 @@ function setWizardPartner(want){
 function setWizardTimerEnabled(on){
   timerSettings.enabled = on;
   saveTimerSettings();
+  if(!on) timerStop();
   renderTimerSettings();
   renderWizardStepBody();
   refreshTimerFooter();
@@ -3368,7 +3405,8 @@ const TIMER_SETTINGS_KEY = "gymtracker:timerSettings";
 let timerSettings = { enabled: false, mode: "countdown", duration: 90 };
 let timerIntervalId = null;
 let timerRemaining = 0;
-let timerElapsed = 0;
+let timerElapsedMs = 0;
+let timerSegmentStart = 0;
 let timerSettingsCollapsed = true;
 let creditsSettingsCollapsed = true;
 
@@ -3398,33 +3436,48 @@ function formatTime(secs){
   return m + ":" + String(s).padStart(2, "0");
 }
 
+function formatStopwatch(ms){
+  const totalCs = Math.max(0, Math.floor(ms / 10));
+  const cs = totalCs % 100;
+  const totalSec = Math.floor(totalCs / 100);
+  const s = totalSec % 60;
+  const m = Math.floor(totalSec / 60);
+  return m + ":" + String(s).padStart(2, "0") + "." + String(cs).padStart(2, "0");
+}
+
 let timerRunState = "idle"; // "idle" | "running" | "paused" | "done"
 let lapCount = 0;
 
 function refreshTimerFooter(){
   const w = document.getElementById("timerWidget");
   const main = document.querySelector("main");
-  const shouldShow = (timerSettings.enabled && !!CONFIG[activeTab]) || timerRunState !== "idle";
+  const shouldShow = timerSettings.enabled && !!CONFIG[activeTab];
   if(w) w.classList.toggle("visible", shouldShow);
   if(main) main.classList.toggle("has-timer-footer", shouldShow);
   if(!shouldShow) return;
 
-  const labelEl = document.getElementById("timerLabel");
+  const modeBtn = document.getElementById("timerModeBtn");
   const display = document.getElementById("timerDisplay");
   const startBtn = document.getElementById("timerStartBtn");
   const pauseBtn = document.getElementById("timerPauseBtn");
   const stopBtn = document.getElementById("timerStopBtn");
   const lapBtn = document.getElementById("timerLapBtn");
-  if(!labelEl || !display || !startBtn) return;
+  if(!modeBtn || !display || !startBtn) return;
 
-  labelEl.textContent = timerSettings.mode === "countdown" ? "TIMER" : "STOPWATCH";
+  modeBtn.textContent = (timerSettings.mode === "countdown" ? "⏱ TIMER" : "⏲ STOPWATCH") + " ⇄";
+  modeBtn.disabled = timerRunState !== "idle";
+
   if(timerRunState === "done"){
     display.classList.add("done");
     display.textContent = "Done ✓";
   } else {
     display.classList.remove("done");
-    if(timerSettings.mode === "countdown") display.textContent = formatTime(timerRunState === "idle" ? timerSettings.duration : Math.max(0, timerRemaining));
-    else display.textContent = formatTime(timerElapsed);
+    if(timerSettings.mode === "countdown"){
+      display.textContent = formatTime(timerRunState === "idle" ? timerSettings.duration : Math.max(0, timerRemaining));
+    } else {
+      const liveMs = timerElapsedMs + (timerRunState === "running" ? (Date.now() - timerSegmentStart) : 0);
+      display.textContent = formatStopwatch(liveMs);
+    }
   }
 
   startBtn.textContent = timerRunState === "paused" ? "Resume" : "Start";
@@ -3452,10 +3505,8 @@ function timerResumeInterval(){
       }
     }, 1000);
   } else {
-    timerIntervalId = setInterval(() => {
-      timerElapsed++;
-      refreshTimerFooter();
-    }, 1000);
+    timerSegmentStart = Date.now();
+    timerIntervalId = setInterval(refreshTimerFooter, 50);
   }
   refreshTimerFooter();
 }
@@ -3463,7 +3514,7 @@ function timerResumeInterval(){
 function startRestTimer(){
   if(timerIntervalId){ clearInterval(timerIntervalId); timerIntervalId = null; }
   timerRemaining = timerSettings.duration;
-  timerElapsed = 0;
+  timerElapsedMs = 0;
   lapCount = 0;
   timerResumeInterval();
 }
@@ -3475,6 +3526,9 @@ function timerStart(){
 
 function timerPause(){
   if(timerIntervalId){ clearInterval(timerIntervalId); timerIntervalId = null; }
+  if(timerSettings.mode === "countup"){
+    timerElapsedMs += Date.now() - timerSegmentStart;
+  }
   timerRunState = "paused";
   refreshTimerFooter();
 }
@@ -3482,14 +3536,26 @@ function timerPause(){
 function timerStop(){
   if(timerIntervalId){ clearInterval(timerIntervalId); timerIntervalId = null; }
   timerRunState = "idle";
+  timerElapsedMs = 0;
   refreshTimerFooter();
 }
 
 function timerLap(){
   if(timerRunState !== "running") return;
   lapCount++;
-  const t = timerSettings.mode === "countdown" ? formatTime(timerSettings.duration - timerRemaining) : formatTime(timerElapsed);
+  const t = timerSettings.mode === "countdown"
+    ? formatTime(timerSettings.duration - timerRemaining)
+    : formatStopwatch(timerElapsedMs + (Date.now() - timerSegmentStart));
   showToast(`Lap ${lapCount} — ${t}`);
+}
+
+function cycleTimerModeInline(){
+  if(timerRunState !== "idle") return;
+  timerSettings.mode = timerSettings.mode === "countdown" ? "countup" : "countdown";
+  saveTimerSettings();
+  refreshTimerFooter();
+  renderTimerSettings();
+  if(wizardStep === 8) renderWizardStepBody();
 }
 
 function renderTimerModeTabs(navId){
@@ -3529,6 +3595,7 @@ function renderTimerSettings(){
 function handleTimerEnabledToggle(checked){
   timerSettings.enabled = checked;
   saveTimerSettings();
+  if(!checked) timerStop();
   renderTimerSettings();
   refreshTimerFooter();
 }

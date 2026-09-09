@@ -1,5 +1,22 @@
 # Changelog
 
+## v0.5.1.6 — 2026-09-09
+### Added
+- **Exercise collapse** — tap an exercise's name while logging to collapse it out of the way; its title turns green while collapsed; switching to that day tab uncollapses everything again
+- **Weight input colour feedback** — turns white when freshly typed, grey when carried over from last time, green when above your personal best, red when below it
+- **Inline timer mode toggle** — the timer footer's label is now a button that switches between Count down / Count up right there, without opening Settings
+- **Stopwatch milliseconds** — count-up mode now shows centiseconds (e.g. `0:12.45`)
+
+### Changed
+- Removed "Day" from the tab labels (Push/Pull/Leg instead of Push Day/Pull Day/Leg Day)
+- Fixed inconsistent spacing between Personal Bests / Log today's session / Past sessions (was 40px vs 22px, now 22px throughout)
+- Renamed "Recent sessions" to "Past sessions", and it's now collapsed by default
+- Progress tab now only shows sub-tabs for currently active training days
+- Timer footer is more compact (smaller display/buttons) and its reserved bottom spacing now matches its actual height instead of overshooting it
+- Turning the timer off now force-stops any running timer too, so the footer is never left showing
+
+---
+
 ## v0.5.1.5 — 2026-09-09
 ### Changed
 - **Timer simplified to one configurable timer** — Settings → Timers is now a single "Timer" toggle with a Count down / Count up mode selector; count-down duration is set directly (minutes + seconds) instead of fixed presets

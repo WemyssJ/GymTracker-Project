@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.3 — 2026-09-09
+### Changed
+- **Default reps target moved into each person's card in Settings → People** (far right, below their colour swatches) instead of living as separate rows down in Settings → Exercises
+
+---
+
 ## v0.7.2 — 2026-09-09
 ### Added
 - **Projected pace line on Progress** — a dashed line now extends from your last logged point across the final quarter of the chart, showing where you'd land if you kept up your own historical rate of improvement (a simple linear trend fit to your actual data, not a fixed target). Needs at least 2 sessions logged for that exercise/person to appear; real data is drawn at the same point spacing, just fit into the first three-quarters of the chart to make room

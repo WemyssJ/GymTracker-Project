@@ -522,7 +522,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.2</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.3</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -2913,6 +2913,7 @@ function renderPeopleSettings(){
   const container = document.getElementById("peopleList");
   container.innerHTML = "";
   people.forEach((p, idx) => {
+    const target = getPersonRepsTarget(p.id);
     const row = document.createElement("div");
     row.className = "person-row";
     row.style.flexDirection = "column";
@@ -2926,6 +2927,14 @@ function renderPeopleSettings(){
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;">
         ${colorSwatchRowHtml(idx)}
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;padding-top:10px;border-top:1px solid var(--line);">
+        <span style="font-size:12px;color:var(--muted);font-weight:700;">Default reps</span>
+        <div class="set-count-row" style="margin-top:0;">
+          <button type="button" class="set-count-btn" id="defaultRepsMinusBtn-${p.id}" onclick="adjustPersonRepsTarget('${p.id}',-1)" ${target<=1?"hidden":""}>−</button>
+          <span class="set-count-label" id="defaultRepsLabel-${p.id}">${target} reps</span>
+          <button type="button" class="set-count-btn" id="defaultRepsPlusBtn-${p.id}" onclick="adjustPersonRepsTarget('${p.id}',1)" ${target>=30?"hidden":""}>+</button>
+        </div>
       </div>
     `;
     container.appendChild(row);
@@ -3006,25 +3015,6 @@ function renderExerciseSettings(containerId){
       </div>
     `;
     container.appendChild(row);
-
-    people.forEach(p=>{
-      const target = getPersonRepsTarget(p.id);
-      const repsRow = document.createElement("div");
-      repsRow.className = "settings-row";
-      repsRow.style.marginBottom = "14px";
-      repsRow.innerHTML = `
-        <div class="settings-row-info">
-          <div class="settings-row-title">Default rep target — <span style="color:${p.color};">${p.name}</span></div>
-          <div class="settings-row-desc">Reps presets to this every time a set is left blank</div>
-        </div>
-        <div class="set-count-row" style="margin-top:0;">
-          <button type="button" class="set-count-btn" id="defaultRepsMinusBtn-${p.id}" onclick="adjustPersonRepsTarget('${p.id}',-1)" ${target<=1?"hidden":""}>−</button>
-          <span class="set-count-label" id="defaultRepsLabel-${p.id}">${target} reps</span>
-          <button type="button" class="set-count-btn" id="defaultRepsPlusBtn-${p.id}" onclick="adjustPersonRepsTarget('${p.id}',1)" ${target>=30?"hidden":""}>+</button>
-        </div>
-      `;
-      container.appendChild(repsRow);
-    });
 
     const commentsRow = document.createElement("div");
     commentsRow.className = "settings-row";

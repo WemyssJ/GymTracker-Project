@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.6.2 — 2026-09-09
+### Changed
+- **Exercise info "Recent" tab renamed to "History" and no longer capped at 6 sessions** — it now lists every logged session for that exercise, scrollable within the panel, instead of just the last few
+
+---
+
 ## v0.6.1 — 2026-09-09
 ### Added
 - **Progress chart assisted/unassisted toggle** — for an exercise logged in both modes, Progress now shows an Unassisted/Assisted switch instead of silently plotting both weight scales as one misleading line; defaults to whichever mode you last used

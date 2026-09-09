@@ -143,6 +143,8 @@
   .chart-legend{display:flex;gap:16px;margin-bottom:12px;}
   .legend-item{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted);font-weight:700;}
   .swatch{width:10px;height:10px;border-radius:3px;display:inline-block;}
+  .chart-view-toggles{display:flex;flex-wrap:wrap;gap:8px 16px;margin-bottom:12px;}
+  .chart-view-toggles .subtabs{margin-bottom:0;}
 
   #progressCanvas{width:100%;display:block;background:var(--panel);
     border:1px solid var(--line);border-radius:12px;}
@@ -520,7 +522,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.0</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.1</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -554,9 +556,11 @@
     </div>
     <nav class="subtabs collapsible-body" id="progressExerciseTabs"></nav>
 
-    <nav class="subtabs" id="progressAssistedToggle" style="display:none;"></nav>
-    <nav class="subtabs" id="progressMetricToggle"></nav>
     <div class="chart-legend" id="chartLegend"></div>
+    <div class="chart-view-toggles" id="chartViewToggles">
+      <nav class="subtabs" id="progressAssistedToggle" style="display:none;"></nav>
+      <nav class="subtabs" id="progressMetricToggle"></nav>
+    </div>
     <canvas id="progressCanvas" height="300"></canvas>
     <p id="progressChartCaption" style="font-size:11.5px;color:var(--muted);margin-top:10px;">Line shows weight (kg) logged each session over time.</p>
 

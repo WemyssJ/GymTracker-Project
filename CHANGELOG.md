@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.1 — 2026-09-09
+### Changed
+- **Moved the Assisted/Unassisted and Weight/Est. 1RM toggles on Progress** — they sat as two more full-width pill rows between the Exercise picker and the chart, adding to an already tall stack of button rows before you reached the chart. They now sit together in one combined row directly above the chart, right after the people legend, grouping "how to view this chart" next to the chart itself instead of mixed in with "which exercise to view"
+
+---
+
 ## v0.7.0 — 2026-09-09
 ### Added
 - **Comments** — an optional "Notes (optional)" field per person under each exercise, for things like "watch form" or "felt tired" that don't belong in the reps field. Notes never carry forward between sessions, show up in History and in the exercise info History tab, and restore correctly when editing a past session. Toggle it off in Settings → Exercises if you don't want it (on by default)

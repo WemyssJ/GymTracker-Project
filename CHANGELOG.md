@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.7.4 — 2026-09-09
+### Fixed
+- **Estimated 1RM could spike to implausible numbers** — the formula was reading a rep count off the front of old free-text reps notes (e.g. "57.5kg (4,4), 55kg (4)" → read as 57 reps), producing wildly inflated estimates. It now only estimates from a clean whole-number rep count and skips anything else, same as it skips a blank set
+
+### Added
+- **X/Y axis labels on the Progress chart** ("Session date" / "Weight (kg)" or "Est. 1RM (kg)")
+- **Settings jump nav** — a row of quick links (Days · Theme · People · Exercises · Backup · Timers · Credits) at the top of Settings that expands and scrolls straight to a section, instead of scrolling past everything above it
+- **Exercises in Settings collapse per day** (like the setup wizard already did), defaulting to collapsed except whichever day you were on when you opened Settings — with 4 days and 20+ exercises this was the single biggest reason Settings felt endless
+- **"+ Add note" link** instead of an always-visible notes box per person — a 2-person, 6-exercise day no longer shows 12 empty note fields at once; tapping it reveals and focuses the field, and it stays open once it has text
+
+### Changed
+- **Personal Bests now defaults to collapsed** (matching History) so the actual logging form is front and center when you open a day
+- Renamed the Backup & Sync GitHub button's icon from the settings-gear emoji to a key, since it sat one tap away from the real Settings gear and looked like a second settings screen
+
+---
+
 ## v0.7.3 — 2026-09-09
 ### Changed
 - **Default reps target moved into each person's card in Settings → People** (far right, below their colour swatches) instead of living as separate rows down in Settings → Exercises

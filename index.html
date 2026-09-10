@@ -376,7 +376,7 @@
     cursor:pointer;line-height:1;padding:0;flex-shrink:0;
     font-style:italic;font-family:Georgia,serif;
   }
-  .ex-info-box{max-height:88vh;display:flex;flex-direction:column;overflow:hidden;}
+  .ex-info-box{height:88vh;display:flex;flex-direction:column;overflow:hidden;}
   .ex-info-header{display:flex;align-items:center;justify-content:space-between;
     padding-bottom:14px;margin-bottom:0;border-bottom:1px solid var(--line);flex-shrink:0;}
   .muscle-img{width:100%;border-radius:10px;margin-bottom:14px;display:block;}
@@ -539,7 +539,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.6</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.8</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -651,7 +651,7 @@
     </div>
     <div id="backupSettingsBody" class="collapsible-body">
       <div id="githubSyncControls" style="display:none;">
-        <button type="button" class="icon-btn" style="width:100%;margin-bottom:8px;" onclick="openSettings()">🔑 Configure GitHub</button>
+        <button type="button" class="icon-btn" style="width:100%;margin-bottom:8px;display:flex;align-items:center;gap:6px;justify-content:center;" onclick="openSettings()"><svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"/></svg> Configure GitHub</button>
         <div class="header-actions" style="padding:0 0 8px 0;">
           <button id="pushBtn" class="icon-btn push-btn" onclick="pushToGithub()">⤴ Push to GitHub</button>
           <button id="pullBtn" class="icon-btn push-btn" onclick="pullFromGithub()">⤵ Load from GitHub</button>
@@ -661,7 +661,7 @@
         <button id="exportBtn" class="icon-btn backup-btn" onclick="exportExcel()">⤓ Backup (Excel)</button>
         <button id="importBtn" class="icon-btn backup-btn" onclick="document.getElementById('importFileInput').click()">⤒ Restore (Excel)</button>
       </div>
-      <button type="button" class="icon-btn danger-btn" style="width:100%;" onclick="deleteAllData()">🗑 Delete All Data</button>
+      <button type="button" class="icon-btn danger-btn" style="width:100%;display:flex;align-items:center;gap:6px;justify-content:center;" onclick="deleteAllData()"><svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/></svg> Delete All Data</button>
       <p style="font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5;">
         Deleting all data wipes every session, person, and exercise on this device permanently. It can't be undone — back up first if you're not sure.
       </p>
@@ -765,7 +765,7 @@
     <label for="ghToken">Personal access token</label>
     <div style="display:flex;gap:8px;align-items:center;">
       <input type="password" id="ghToken" placeholder="github_pat_..." style="flex:1;margin:0;">
-      <button type="button" id="tokenToggle" class="icon-btn" onclick="toggleTokenVisibility()" style="flex-shrink:0;padding:8px 11px;font-size:15px;" aria-label="Show/hide token">👁</button>
+      <button type="button" id="tokenToggle" class="icon-btn" onclick="toggleTokenVisibility()" style="flex-shrink:0;padding:8px 11px;" aria-label="Show/hide token"><svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg></button>
     </div>
     <label for="ghRepo">Repo (owner/name)</label>
     <input type="text" id="ghRepo" placeholder="yourname/gym-log">
@@ -841,6 +841,27 @@
 </div>
 
 <script>
+const ICON = {
+  trash:   '<svg width="13" height="13" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>',
+  key:     '<svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"/></svg>',
+  eye:     '<svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>',
+  eyeOff:  '<svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M3.707 2.293a1 1 0 00-1.414 1.414l14 14a1 1 0 001.414-1.414l-1.473-1.473A10.014 10.014 0 0019.542 10C18.268 5.943 14.478 3 10 3a9.958 9.958 0 00-4.512 1.074l-1.78-1.781zm4.261 4.26l1.514 1.515a2.003 2.003 0 012.45 2.45l1.514 1.514a4 4 0 00-5.478-5.478z" clip-rule="evenodd"/><path d="M12.454 16.697L9.75 13.992a4 4 0 01-3.742-3.741L2.335 6.578A9.98 9.98 0 00.458 10c1.274 4.057 5.064 7 9.542 7 .847 0 1.669-.105 2.454-.303z"/></svg>',
+  gear:    '<svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/></svg>',
+  dumbbell:'<svg width="16" height="12" viewBox="0 0 24 12" fill="currentColor" aria-hidden="true" style="display:inline;vertical-align:middle;"><rect x="0" y="1" width="5" height="10" rx="1.5"/><rect x="5" y="4" width="14" height="4" rx="1"/><rect x="19" y="1" width="5" height="10" rx="1.5"/></svg>',
+  figure:  '<svg width="22" height="32" viewBox="0 0 22 32" fill="currentColor" opacity="0.3" aria-hidden="true"><circle cx="11" cy="5" r="4"/><rect x="7" y="11" width="8" height="10" rx="2"/><rect x="5" y="21" width="4" height="10" rx="2"/><rect x="13" y="21" width="4" height="10" rx="2"/></svg>',
+};
+
+function addSwipeListener(el, onLeft, onRight){
+  let sx = 0, sy = 0;
+  el.addEventListener("touchstart", e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  el.addEventListener("touchend", e => {
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
+    if(dx < 0) onLeft(); else onRight();
+  }, { passive: true });
+}
+
 const CONFIG = {
   "push": {
     "label": "Push",
@@ -1573,7 +1594,7 @@ function renderPickerGrid(){
       : `<div class="ex-picker-row-muscle-img"></div>`;
     const exImgEl = repdb
       ? `<img src="${repdb.files[0]}" alt="${name}" onerror="this.style.display='none'">`
-      : `<div class="ex-picker-row-img-ph">💪</div>`;
+      : `<div class="ex-picker-row-img-ph">${ICON.figure}</div>`;
     const alreadyTag = already ? `<span class="ex-picker-already">(already selected)</span>` : "";
     return `<div class="ex-picker-row${sel?" selected":""}${already?" in-list":""}" onclick="selectFromPicker('${name.replace(/'/g,"\\'")}')">
       <div class="ex-picker-row-name">${name}${alreadyTag}</div>
@@ -1623,6 +1644,10 @@ let progressExercise = null;
 // renderProgressView sees this exercise has both modes logged)
 let progressShowUnassisted = null;
 let progressShowAssisted = null;
+const PROGRESS_ASSISTED_PREFS_KEY = "gymtracker:progressAssistedFilter";
+let progressAssistedPrefs = {};
+function loadProgressAssistedPrefs(){ try{ return JSON.parse(localStorage.getItem(PROGRESS_ASSISTED_PREFS_KEY)) || {}; }catch(e){ return {}; } }
+function saveProgressAssistedPrefs(){ try{ localStorage.setItem(PROGRESS_ASSISTED_PREFS_KEY, JSON.stringify(progressAssistedPrefs)); }catch(e){} }
 let cache = {}; // { push: [session, ...], pull: [...], leg: [...] }
 const TAB_ORDER = [...Object.keys(CONFIG), "progress", "settings"];
 
@@ -1912,6 +1937,14 @@ function addExercise(tabKey){
   refreshExerciseUIs();
 }
 
+function resetExercisesToDefaults(tabKey){
+  exercisesConfig[tabKey] = [...CONFIG[tabKey].exercises];
+  saveExercises();
+  refreshExerciseUIs();
+  if(activeTab === tabKey){ renderStatStrip(); renderForm(); renderHistory(); }
+  showToast("Exercises reset to defaults");
+}
+
 async function removeExercise(tabKey, idx){
   const list = getExercises(tabKey);
   if(list.length <= 1){
@@ -2150,7 +2183,7 @@ function renderTabs(){
     const btn = document.createElement("button");
     const isNext = key === nextKey && key !== "progress" && key !== "settings";
     if(key === "settings"){
-      btn.innerHTML = "⚙";
+      btn.innerHTML = ICON.gear;
       btn.setAttribute("aria-label", "Settings");
       btn.className = "settings-tab" + (key === activeTab ? " active" : "");
     } else {
@@ -2426,7 +2459,7 @@ function checkOverloadHint(exIndex){
   });
   if(maxReps >= 15){
     hint.style.display = "block";
-    hint.textContent = `💡 ${maxReps} reps is high — try adding weight and aiming for ~5–8 reps next session.`;
+    hint.textContent = `${maxReps} reps is high — try adding weight and aiming for ~5–8 reps next session.`;
   } else {
     hint.style.display = "none";
   }
@@ -2514,7 +2547,7 @@ function renderForm(){
     const infoBtn = EXERCISE_INFO[ex]
       ? `<button type="button" class="ex-info-btn" onclick="showExerciseInfo('${safeName}')" aria-label="Exercise info">i</button>`
       : "";
-    const plateBtn = advancedMode ? `<button type="button" class="ex-info-btn" style="font-style:normal;" onclick="openPlateCalc('${safeName}')" aria-label="Plate calculator">🏋</button>` : "";
+    const plateBtn = advancedMode ? `<button type="button" class="ex-info-btn" style="font-style:normal;" onclick="openPlateCalc('${safeName}')" aria-label="Plate calculator">${ICON.dumbbell}</button>` : "";
     const btnGroup = `<div style="display:flex;gap:6px;">${infoBtn}${plateBtn}</div>`;
     const isCollapsed = !!collapsedExercises[ex];
     html += `<div class="exercise-block${isCollapsed?" ex-collapsed":""}" data-ex-name="${safeName}">
@@ -2643,7 +2676,7 @@ function renderHistory(){
         <span class="hdate">${fmtDate(s.date)}</span>
         <div style="display:flex;gap:2px;">
           <button class="delete-btn" onclick="editSession('${activeTab}','${s.date}')" aria-label="Edit session" title="Edit session">✎</button>
-          <button class="delete-btn" onclick="deleteSession('${activeTab}','${s.date}')" aria-label="Delete session">🗑</button>
+          <button class="delete-btn" onclick="deleteSession('${activeTab}','${s.date}')" aria-label="Delete session">${ICON.trash}</button>
         </div>
       </div>
     `;
@@ -2868,7 +2901,7 @@ async function handleSave(evt){
   const hasGithub = !!(ghCfg && ghCfg.token && ghCfg.repo);
 
   if(prCount > 0){
-    showToast(`Saved — ${prCount} new PR${prCount>1?"s":""} 🏆`, "pr");
+    showToast(`Saved — ${prCount} new PR${prCount>1?"s":""}`, "pr");
   } else if(regCount > 0){
     showToast(`Saved — down on ${regCount} lift${regCount>1?"s":""} from last time`, "reg");
   } else {
@@ -2956,7 +2989,7 @@ function renderPeopleSettings(){
         <input type="text" class="person-name-input" value="${p.name}"
           oninput="updatePersonName(${idx}, this.value)">
         <button type="button" class="delete-btn" onclick="removePerson(${idx})"
-          aria-label="Remove person" ${people.length <= 1 ? "disabled" : ""}>🗑</button>
+          aria-label="Remove person" ${people.length <= 1 ? "disabled" : ""}>${ICON.trash}</button>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;">
         ${colorSwatchRowHtml(idx)}
@@ -3104,12 +3137,13 @@ function renderExerciseSettings(containerId){
             <span class="${isPlaceholder?"ex-picker-btn-placeholder":""}">${label}</span>
             <span style="color:var(--muted);font-size:11px;">▾</span>
           </button>
-          <button type="button" class="delete-btn" onclick="removeExercise('${tabKey}',${idx})" aria-label="Remove exercise">🗑</button>
+          <button type="button" class="delete-btn" onclick="removeExercise('${tabKey}',${idx})" aria-label="Remove exercise">${ICON.trash}</button>
         </div>
       `;
     });
     inner += `</div>`;
     inner += `<button type="button" class="icon-btn" style="width:100%;margin-top:4px;" onclick="openExercisePicker('${tabKey}',-1)">+ Add exercise</button>`;
+    inner += `<button type="button" class="icon-btn" style="width:100%;margin-top:4px;color:var(--muted);" onclick="resetExercisesToDefaults('${tabKey}')">Reset to defaults</button>`;
     inner += `</div>`;
     section.innerHTML = inner;
     container.appendChild(section);
@@ -3234,6 +3268,8 @@ function toggleProgressShowUnassisted(){
     return;
   }
   progressShowUnassisted = !progressShowUnassisted;
+  progressAssistedPrefs[progressSubTab + "|" + progressExercise] = { showUnassisted: progressShowUnassisted, showAssisted: progressShowAssisted };
+  saveProgressAssistedPrefs();
   renderProgressView();
 }
 function toggleProgressShowAssisted(){
@@ -3242,22 +3278,30 @@ function toggleProgressShowAssisted(){
     return;
   }
   progressShowAssisted = !progressShowAssisted;
+  progressAssistedPrefs[progressSubTab + "|" + progressExercise] = { showUnassisted: progressShowUnassisted, showAssisted: progressShowAssisted };
+  saveProgressAssistedPrefs();
   renderProgressView();
 }
 
 function renderProgressAssistedToggle(hasAssisted, hasUnassisted){
   const nav = document.getElementById("progressAssistedToggle");
-  const showToggle = hasAssisted && hasUnassisted;
-  nav.style.display = showToggle ? "flex" : "none";
-  if(!showToggle) return;
+  if(!hasAssisted){ nav.style.display = "none"; return; }
+  nav.style.display = "flex";
   nav.innerHTML = "";
-  [["Unassisted", progressShowUnassisted, toggleProgressShowUnassisted], ["Assisted", progressShowAssisted, toggleProgressShowAssisted]].forEach(([label, active, onToggle])=>{
+  if(hasAssisted && hasUnassisted){
+    [["Unassisted", progressShowUnassisted, toggleProgressShowUnassisted], ["Assisted", progressShowAssisted, toggleProgressShowAssisted]].forEach(([label, active, onToggle])=>{
+      const btn = document.createElement("button");
+      btn.textContent = label;
+      btn.className = active ? "active" : "";
+      btn.onclick = onToggle;
+      nav.appendChild(btn);
+    });
+  } else {
     const btn = document.createElement("button");
-    btn.textContent = label;
-    btn.className = active ? "active" : "";
-    btn.onclick = onToggle;
+    btn.textContent = "Assisted";
+    btn.className = "active";
     nav.appendChild(btn);
-  });
+  }
 }
 
 function getExerciseSeries(tabKey, exercise, showUnassisted, showAssisted){
@@ -3292,12 +3336,16 @@ function renderProgressView(){
 
   const modes = sessionModesForExercise(progressSubTab, progressExercise);
   const hasBoth = modes.hasAssisted && modes.hasUnassisted;
-  if(hasBoth){
-    if(progressShowUnassisted === null) progressShowUnassisted = true;
-    if(progressShowAssisted === null) progressShowAssisted = true;
-  } else {
-    progressShowUnassisted = modes.hasUnassisted;
-    progressShowAssisted = modes.hasAssisted;
+  if(progressShowUnassisted === null || progressShowAssisted === null){
+    const pref = progressAssistedPrefs[progressSubTab + "|" + progressExercise];
+    if(pref && hasBoth){
+      progressShowUnassisted = pref.showUnassisted;
+      progressShowAssisted = pref.showAssisted;
+      if(!progressShowUnassisted && !progressShowAssisted){ progressShowUnassisted = progressShowAssisted = true; }
+    } else {
+      progressShowUnassisted = modes.hasUnassisted;
+      progressShowAssisted = modes.hasAssisted;
+    }
   }
   renderChartLegend(hasBoth && progressShowUnassisted && progressShowAssisted);
   renderProgressAssistedToggle(modes.hasAssisted, modes.hasUnassisted);
@@ -3866,7 +3914,7 @@ function closeWelcome(){
 
 function wizardIntroHtml(){
   return `
-    <h2 style="margin-bottom:4px;">👋 Welcome to GymTracker</h2>
+    <h2 style="margin-bottom:4px;">Welcome to GymTracker</h2>
     <p class="confirm-message" style="margin-bottom:18px;font-size:13px;">Let's get you set up, or import any existing data instead.</p>
     <div style="display:flex;flex-direction:column;gap:8px;">
       <button type="button" class="icon-btn btn-primary" style="width:100%;text-align:center;border:none;" onclick="startFreshWizard()">Set up my profile</button>
@@ -3875,7 +3923,7 @@ function wizardIntroHtml(){
         <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;">Personal access token</label>
         <div style="display:flex;gap:6px;margin-bottom:10px;">
           <input type="password" id="welcomeToken" placeholder="github_pat_..." style="flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px;">
-          <button type="button" id="welcomeTokenToggle" class="icon-btn" onclick="toggleWelcomeToken()" style="padding:6px 10px;font-size:15px;" aria-label="Show/hide token">👁</button>
+          <button type="button" id="welcomeTokenToggle" class="icon-btn" onclick="toggleWelcomeToken()" style="padding:6px 10px;" aria-label="Show/hide token"><svg width="15" height="15" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg></button>
         </div>
         <label style="font-size:11px;font-weight:700;color:var(--muted);display:block;margin-bottom:4px;">Repo (owner/name)</label>
         <input type="text" id="welcomeRepo" placeholder="yourname/gym-log" style="width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:8px 10px;font-size:13px;margin-bottom:10px;">
@@ -3988,7 +4036,7 @@ function wizardFinish(){
   saveDefaultSetCount();
   saveTimerSettings();
   closeWelcome();
-  showToast("You're all set 💪");
+  showToast("You're all set");
   switchTab(activeDays.includes(activeTab) ? activeTab : activeDays[0]);
 }
 function startFreshWizard(){ wizardStep = 1; renderWizardStep(); }
@@ -4018,8 +4066,8 @@ function toggleTokenVisibility(){
   const input = document.getElementById("ghToken");
   const btn = document.getElementById("tokenToggle");
   if(!input) return;
-  if(input.type === "password"){ input.type = "text"; btn.textContent = "🙈"; }
-  else { input.type = "password"; btn.textContent = "👁"; }
+  if(input.type === "password"){ input.type = "text"; btn.innerHTML = ICON.eyeOff; }
+  else { input.type = "password"; btn.innerHTML = ICON.eye; }
 }
 
 function handleWelcomeExcel(){
@@ -4037,8 +4085,8 @@ function toggleWelcomeToken(){
   const input = document.getElementById("welcomeToken");
   const btn = document.getElementById("welcomeTokenToggle");
   if(!input) return;
-  if(input.type === "password"){ input.type = "text"; btn.textContent = "🙈"; }
-  else { input.type = "password"; btn.textContent = "👁"; }
+  if(input.type === "password"){ input.type = "text"; btn.innerHTML = ICON.eyeOff; }
+  else { input.type = "password"; btn.innerHTML = ICON.eye; }
 }
 
 async function handleWelcomeGithubRestore(){
@@ -4630,6 +4678,23 @@ function switchExInfoView(view){
   document.getElementById("exInfoOverlay").querySelector(".ex-info-body").scrollTop = 0;
 }
 
+const EX_INFO_VIEWS = ["muscles","exercise","recent"];
+function exInfoSwipe(dir){
+  const cur = EX_INFO_VIEWS.findIndex(v => {
+    const el = document.getElementById(`exInfo${v.charAt(0).toUpperCase()}${v.slice(1)}View`);
+    return el && el.style.display !== "none";
+  });
+  const next = cur + dir;
+  if(next >= 0 && next < EX_INFO_VIEWS.length) switchExInfoView(EX_INFO_VIEWS[next]);
+}
+
+function mainTabSwipe(dir){
+  const tabs = [...activeDays, "progress"];
+  const idx = tabs.indexOf(activeTab);
+  const next = idx + dir;
+  if(next >= 0 && next < tabs.length) switchTab(tabs[next]);
+}
+
 async function init(){
   migrateLegacyStorageKeys();
   const isNewUser = detectNewUser();
@@ -4651,6 +4716,7 @@ async function init(){
   defaultSetCount = loadDefaultSetCount();
   defaultRepsTargets = loadDefaultRepsTargets();
   assistedState = loadAssistedState();
+  progressAssistedPrefs = loadProgressAssistedPrefs();
   commentsEnabled = loadCommentsEnabled();
   advancedMode = loadAdvancedMode();
   formDrafts = loadFormDrafts();
@@ -4673,6 +4739,8 @@ async function init(){
   setupViewportFooterFix();
   setupTimerFooterObserver();
   setupBackToTopButton();
+  addSwipeListener(document.querySelector("main"), () => mainTabSwipe(1), () => mainTabSwipe(-1));
+  addSwipeListener(document.getElementById("exInfoOverlay").querySelector(".ex-info-body"), () => exInfoSwipe(1), () => exInfoSwipe(-1));
 }
 
 function scrollToTop(){
@@ -4787,7 +4855,7 @@ function openSettings(){
   tokenInput.value = cfg.token || "";
   tokenInput.type = "password";
   const tokenToggle = document.getElementById("tokenToggle");
-  if(tokenToggle) tokenToggle.textContent = "👁";
+  if(tokenToggle) tokenToggle.innerHTML = ICON.eye;
   document.getElementById("ghRepo").value = cfg.repo || "";
   document.getElementById("ghPath").value = cfg.path || "GymLog.json";
   document.getElementById("ghBranch").value = cfg.branch || "main";
@@ -4899,7 +4967,7 @@ async function autoPushToGithub(){
 async function pushToGithub(){
   const cfg = getGithubConfig();
   if(!cfg || !cfg.token || !cfg.repo){
-    showToast("Set up GitHub first (tap 🔑)");
+    showToast("Set up GitHub first (tap Configure GitHub)");
     openSettings();
     return;
   }
@@ -5027,7 +5095,7 @@ function applyRemoteGithubData(remote){
 async function pullFromGithub(){
   const cfg = getGithubConfig();
   if(!cfg || !cfg.token || !cfg.repo){
-    showToast("Set up GitHub first (tap 🔑)");
+    showToast("Set up GitHub first (tap Configure GitHub)");
     openSettings();
     return;
   }

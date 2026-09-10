@@ -280,6 +280,8 @@
   #toast.reg,#toast.default-toast{animation:toastIn 0.2s ease;}
 
   @keyframes fadeInMain{from{opacity:0}to{opacity:1}}
+  @keyframes slideInRight{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:translateX(0)}}
+  @keyframes slideInLeft{from{opacity:0;transform:translateX(-32px)}to{opacity:1;transform:translateX(0)}}
 
   /* ── Collapsible section transitions ─────────────────────────── */
   .collapsible-body{overflow:hidden;max-height:3000px;opacity:1;}
@@ -539,7 +541,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.8</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.9</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -2930,7 +2932,8 @@ async function switchTab(tabKey){
   const main = document.querySelector("main");
   main.style.animation = "none";
   void main.offsetWidth;
-  main.style.animation = "fadeInMain 0.15s ease";
+  main.style.animation = switchTab._anim || "fadeInMain 0.15s ease";
+  switchTab._anim = null;
 
   document.getElementById("dayView").style.display = "none";
   document.getElementById("progressView").style.display = "none";
@@ -3108,18 +3111,18 @@ function renderExerciseSettings(containerId){
       if(!(tabKey in exerciseDayCollapsed)) exerciseDayCollapsed[tabKey] = tabKey !== lastActiveDayTab;
       isCollapsed = exerciseDayCollapsed[tabKey];
       headerHtml = `
-        <div class="p-label" style="margin-bottom:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="toggleExerciseDayCollapse('${tabKey}')">
+        <div class="p-label" style="margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:6px;" onclick="toggleExerciseDayCollapse('${tabKey}')">
+          <span style="color:var(--muted);font-size:11px;">${isCollapsed ? "▸" : "▾"}</span>
           <span>${CONFIG[tabKey].label.toUpperCase()} DAY <span style="color:var(--muted);font-weight:400;">· ${exCount} exercise${exCount!==1?"s":""}</span></span>
-          <span style="color:var(--muted);">${isCollapsed ? "▸" : "▾"}</span>
         </div>
       `;
     } else {
       if(!(tabKey in wizardDayCollapsed)) wizardDayCollapsed[tabKey] = true;
       isCollapsed = wizardDayCollapsed[tabKey];
       headerHtml = `
-        <div class="p-label" style="margin-bottom:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;" onclick="toggleWizardDayCollapse('${tabKey}')">
+        <div class="p-label" style="margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:6px;" onclick="toggleWizardDayCollapse('${tabKey}')">
+          <span style="color:var(--muted);font-size:11px;">${isCollapsed ? "▸" : "▾"}</span>
           <span>${CONFIG[tabKey].label.toUpperCase()} DAY <span style="color:var(--muted);font-weight:400;">· ${exCount} exercise${exCount!==1?"s":""}</span></span>
-          <span style="color:var(--muted);">${isCollapsed ? "▸" : "▾"}</span>
         </div>
       `;
     }
@@ -3285,23 +3288,20 @@ function toggleProgressShowAssisted(){
 
 function renderProgressAssistedToggle(hasAssisted, hasUnassisted){
   const nav = document.getElementById("progressAssistedToggle");
-  if(!hasAssisted){ nav.style.display = "none"; return; }
+  if(!hasAssisted && !hasUnassisted){ nav.style.display = "none"; return; }
   nav.style.display = "flex";
   nav.innerHTML = "";
-  if(hasAssisted && hasUnassisted){
-    [["Unassisted", progressShowUnassisted, toggleProgressShowUnassisted], ["Assisted", progressShowAssisted, toggleProgressShowAssisted]].forEach(([label, active, onToggle])=>{
-      const btn = document.createElement("button");
-      btn.textContent = label;
-      btn.className = active ? "active" : "";
-      btn.onclick = onToggle;
-      nav.appendChild(btn);
-    });
-  } else {
+  [
+    ["Unassisted", progressShowUnassisted, toggleProgressShowUnassisted, hasUnassisted],
+    ["Assisted",   progressShowAssisted,   toggleProgressShowAssisted,   hasAssisted],
+  ].forEach(([label, active, onToggle, hasData])=>{
     const btn = document.createElement("button");
-    btn.textContent = "Assisted";
-    btn.className = "active";
+    btn.textContent = label;
+    btn.className = (active && hasData) ? "active" : "";
+    if(hasData){ btn.onclick = onToggle; }
+    else { btn.disabled = true; btn.style.opacity = "0.3"; }
     nav.appendChild(btn);
-  }
+  });
 }
 
 function getExerciseSeries(tabKey, exercise, showUnassisted, showAssisted){
@@ -3475,7 +3475,7 @@ function drawLineChart(series){
   const hasAssistedPts = series.some(pt => pt.assisted);
   const modes = [];
   if(hasUnassistedPts) modes.push({ assisted: false, opacity: 1 });
-  if(hasAssistedPts) modes.push({ assisted: true, opacity: 0.5 });
+  if(hasAssistedPts) modes.push({ assisted: true, opacity: 0.28 });
 
   // Each line only walks the indices belonging to its own mode — a date
   // that belongs to the OTHER enabled mode is skipped over silently rather
@@ -4692,7 +4692,10 @@ function mainTabSwipe(dir){
   const tabs = [...activeDays, "progress"];
   const idx = tabs.indexOf(activeTab);
   const next = idx + dir;
-  if(next >= 0 && next < tabs.length) switchTab(tabs[next]);
+  if(next >= 0 && next < tabs.length){
+    switchTab._anim = dir > 0 ? "slideInRight 0.22s ease" : "slideInLeft 0.22s ease";
+    switchTab(tabs[next]);
+  }
 }
 
 async function init(){

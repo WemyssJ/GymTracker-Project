@@ -378,7 +378,7 @@
     cursor:pointer;line-height:1;padding:0;flex-shrink:0;
     font-style:italic;font-family:Georgia,serif;
   }
-  .ex-info-box{height:88vh;display:flex;flex-direction:column;overflow:hidden;}
+  .ex-info-box{height:67dvh;display:flex;flex-direction:column;overflow:hidden;}
   .ex-info-header{display:flex;align-items:center;justify-content:space-between;
     padding-bottom:14px;margin-bottom:0;border-bottom:1px solid var(--line);flex-shrink:0;}
   .muscle-img{width:100%;border-radius:10px;margin-bottom:14px;display:block;}
@@ -395,7 +395,7 @@
   .form-tips li:last-child{margin-bottom:0;}
 
   /* ── Exercise picker modal ─────────────────────────── */
-  .ex-picker-box{display:flex;flex-direction:column;max-height:88vh;padding:0;}
+  .ex-picker-box{display:flex;flex-direction:column;max-height:67dvh;padding:0;}
   .ex-picker-header{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 10px;flex-shrink:0;}
   .ex-picker-search{width:100%;box-sizing:border-box;background:var(--panel-2);border:1px solid var(--line);
     border-radius:10px;color:var(--text);font-size:14px;padding:9px 12px;outline:none;
@@ -456,6 +456,25 @@
   body:has(main.has-timer-footer) .back-to-top-btn{bottom:calc(var(--timer-footer-h, 128px) + 16px);}
   @media(min-width:500px){
     .back-to-top-btn{right:calc(50% - 199px);}
+  }
+
+  .timer-minimize-btn{
+    position:absolute;top:6px;right:10px;
+    background:none;border:none;color:var(--muted);font-size:20px;
+    cursor:pointer;padding:2px 8px;line-height:1;
+  }
+  .timer-bubble{
+    position:fixed;left:16px;bottom:calc(20px + env(safe-area-inset-bottom));
+    width:44px;height:44px;border-radius:50%;
+    background:var(--panel);border:2px solid var(--amber);color:var(--amber);
+    font-size:22px;display:flex;align-items:center;justify-content:center;
+    box-shadow:0 4px 14px rgba(0,0,0,0.4);cursor:pointer;z-index:40;
+    opacity:0;pointer-events:none;transform:translateY(8px);
+    transition:opacity 0.2s ease,transform 0.2s ease;
+  }
+  .timer-bubble.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
+  @media(min-width:500px){
+    .timer-bubble{left:calc(50% - 199px);}
   }
 
   /* ── Timer footer ──────────────────────────────────── */
@@ -541,7 +560,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.7.9</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.0</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -588,6 +607,7 @@
         <button type="button" class="set-count-btn" onclick="shiftHeatmapMonth(-1)" aria-label="Previous month">‹</button>
         <span id="heatmapMonthLabel"></span>
         <button type="button" class="set-count-btn" onclick="shiftHeatmapMonth(1)" aria-label="Next month">›</button>
+        <button type="button" id="heatmapTodayBtn" class="set-count-btn" onclick="jumpHeatmapToToday()" aria-label="Jump to today" style="display:none;font-size:11px;padding:4px 10px;">Today</button>
       </div>
       <div id="heatmapGrid" class="heatmap-grid"></div>
       <p style="font-size:11.5px;color:var(--muted);margin-top:10px;">Highlighted days had a session logged, in any split.</p>
@@ -711,8 +731,10 @@
 <div id="toast"></div>
 
 <button type="button" id="backToTopBtn" class="back-to-top-btn" onclick="scrollToTop()" aria-label="Back to top">↑</button>
+<button type="button" id="timerBubble" class="timer-bubble" onclick="toggleTimerMinimize()" aria-label="Open timer">⏰</button>
 
 <div id="timerWidget" class="timer-widget">
+  <button type="button" id="timerMinimizeBtn" class="timer-minimize-btn" onclick="toggleTimerMinimize()" aria-label="Minimise timer">−</button>
   <div class="timer-widget-info">
     <button type="button" id="timerModeBtn" class="timer-mode-btn" onclick="cycleTimerModeInline()">⏱ TIMER ⇄</button>
     <div id="timerDisplay" class="timer-display" onclick="startEditTimerDuration()">1:30</div>
@@ -861,6 +883,16 @@ function addSwipeListener(el, onLeft, onRight){
     const dy = e.changedTouches[0].clientY - sy;
     if(Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.5) return;
     if(dx < 0) onLeft(); else onRight();
+  }, { passive: true });
+}
+
+function addSwipeDownListener(el, onDown){
+  let sx = 0, sy = 0;
+  el.addEventListener("touchstart", e => { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  el.addEventListener("touchend", e => {
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
+    if(dy > 60 && dy > Math.abs(dx) * 1.5) onDown();
   }, { passive: true });
 }
 
@@ -3380,6 +3412,11 @@ function shiftHeatmapMonth(delta){
   renderHeatmap();
 }
 
+function jumpHeatmapToToday(){
+  heatmapMonthOffset = 0;
+  renderHeatmap();
+}
+
 function getAllSessionDatesSet(){
   const set = new Set();
   Object.keys(CONFIG).forEach(tabKey => {
@@ -3397,6 +3434,8 @@ function renderHeatmap(){
   const viewDate = new Date(now.getFullYear(), now.getMonth() + heatmapMonthOffset, 1);
   const year = viewDate.getFullYear(), month = viewDate.getMonth();
   label.textContent = viewDate.toLocaleDateString(undefined, { month: "long", year: "numeric" });
+  const todayBtn = document.getElementById("heatmapTodayBtn");
+  if(todayBtn) todayBtn.style.display = heatmapMonthOffset !== 0 ? "" : "none";
 
   const firstDayDow = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
@@ -4385,6 +4424,12 @@ function formatStopwatch(ms){
 
 let timerRunState = "idle"; // "idle" | "running" | "paused" | "done"
 let lapCount = 0;
+let timerMinimized = false;
+
+function toggleTimerMinimize(){
+  timerMinimized = !timerMinimized;
+  refreshTimerFooter();
+}
 
 // The footer's real height varies with device font scaling / safe-area
 // insets, so main's bottom padding tracks it live via a ResizeObserver
@@ -4413,11 +4458,15 @@ function setupTimerFooterObserver(){
 
 function refreshTimerFooter(){
   const w = document.getElementById("timerWidget");
+  const bubble = document.getElementById("timerBubble");
   const main = document.querySelector("main");
   const shouldShow = timerSettings.enabled && !!CONFIG[activeTab];
-  if(w) w.classList.toggle("visible", shouldShow);
-  if(main) main.classList.toggle("has-timer-footer", shouldShow);
-  if(shouldShow) syncTimerFooterHeight();
+  const showFull = shouldShow && !timerMinimized;
+  const showBubble = shouldShow && timerMinimized;
+  if(w) w.classList.toggle("visible", showFull);
+  if(bubble) bubble.classList.toggle("visible", showBubble);
+  if(main) main.classList.toggle("has-timer-footer", showFull);
+  if(showFull) syncTimerFooterHeight();
   if(!shouldShow) return;
 
   const modeBtn = document.getElementById("timerModeBtn");
@@ -4689,7 +4738,7 @@ function exInfoSwipe(dir){
 }
 
 function mainTabSwipe(dir){
-  const tabs = [...activeDays, "progress"];
+  const tabs = [...activeDays, "progress", "settings"];
   const idx = tabs.indexOf(activeTab);
   const next = idx + dir;
   if(next >= 0 && next < tabs.length){
@@ -4744,6 +4793,8 @@ async function init(){
   setupBackToTopButton();
   addSwipeListener(document.querySelector("main"), () => mainTabSwipe(1), () => mainTabSwipe(-1));
   addSwipeListener(document.getElementById("exInfoOverlay").querySelector(".ex-info-body"), () => exInfoSwipe(1), () => exInfoSwipe(-1));
+  addSwipeDownListener(document.getElementById("exInfoOverlay").querySelector(".ex-info-header"), closeExerciseInfo);
+  addSwipeDownListener(document.getElementById("exercisePickerOverlay").querySelector(".ex-picker-header"), closeExercisePicker);
 }
 
 function scrollToTop(){

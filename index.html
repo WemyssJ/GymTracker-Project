@@ -183,6 +183,14 @@
   .section-label.collapsible span{display:inline-block;width:12px;color:var(--amber);}
 
   .log-form-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;}
+  .log-form-card.editing-mode{border:2px solid var(--amber);background:linear-gradient(180deg, var(--amber-dim), var(--panel) 90px);}
+  .editing-banner{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    background:var(--amber-dim);color:var(--amber);font-size:12.5px;font-weight:700;
+    border-radius:8px;padding:8px 10px;margin:-4px 0 14px 0;
+  }
+  .editing-cancel-btn{background:none;border:1px solid var(--amber);color:var(--amber);
+    border-radius:14px;padding:3px 10px;font-size:11.5px;font-weight:700;cursor:pointer;}
 
   .date-row{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
   .date-row label{font-size:13px;color:var(--muted);font-weight:600;}
@@ -292,6 +300,10 @@
   .session-summary-ex .name{color:var(--text);font-weight:600;}
   .session-summary-ex .vals{color:var(--muted);text-align:right;}
   .session-summary-volume{font-size:12px;color:var(--muted);margin-top:8px;}
+  .session-summary-tips{margin-top:10px;background:var(--panel-2);border-radius:8px;padding:8px 10px;}
+  .session-summary-tips-title{font-size:10.5px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:var(--amber);margin-bottom:4px;}
+  .session-summary-tip{font-size:12px;color:var(--text);line-height:1.5;}
+  .session-summary-tip strong{color:var(--text);}
   .session-summary-volume .vol-up{color:var(--green);font-weight:700;}
   .session-summary-volume .vol-down{color:var(--red);font-weight:700;}
   .pr-badge{display:inline-block;background:var(--green-bg);color:var(--green);font-size:10px;
@@ -594,7 +606,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.1</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.2</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -1800,24 +1812,6 @@ function mixHex(hex1, hex2, ratio){
   });
 }
 
-function rgbToHsl({ r, g, b }){
-  r /= 255; g /= 255; b /= 255;
-  const max = Math.max(r, g, b), min = Math.min(r, g, b);
-  let h = 0, s = 0;
-  const l = (max + min) / 2;
-  const d = max - min;
-  if(d !== 0){
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch(max){
-      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-      case g: h = (b - r) / d + 2; break;
-      default: h = (r - g) / d + 4; break;
-    }
-    h *= 60;
-  }
-  return { h, s: s * 100, l: l * 100 };
-}
-
 function hslToRgb(h, s, l){
   h = ((h % 360) + 360) % 360; s /= 100; l /= 100;
   const c = (1 - Math.abs(2 * l - 1)) * s;
@@ -1833,7 +1827,6 @@ function hslToRgb(h, s, l){
   return { r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255 };
 }
 
-function hexToHsl(hex){ return rgbToHsl(hexToRgb(hex)); }
 function hslToHex(h, s, l){ return rgbToHex(hslToRgb(h, s, l)); }
 
 function deriveTheme(bg, accent){
@@ -1891,23 +1884,27 @@ function applyTheme(themeKey, custom){
 }
 
 // How far a logged value sits from its target/best, expressed as a single
-// colour: bang on target reads as the current theme's accent colour, and it
-// grades into a darker red the further under target the value is — replacing
-// the old flat red/white/green tri-state so "just a bit off" doesn't look as
-// alarming as "way off". Interpolated in HSL (not RGB) so the in-between
-// steps stay a legible red rather than washing out to muddy grey.
-const TRACK_GRADIENT_OFF_HSL = { h: 4, s: 62, l: 30 };
-function trackGradientColor(ratio){
-  const deficit = Math.max(0, Math.min(1, 1 - ratio));
-  const a = hexToHsl(currentAccentHex);
-  const b = TRACK_GRADIENT_OFF_HSL;
-  let dh = b.h - a.h;
-  if(dh > 180) dh -= 360;
-  if(dh < -180) dh += 360;
-  const h = a.h + dh * deficit;
-  const s = a.s + (b.s - a.s) * deficit;
-  const l = a.l + (b.l - a.l) * deficit;
-  return hslToHex(h, s, l);
+// colour: bang on target is always the given base colour with no
+// interpolation (the caller passes that person's own colour, so "on target"
+// reads as "this is Sam's number and it's right where it should be", not a
+// generic status colour); below target grades from pale to dark red as the
+// shortfall grows; above target grades from pale to a brighter/richer green
+// as the overshoot grows. Red and green stay fixed hues (matching --red /
+// --green) rather than hue-rotating toward the base colour — an earlier
+// version interpolated hue between the accent and red, which for a
+// cyan/green accent swept through purple/magenta on the way, which read as
+// an unrelated, confusing colour rather than "off track".
+const TRACK_RED_HUE = 2, TRACK_GREEN_HUE = 128;
+function trackGradientColor(value, target, baseColor){
+  baseColor = baseColor || currentAccentHex;
+  if(!(target > 0) || !isFinite(value)) return baseColor;
+  if(value === target) return baseColor;
+  if(value > target){
+    const overshoot = Math.min(1, (value - target) / target);
+    return hslToHex(TRACK_GREEN_HUE, 40 + overshoot * 35, 78 - overshoot * 33);
+  }
+  const shortfall = Math.min(1, (target - value) / target);
+  return hslToHex(TRACK_RED_HUE, 45 + shortfall * 25, 78 - shortfall * 48);
 }
 
 function renderThemeSettings(navId){
@@ -2142,8 +2139,17 @@ function migrateCommaSeparatedReps(entry){
   });
 }
 
+function nextSessionId(){
+  return Date.now().toString() + "-" + Math.random().toString(36).slice(2, 7);
+}
+
 function normalizeSessions(sessions){
   sessions.forEach(sess => {
+    // Sessions used to be keyed solely by date (one per day). Older saved/backed-up
+    // sessions have no id — give them one derived from their date so existing
+    // edit/delete/history logic keeps working, while sessions logged from now on
+    // (including a same-day second session) get a unique id instead.
+    if(!sess.id) sess.id = sess.date;
     Object.keys(sess.entries).forEach(ex => {
       sess.entries[ex] = normalizeEntry(sess.entries[ex]);
       migrateCommaSeparatedReps(sess.entries[ex]);
@@ -2270,7 +2276,7 @@ function getLastEntry(tabKey, exercise){
   const wantAssisted = !!assistedState[exercise];
   const matching = [...cache[tabKey]]
     .filter(s => s.entries[exercise] && !!s.entries[exercise].assisted === wantAssisted)
-    .sort((a, b) => b.date.localeCompare(a.date));
+    .sort((a, b) => b.date.localeCompare(a.date) || (b.id || "").localeCompare(a.id || ""));
   // Deliberately no fallback to the other mode's entry: assisted and
   // unassisted use unrelated weight scales (e.g. counterweight vs added
   // load), so reusing one mode's number as a "starting suggestion" for the
@@ -2561,29 +2567,29 @@ function setBoxHtml(exIndex, person, setIndex, set, exName, personId){
         <input type="text" inputmode="numeric" placeholder="reps"
           class="${repsClass}" value="${repsVal}"
           data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="reps"
-          oninput="this.classList.remove('prefilled'); updateRepsInputColor(this,'${personId}'); checkOverloadHint(${exIndex}); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'reps',this.value);" onfocus="this.select()">
+          oninput="this.classList.remove('prefilled'); updateRepsInputColor(this,'${personId}'); checkOverloadHint(${exIndex},'${personId}'); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'reps',this.value);" onfocus="this.select()">
       </div>
     </div>
   `;
 }
 
-function checkOverloadHint(exIndex){
-  const hint = document.getElementById(`overloadHint-${exIndex}`);
+function checkOverloadHint(exIndex, personId){
+  const hint = document.getElementById(`overloadHint-${exIndex}-${personId}`);
   if(!hint) return;
   let maxReps = 0;
-  let minReps = null, minTarget = 8;
-  document.querySelectorAll(`[data-ex="${exIndex}"][data-field="reps"]`).forEach(inp=>{
+  let minReps = null;
+  const target = getPersonRepsTarget(personId);
+  document.querySelectorAll(`[data-ex="${exIndex}"][data-person="${personId}"][data-field="reps"]`).forEach(inp=>{
     const n = parseInt(inp.value, 10);
     if(isNaN(n) || n <= 0) return;
     if(n > maxReps) maxReps = n;
-    const target = getPersonRepsTarget(inp.dataset.person);
-    if(minReps === null || n < minReps){ minReps = n; minTarget = target; }
+    if(minReps === null || n < minReps) minReps = n;
   });
   hint.classList.remove("overload-hint-warn");
   if(maxReps >= 15){
     hint.style.display = "block";
     hint.textContent = `${maxReps} reps is high — try adding weight and aiming for ~5–8 reps next session.`;
-  } else if(minReps !== null && minReps <= Math.max(2, Math.floor(minTarget / 2))){
+  } else if(minReps !== null && minReps <= Math.max(2, Math.floor(target / 2))){
     hint.style.display = "block";
     hint.classList.add("overload-hint-warn");
     hint.textContent = `Only ${minReps} rep${minReps === 1 ? "" : "s"} on a set — that weight may be too heavy. Try dropping it a little on the next set.`;
@@ -2609,7 +2615,12 @@ function copySetOneToAll(exIndex, personId, exName){
     updateRepsInputColor(inp, personId);
     recordDraftValue(activeTab, exName, personId, inp.dataset.set, "reps", repsVal);
   });
-  checkOverloadHint(exIndex);
+  checkOverloadHint(exIndex, personId);
+}
+
+function getPersonColor(personId){
+  const p = people.find(pp => pp.id === personId);
+  return p ? p.color : currentAccentHex;
 }
 
 function updateWeightInputColor(input, exName, personId){
@@ -2620,12 +2631,8 @@ function updateWeightInputColor(input, exName, personId){
   if(isNaN(val)) return;
   const stats = computeStatsFor(activeTab, exName, personId);
   if(stats.best === null || stats.best <= 0) return;
-  if(val > stats.best){
-    input.classList.add("pr-val");
-  } else {
-    input.style.color = trackGradientColor(val / stats.best);
-    input.style.fontWeight = "800";
-  }
+  input.style.color = trackGradientColor(val, stats.best, getPersonColor(personId));
+  if(val !== stats.best) input.style.fontWeight = "800";
 }
 
 function updateRepsInputColor(input, personId){
@@ -2635,12 +2642,23 @@ function updateRepsInputColor(input, personId){
   const val = parseInt(input.value, 10);
   if(isNaN(val)) return;
   const target = getPersonRepsTarget(personId);
-  if(val > target){
-    input.classList.add("pr-val");
-  } else {
-    input.style.color = trackGradientColor(target > 0 ? val / target : 1);
-    input.style.fontWeight = "800";
-  }
+  if(target <= 0) return;
+  input.style.color = trackGradientColor(val, target, getPersonColor(personId));
+  if(val !== target) input.style.fontWeight = "800";
+}
+
+// Colours every set input on the current form, including untouched
+// prefilled/carried-forward ones — so a suggested value reads as "on target"
+// or "too heavy" right away instead of sitting in flat grey until edited.
+function colorizeFormInputs(){
+  const exercises = getExercises(activeTab);
+  document.querySelectorAll('#logForm [data-field="wt"]').forEach(inp => {
+    const ex = exercises[inp.dataset.ex];
+    if(ex) updateWeightInputColor(inp, ex, inp.dataset.person);
+  });
+  document.querySelectorAll('#logForm [data-field="reps"]').forEach(inp => {
+    updateRepsInputColor(inp, inp.dataset.person);
+  });
 }
 
 let collapsedExercises = {};
@@ -2737,10 +2755,10 @@ function renderForm(){
           ${count > 1 ? `<div class="set-col copy-set-col"><div class="set-label">&nbsp;</div><button type="button" class="copy-set-btn" onclick="copySetOneToAll(${i},'${p.id}','${safeName}')" aria-label="Copy set 1 into all sets" title="Copy set 1 into all sets">⧉</button></div>` : ""}
         </div>
         ${noteHtml}
+        <div class="overload-hint" id="overloadHint-${i}-${p.id}" style="display:none;"></div>
       `;
     });
     html += `
-      <div class="overload-hint" id="overloadHint-${i}" style="display:none;"></div>
       <div class="set-count-row">
         ${count > 1 ? `<button type="button" class="set-count-btn" onclick="adjustSetCount('${safeName}',-1)" aria-label="Remove set">−</button>` : ""}
         <span class="set-count-label">${count} set${count!==1?"s":""}</span>
@@ -2762,16 +2780,21 @@ function renderForm(){
     }
     html += `<p style="text-align:center;font-size:12px;color:var(--muted);margin:10px 0 2px 0;">${lastMsg}</p>`;
   }
-  html += `<button type="submit" id="saveBtn">Log ${cfg.label} Session</button>`;
-  form.innerHTML = `<div class="log-form-card">${html}</div>`;
+  const editingId = draft && draft.editingId;
+  html += `<button type="submit" id="saveBtn">${editingId ? "Update" : "Log"} ${cfg.label} Session</button>`;
+  const editingBanner = editingId
+    ? `<div class="editing-banner">✎ Editing the ${fmtDate(dateVal)} session <button type="button" class="editing-cancel-btn" onclick="cancelEditSession()">Cancel</button></div>`
+    : "";
+  form.innerHTML = `<div class="log-form-card${editingId ? " editing-mode" : ""}">${editingBanner}${html}</div>`;
   form.onsubmit = handleSave;
   applyFormCollapsedState();
-  getExercises(activeTab).forEach((ex, i) => checkOverloadHint(i));
+  getExercises(activeTab).forEach((ex, i) => people.forEach(p => checkOverloadHint(i, p.id)));
+  colorizeFormInputs();
 }
 
 function renderHistory(){
   const cfg = CONFIG[activeTab];
-  const sessions = [...cache[activeTab]].sort((a,b)=> b.date.localeCompare(a.date));
+  const sessions = [...cache[activeTab]].sort((a,b)=> b.date.localeCompare(a.date) || (b.id||"").localeCompare(a.id||""));
   const container = document.getElementById("history");
   if(sessions.length === 0){
     container.innerHTML = '<div class="empty">No sessions logged yet.</div>';
@@ -2779,15 +2802,15 @@ function renderHistory(){
     return;
   }
   // precompute running bests in chronological order so we can flag PRs per row
-  const chrono = [...cache[activeTab]].sort((a,b)=> a.date.localeCompare(b.date));
+  const chrono = [...cache[activeTab]].sort((a,b)=> a.date.localeCompare(b.date) || (a.id||"").localeCompare(b.id||""));
   const runningBest = {}; // ex -> personId -> best so far
-  const prFlags = {}; // date|ex -> personId -> bool
+  const prFlags = {}; // sessionId|ex -> personId -> bool
   const regFlags = {};
   let prevRow = null;
   chrono.forEach(s=>{
     getExercises(activeTab).forEach(ex=>{
       const e = s.entries[ex];
-      const flagKey = s.date + "|" + ex;
+      const flagKey = s.id + "|" + ex;
       if(!e){ return; }
       prFlags[flagKey] = {};
       regFlags[flagKey] = {};
@@ -2814,15 +2837,15 @@ function renderHistory(){
       <div class="hdate-row">
         <span class="hdate">${fmtDate(s.date)}</span>
         <div style="display:flex;gap:2px;">
-          <button class="delete-btn" onclick="editSession('${activeTab}','${s.date}')" aria-label="Edit session" title="Edit session">✎</button>
-          <button class="delete-btn" onclick="deleteSession('${activeTab}','${s.date}')" aria-label="Delete session">${ICON.trash}</button>
+          <button class="delete-btn" onclick="editSession('${activeTab}','${s.id}')" aria-label="Edit session" title="Edit session">✎</button>
+          <button class="delete-btn" onclick="deleteSession('${activeTab}','${s.id}')" aria-label="Delete session">${ICON.trash}</button>
         </div>
       </div>
     `;
     getExercises(activeTab).forEach(ex=>{
       const e = s.entries[ex];
       if(!e) return;
-      const flagKey = s.date + "|" + ex;
+      const flagKey = s.id + "|" + ex;
       const pf = prFlags[flagKey] || {};
       const rf = regFlags[flagKey] || {};
       let valsHtml = "";
@@ -2882,8 +2905,8 @@ function notesSummaryHtml(entry){
   return parts.length ? `<div class="hex-note">${parts.join(" · ")}</div>` : "";
 }
 
-function editSession(tabKey, date){
-  const sess = (cache[tabKey] || []).find(s => s.date === date);
+function editSession(tabKey, id){
+  const sess = (cache[tabKey] || []).find(s => s.id === id);
   if(!sess) return;
   const values = {};
   getExercises(tabKey).forEach(ex=>{
@@ -2901,7 +2924,7 @@ function editSession(tabKey, date){
     });
   });
   saveAssistedState();
-  formDrafts[tabKey] = { date: sess.date, values };
+  formDrafts[tabKey] = { date: sess.date, values, editingId: sess.id };
   saveFormDrafts();
   const openEdit = () => {
     if(formCollapsed){
@@ -2910,7 +2933,7 @@ function editSession(tabKey, date){
     }
     applyFormCollapsedState();
     renderForm();
-    showToast(`Editing ${fmtDate(date)} — adjust values, then save to update`);
+    showToast(`Editing ${fmtDate(sess.date)} — adjust values, then save to update`);
     document.getElementById("logForm")?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   if(activeTab !== tabKey){
@@ -2920,14 +2943,26 @@ function editSession(tabKey, date){
   }
 }
 
-async function deleteSession(tabKey, date){
-  const label = fmtDate(date);
+function cancelEditSession(){
+  clearDraft(activeTab);
+  renderForm();
+  showToast("Edit cancelled");
+}
+
+async function deleteSession(tabKey, id){
+  const sess = (cache[tabKey] || []).find(s => s.id === id);
+  const label = sess ? fmtDate(sess.date) : "session";
   if(!(await showConfirm(`Delete the ${label} session? This can't be undone.`))) return;
-  cache[tabKey] = cache[tabKey].filter(s => s.date !== date);
+  cache[tabKey] = cache[tabKey].filter(s => s.id !== id);
   try{
     localStorage.setItem(CONFIG[tabKey].key, JSON.stringify(cache[tabKey]));
   }catch(e){
     console.error("Storage write error", e);
+  }
+  // if the deleted session was mid-edit in the log form, don't leave the
+  // form pointing at a session that no longer exists
+  if(formDrafts[tabKey] && formDrafts[tabKey].editingId === id){
+    clearDraft(tabKey);
   }
   renderTabs();
   renderStatStrip();
@@ -2978,9 +3013,13 @@ async function handleSave(evt){
   const personSummaries = {};
   people.forEach(p => { personSummaries[p.id] = { volume: 0, exercises: [] }; });
 
-  // capture the last session before this date now, before cache is mutated
-  // below, so the summary can show a volume delta against it
-  const priorSessions = cache[activeTab].filter(s => s.date < date);
+  const draft = formDrafts[activeTab];
+  const editingId = (draft && draft.editingId) || null;
+
+  // capture the last session strictly before this date now, before cache is
+  // mutated below, so the summary can show a volume delta against it — the
+  // session being edited (if any) is excluded even if its old date ties
+  const priorSessions = cache[activeTab].filter(s => s.date < date && s.id !== editingId);
   const prevSession = priorSessions.length ? priorSessions.reduce((a, b) => (a.date > b.date ? a : b)) : null;
   const prevVolumes = {};
   people.forEach(p => { prevVolumes[p.id] = prevSession ? computePersonVolume(prevSession, activeTab, p.id) : null; });
@@ -2991,9 +3030,13 @@ async function handleSave(evt){
     const count = exSetCounts[ex] ?? defaultSetCount;
     people.forEach(p => {
       const personSets = readSets(i, p.id, count);
-      if(personSets.some(s => s.wt !== null || s.reps.trim() !== "")){
-        anyValue = true;
-      }
+      // "has any data" = what will actually get saved and shown in history —
+      // includes carried-forward/prefilled values, not just freshly typed
+      // ones. The session-summary breakdown below must use this (not
+      // hasRealData) so its exercise list and its total-volume figure agree —
+      // volume is summed over everything saved, so the list has to match.
+      const hasAnyData = personSets.some(s => s.wt !== null || s.reps.trim() !== "");
+      if(hasAnyData) anyValue = true;
       const hasRealData = personSets.some(s => s.wtReal || s.repsReal);
       if(hasRealData){
         // any field still blank at save time on an exercise the user
@@ -3020,8 +3063,11 @@ async function handleSave(evt){
         if(st.best !== null && top > st.best){ prCount++; isPR = true; }
         if(st.last !== null && top < st.last){ regCount++; isReg = true; }
       }
-      if(hasRealData){
-        personSummaries[p.id].exercises.push({ ex, sets: sets[p.id], isPR, isReg });
+      if(hasAnyData){
+        personSummaries[p.id].exercises.push({
+          ex, sets: sets[p.id], isPR, isReg,
+          tip: exerciseTip(ex, sets[p.id], getPersonRepsTarget(p.id))
+        });
       }
     });
     entries[ex] = { sets, assisted: !!assistedState[ex], notes };
@@ -3035,9 +3081,17 @@ async function handleSave(evt){
 
   people.forEach(p => { personSummaries[p.id].volume = computePersonVolume({ date, entries }, activeTab, p.id); });
 
-  // remove any existing entry for the same date (overwrite instead of duplicate)
-  cache[activeTab] = cache[activeTab].filter(s => s.date !== date);
-  cache[activeTab].push({ date, entries });
+  // an explicit edit (opened via the history row's ✎ button) updates that
+  // exact session in place; anything else — including logging again on a
+  // date that already has a session — creates a separate, new session so
+  // multiple sessions on the same day can each be edited/deleted on their own
+  const existingIdx = editingId ? cache[activeTab].findIndex(s => s.id === editingId) : -1;
+  if(existingIdx >= 0){
+    cache[activeTab][existingIdx] = { id: editingId, date, entries };
+  } else {
+    cache[activeTab].push({ id: nextSessionId(), date, entries });
+  }
+  cache[activeTab].sort((a, b) => a.date.localeCompare(b.date) || (a.id || "").localeCompare(b.id || ""));
 
   const saveBtn = document.getElementById("saveBtn");
   saveBtn.textContent = "Saving…";
@@ -3063,6 +3117,19 @@ async function handleSave(evt){
   startRestTimer();
 
   if(hasGithub) autoPushToGithub();
+}
+
+// Same thresholds as the live drop-weight/add-weight hint on the log form,
+// but evaluated once against the final saved sets so the summary can point
+// out what to change next time without the user having to notice it live.
+function exerciseTip(ex, sets, target){
+  const repsVals = (sets || []).map(s => parseInt(s.reps, 10)).filter(n => !isNaN(n) && n > 0);
+  if(!repsVals.length) return null;
+  const maxReps = Math.max(...repsVals);
+  const minReps = Math.min(...repsVals);
+  if(maxReps >= 15) return `Add weight — ${maxReps} reps is high for a working set.`;
+  if(target > 0 && minReps <= Math.max(2, Math.floor(target / 2))) return `Try a lighter weight — only ${minReps} reps on a set.`;
+  return null;
 }
 
 function computePersonVolume(session, tabKey, personId){
@@ -3098,12 +3165,20 @@ function personSessionSummaryHtml(p, summary, prevVolume){
     const cls = delta > 0 ? "vol-up" : (delta < 0 ? "vol-down" : "");
     volHtml += ` <span class="${cls}">(${sign}${pct}% vs last time)</span>`;
   }
+  const tipped = summary.exercises.filter(e => e.tip);
+  const tipsHtml = tipped.length ? `
+    <div class="session-summary-tips">
+      <div class="session-summary-tips-title">Next session</div>
+      ${tipped.map(e => `<div class="session-summary-tip"><strong>${e.ex}:</strong> ${e.tip}</div>`).join("")}
+    </div>
+  ` : "";
   return `
     <div class="session-summary-person">
       <div class="session-summary-person-name" style="color:${p.color};">${p.name}</div>
       ${prBanner}
       ${exListHtml}
       <div class="session-summary-volume">${volHtml}</div>
+      ${tipsHtml}
     </div>
   `;
 }

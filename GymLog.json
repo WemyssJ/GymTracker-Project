@@ -921,15 +921,15 @@
             "joe": [
               {
                 "wt": 55,
-                "reps": "5,3,4"
+                "reps": "5"
               },
               {
                 "wt": null,
-                "reps": ""
+                "reps": "3"
               },
               {
                 "wt": null,
-                "reps": ""
+                "reps": "4"
               }
             ]
           }
@@ -1022,15 +1022,15 @@
             "joe": [
               {
                 "wt": 55,
-                "reps": "5,3,4"
+                "reps": "5"
               },
               {
                 "wt": null,
-                "reps": ""
+                "reps": "3"
               },
               {
                 "wt": null,
-                "reps": ""
+                "reps": "4"
               }
             ]
           }
@@ -1426,15 +1426,15 @@
             "joe": [
               {
                 "wt": 55,
-                "reps": "4,5,3"
+                "reps": "4"
               },
               {
                 "wt": null,
-                "reps": ""
+                "reps": "5"
               },
               {
                 "wt": null,
-                "reps": ""
+                "reps": "3"
               }
             ]
           }
@@ -1527,15 +1527,15 @@
             "joe": [
               {
                 "wt": 60,
-                "reps": "3,3,2"
+                "reps": "3"
               },
               {
                 "wt": null,
-                "reps": ""
+                "reps": "3"
               },
               {
                 "wt": null,
-                "reps": ""
+                "reps": "2"
               }
             ]
           }
@@ -1603,6 +1603,215 @@
               }
             ]
           }
+        }
+      }
+    },
+    {
+      "date": "2026-09-13",
+      "entries": {
+        "Bench Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 30,
+                "reps": "3"
+              },
+              {
+                "wt": 30,
+                "reps": "4"
+              },
+              {
+                "wt": 30,
+                "reps": "3"
+              }
+            ],
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "3"
+              },
+              {
+                "wt": 60,
+                "reps": "3"
+              },
+              {
+                "wt": 60,
+                "reps": "3"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Incline Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 25,
+                "reps": "3"
+              },
+              {
+                "wt": 25,
+                "reps": "2"
+              },
+              {
+                "wt": 20,
+                "reps": "8"
+              }
+            ],
+            "joe": [
+              {
+                "wt": 40,
+                "reps": "5"
+              },
+              {
+                "wt": 40,
+                "reps": "3"
+              },
+              {
+                "wt": 40,
+                "reps": "6"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Overhead Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              }
+            ],
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Dumbbell Press": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 10,
+                "reps": "5"
+              },
+              {
+                "wt": 10,
+                "reps": "5"
+              },
+              {
+                "wt": 10,
+                "reps": "4"
+              }
+            ],
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "8"
+              },
+              {
+                "wt": 16,
+                "reps": "8"
+              },
+              {
+                "wt": 14,
+                "reps": "7"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Lateral Raise": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 4,
+                "reps": "8"
+              },
+              {
+                "wt": 4,
+                "reps": "8"
+              },
+              {
+                "wt": 4,
+                "reps": "8"
+              }
+            ],
+            "joe": [
+              {
+                "wt": 8,
+                "reps": "6"
+              },
+              {
+                "wt": 8,
+                "reps": "8"
+              },
+              {
+                "wt": 6,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Tricep Push": {
+          "sets": {
+            "sam": [
+              {
+                "wt": 18,
+                "reps": "8"
+              },
+              {
+                "wt": 23,
+                "reps": "8"
+              },
+              {
+                "wt": 23,
+                "reps": "8"
+              }
+            ],
+            "joe": [
+              {
+                "wt": 36,
+                "reps": "8"
+              },
+              {
+                "wt": 41,
+                "reps": "8"
+              },
+              {
+                "wt": 41,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
         }
       }
     }
@@ -6115,5 +6324,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-09-09T15:32:09.617Z"
+  "exportedAt": "2026-09-13T18:34:55.282Z"
 }

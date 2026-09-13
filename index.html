@@ -201,6 +201,7 @@
     font-weight:700;margin-bottom:10px;cursor:pointer;user-select:none;}
   .assisted-toggle input{width:14px;height:14px;accent-color:var(--amber);cursor:pointer;}
   .overload-hint{font-size:11.5px;color:var(--amber);font-weight:600;line-height:1.4;margin:8px 0 0 0;}
+  .overload-hint.overload-hint-warn{color:var(--red);}
   .note-input{width:100%;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
     border-radius:8px;padding:7px 10px;font-size:12.5px;margin-top:6px;}
   .note-input::placeholder{color:var(--faint);}
@@ -244,7 +245,6 @@
   .mini-box input.prefilled{color:var(--muted);}
   .reps-box input.prefilled{color:var(--faint);}
   .mini-box input.pr-val{color:var(--green);}
-  .mini-box input.reg-val{color:var(--red);}
   .copy-set-col{flex:0 0 30px;}
   .copy-set-btn{
     flex:1;width:100%;background:var(--panel-2);border:1px solid var(--line);
@@ -282,6 +282,40 @@
   @keyframes fadeInMain{from{opacity:0}to{opacity:1}}
   @keyframes slideInRight{from{opacity:0;transform:translateX(32px)}to{opacity:1;transform:translateX(0)}}
   @keyframes slideInLeft{from{opacity:0;transform:translateX(-32px)}to{opacity:1;transform:translateX(0)}}
+
+  /* ── Session summary modal ─────────────────────────── */
+  #sessionSummaryOverlay .modal-box{max-height:85vh;overflow-y:auto;}
+  .session-summary-person{border-top:1px solid var(--line);padding:14px 0;}
+  .session-summary-person:first-of-type{border-top:none;padding-top:4px;}
+  .session-summary-person-name{font-size:15px;font-weight:800;margin-bottom:8px;}
+  .session-summary-ex{display:flex;justify-content:space-between;gap:10px;font-size:13px;padding:4px 0;}
+  .session-summary-ex .name{color:var(--text);font-weight:600;}
+  .session-summary-ex .vals{color:var(--muted);text-align:right;}
+  .session-summary-volume{font-size:12px;color:var(--muted);margin-top:8px;}
+  .session-summary-volume .vol-up{color:var(--green);font-weight:700;}
+  .session-summary-volume .vol-down{color:var(--red);font-weight:700;}
+  .pr-badge{display:inline-block;background:var(--green-bg);color:var(--green);font-size:10px;
+    font-weight:800;padding:1px 6px;border-radius:10px;vertical-align:middle;margin-left:4px;}
+  .reg-badge{display:inline-block;color:var(--red);font-weight:800;font-size:12px;margin-left:4px;}
+
+  @keyframes pbBannerIn{
+    0%{opacity:0;transform:scale(0.85) translateY(-4px);}
+    60%{opacity:1;transform:scale(1.04) translateY(0);}
+    100%{opacity:1;transform:scale(1) translateY(0);}
+  }
+  @keyframes pbBannerGlow{
+    0%,100%{box-shadow:0 0 0 0 rgba(255,196,0,0.0);}
+    50%{box-shadow:0 0 18px 2px rgba(255,196,0,0.35);}
+  }
+  .pb-banner{
+    background:linear-gradient(135deg, var(--amber-dim), var(--panel-2));
+    border:1px solid var(--amber);color:var(--amber);font-size:13px;font-weight:700;
+    border-radius:10px;padding:10px 12px;margin-bottom:10px;line-height:1.5;
+    animation:pbBannerIn 0.4s cubic-bezier(0.22,1,0.36,1) both, pbBannerGlow 1.8s ease-in-out 0.4s 2;
+  }
+  .pb-banner strong{color:var(--text);}
+  .pb-chip{display:inline-block;background:var(--amber);color:var(--accent-ink);font-size:11px;
+    font-weight:800;padding:2px 8px;border-radius:10px;margin:3px 4px 0 0;}
 
   /* ── Collapsible section transitions ─────────────────────────── */
   .collapsible-body{overflow:hidden;max-height:3000px;opacity:1;}
@@ -560,7 +594,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.0</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.1</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -687,25 +721,6 @@
       <p style="font-size:11.5px;color:var(--muted);margin-top:8px;line-height:1.5;">
         Deleting all data wipes every session, person, and exercise on this device permanently. It can't be undone — back up first if you're not sure.
       </p>
-    </div>
-
-    <div class="section-label collapsible" id="settingsTimerLabel" style="margin-top:26px;" onclick="toggleTimerCollapsed()">
-      <span id="timerToggleIcon">▸</span> Timers
-    </div>
-    <div id="timerSettingsBody" class="collapsible-body is-collapsed">
-      <div class="settings-row">
-        <div class="settings-row-info">
-          <div class="settings-row-title">Timer</div>
-          <div class="settings-row-desc">Shows a Start/Pause/Stop/Lap timer footer on workout pages</div>
-        </div>
-        <label class="toggle-switch" aria-label="Timer">
-          <input type="checkbox" id="timerEnabledToggle" onchange="handleTimerEnabledToggle(this.checked)">
-          <span class="toggle-slider"></span>
-        </label>
-      </div>
-      <div id="timerModeSettings" style="display:none;padding:8px 0 4px;">
-        <p style="font-size:11.5px;color:var(--muted);margin:0;line-height:1.5;">Switch between Count down and Count up, and set the countdown time, right on the timer footer itself.</p>
-      </div>
     </div>
 
     <div class="section-label collapsible" id="settingsCreditsLabel" style="margin-top:26px;" onclick="toggleCreditsCollapsed()">
@@ -860,6 +875,16 @@
     <div class="ex-picker-footer">
       <button type="button" class="icon-btn" style="width:100%;" onclick="openPickerCustom()">+ Custom exercise…</button>
       <input type="text" id="exPickerCustomInput" class="person-name-input" style="display:none;margin-top:8px;" placeholder="Exercise name, then press Enter…" onkeydown="handlePickerCustomKey(event)">
+    </div>
+  </div>
+</div>
+
+<div id="sessionSummaryOverlay" class="modal-overlay" onclick="if(event.target===this) closeModal('sessionSummaryOverlay')">
+  <div class="modal-box">
+    <h2 id="sessionSummaryTitle">Session Summary</h2>
+    <div id="sessionSummaryBody"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn-primary" style="width:100%;" onclick="closeModal('sessionSummaryOverlay')">Nice, done</button>
     </div>
   </div>
 </div>
@@ -1775,6 +1800,42 @@ function mixHex(hex1, hex2, ratio){
   });
 }
 
+function rgbToHsl({ r, g, b }){
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0;
+  const l = (max + min) / 2;
+  const d = max - min;
+  if(d !== 0){
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch(max){
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      default: h = (r - g) / d + 4; break;
+    }
+    h *= 60;
+  }
+  return { h, s: s * 100, l: l * 100 };
+}
+
+function hslToRgb(h, s, l){
+  h = ((h % 360) + 360) % 360; s /= 100; l /= 100;
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+  const m = l - c / 2;
+  let r = 0, g = 0, b = 0;
+  if(h < 60){ r = c; g = x; b = 0; }
+  else if(h < 120){ r = x; g = c; b = 0; }
+  else if(h < 180){ r = 0; g = c; b = x; }
+  else if(h < 240){ r = 0; g = x; b = c; }
+  else if(h < 300){ r = x; g = 0; b = c; }
+  else { r = c; g = 0; b = x; }
+  return { r: (r + m) * 255, g: (g + m) * 255, b: (b + m) * 255 };
+}
+
+function hexToHsl(hex){ return rgbToHsl(hexToRgb(hex)); }
+function hslToHex(h, s, l){ return rgbToHex(hslToRgb(h, s, l)); }
+
 function deriveTheme(bg, accent){
   return {
     bg,
@@ -1808,6 +1869,8 @@ function saveTheme(){
   }
 }
 
+let currentAccentHex = THEMES.coolSteel.accent;
+
 function applyTheme(themeKey, custom){
   const t = themeKey === "custom" && custom ? custom : deriveTheme(THEMES[themeKey]?.bg || THEMES.coolSteel.bg, THEMES[themeKey]?.accent || THEMES.coolSteel.accent);
   const root = document.documentElement.style;
@@ -1821,9 +1884,30 @@ function applyTheme(themeKey, custom){
   root.setProperty("--amber-dim", t.accentDim);
   root.setProperty("--accent-ink", t.accentInk);
   root.setProperty("--faint", t.faint);
+  currentAccentHex = t.accent;
   const themeColorMeta = document.querySelector('meta[name="theme-color"]');
   if(themeColorMeta) themeColorMeta.setAttribute("content", t.bg);
   if(activeTab === "progress") renderProgressView();
+}
+
+// How far a logged value sits from its target/best, expressed as a single
+// colour: bang on target reads as the current theme's accent colour, and it
+// grades into a darker red the further under target the value is — replacing
+// the old flat red/white/green tri-state so "just a bit off" doesn't look as
+// alarming as "way off". Interpolated in HSL (not RGB) so the in-between
+// steps stay a legible red rather than washing out to muddy grey.
+const TRACK_GRADIENT_OFF_HSL = { h: 4, s: 62, l: 30 };
+function trackGradientColor(ratio){
+  const deficit = Math.max(0, Math.min(1, 1 - ratio));
+  const a = hexToHsl(currentAccentHex);
+  const b = TRACK_GRADIENT_OFF_HSL;
+  let dh = b.h - a.h;
+  if(dh > 180) dh -= 360;
+  if(dh < -180) dh += 360;
+  const h = a.h + dh * deficit;
+  const s = a.s + (b.s - a.s) * deficit;
+  const l = a.l + (b.l - a.l) * deficit;
+  return hslToHex(h, s, l);
 }
 
 function renderThemeSettings(navId){
@@ -2487,13 +2571,22 @@ function checkOverloadHint(exIndex){
   const hint = document.getElementById(`overloadHint-${exIndex}`);
   if(!hint) return;
   let maxReps = 0;
+  let minReps = null, minTarget = 8;
   document.querySelectorAll(`[data-ex="${exIndex}"][data-field="reps"]`).forEach(inp=>{
     const n = parseInt(inp.value, 10);
-    if(!isNaN(n) && n > maxReps) maxReps = n;
+    if(isNaN(n) || n <= 0) return;
+    if(n > maxReps) maxReps = n;
+    const target = getPersonRepsTarget(inp.dataset.person);
+    if(minReps === null || n < minReps){ minReps = n; minTarget = target; }
   });
+  hint.classList.remove("overload-hint-warn");
   if(maxReps >= 15){
     hint.style.display = "block";
     hint.textContent = `${maxReps} reps is high — try adding weight and aiming for ~5–8 reps next session.`;
+  } else if(minReps !== null && minReps <= Math.max(2, Math.floor(minTarget / 2))){
+    hint.style.display = "block";
+    hint.classList.add("overload-hint-warn");
+    hint.textContent = `Only ${minReps} rep${minReps === 1 ? "" : "s"} on a set — that weight may be too heavy. Try dropping it a little on the next set.`;
   } else {
     hint.style.display = "none";
   }
@@ -2521,21 +2614,33 @@ function copySetOneToAll(exIndex, personId, exName){
 
 function updateWeightInputColor(input, exName, personId){
   input.classList.remove("pr-val", "reg-val");
+  input.style.color = "";
+  input.style.fontWeight = "";
   const val = parseFloat(input.value);
   if(isNaN(val)) return;
   const stats = computeStatsFor(activeTab, exName, personId);
-  if(stats.best === null) return;
-  if(val > stats.best) input.classList.add("pr-val");
-  else if(val < stats.best) input.classList.add("reg-val");
+  if(stats.best === null || stats.best <= 0) return;
+  if(val > stats.best){
+    input.classList.add("pr-val");
+  } else {
+    input.style.color = trackGradientColor(val / stats.best);
+    input.style.fontWeight = "800";
+  }
 }
 
 function updateRepsInputColor(input, personId){
   input.classList.remove("pr-val", "reg-val");
+  input.style.color = "";
+  input.style.fontWeight = "";
   const val = parseInt(input.value, 10);
   if(isNaN(val)) return;
   const target = getPersonRepsTarget(personId);
-  if(val > target) input.classList.add("pr-val");
-  else if(val < target) input.classList.add("reg-val");
+  if(val > target){
+    input.classList.add("pr-val");
+  } else {
+    input.style.color = trackGradientColor(target > 0 ? val / target : 1);
+    input.style.fontWeight = "800";
+  }
 }
 
 let collapsedExercises = {};
@@ -2870,6 +2975,16 @@ async function handleSave(evt){
   const entries = {};
   let prCount = 0, regCount = 0;
   let anyValue = false;
+  const personSummaries = {};
+  people.forEach(p => { personSummaries[p.id] = { volume: 0, exercises: [] }; });
+
+  // capture the last session before this date now, before cache is mutated
+  // below, so the summary can show a volume delta against it
+  const priorSessions = cache[activeTab].filter(s => s.date < date);
+  const prevSession = priorSessions.length ? priorSessions.reduce((a, b) => (a.date > b.date ? a : b)) : null;
+  const prevVolumes = {};
+  people.forEach(p => { prevVolumes[p.id] = prevSession ? computePersonVolume(prevSession, activeTab, p.id) : null; });
+
   getExercises(activeTab).forEach((ex, i)=>{
     const sets = {};
     const notes = {};
@@ -2879,7 +2994,8 @@ async function handleSave(evt){
       if(personSets.some(s => s.wt !== null || s.reps.trim() !== "")){
         anyValue = true;
       }
-      if(personSets.some(s => s.wtReal || s.repsReal)){
+      const hasRealData = personSets.some(s => s.wtReal || s.repsReal);
+      if(hasRealData){
         // any field still blank at save time on an exercise the user
         // actually engaged with this session defaults to 0 rather than
         // being left null/blank
@@ -2899,9 +3015,13 @@ async function handleSave(evt){
 
       const top = topSetWeight(sets[p.id]);
       const st = computeStatsFor(activeTab, ex, p.id);
+      let isPR = false, isReg = false;
       if(top !== null){
-        if(st.best !== null && top > st.best) prCount++;
-        if(st.last !== null && top < st.last) regCount++;
+        if(st.best !== null && top > st.best){ prCount++; isPR = true; }
+        if(st.last !== null && top < st.last){ regCount++; isReg = true; }
+      }
+      if(hasRealData){
+        personSummaries[p.id].exercises.push({ ex, sets: sets[p.id], isPR, isReg });
       }
     });
     entries[ex] = { sets, assisted: !!assistedState[ex], notes };
@@ -2912,6 +3032,8 @@ async function handleSave(evt){
       return;
     }
   }
+
+  people.forEach(p => { personSummaries[p.id].volume = computePersonVolume({ date, entries }, activeTab, p.id); });
 
   // remove any existing entry for the same date (overwrite instead of duplicate)
   cache[activeTab] = cache[activeTab].filter(s => s.date !== date);
@@ -2934,17 +3056,67 @@ async function handleSave(evt){
   const ghCfg = getGithubConfig();
   const hasGithub = !!(ghCfg && ghCfg.token && ghCfg.repo);
 
-  if(prCount > 0){
-    showToast(`Saved — ${prCount} new PR${prCount>1?"s":""}`, "pr");
-  } else if(regCount > 0){
-    showToast(`Saved — down on ${regCount} lift${regCount>1?"s":""} from last time`, "reg");
-  } else {
-    showToast(hasGithub ? "Saved" : "Saved locally");
-  }
+  showToast(hasGithub ? "Saved" : "Saved locally", prCount > 0 ? "pr" : (regCount > 0 ? "reg" : undefined));
 
-  if(timerSettings.enabled) startRestTimer();
+  if(anyValue) showSessionSummary(date, personSummaries, prevVolumes);
+
+  startRestTimer();
 
   if(hasGithub) autoPushToGithub();
+}
+
+function computePersonVolume(session, tabKey, personId){
+  let vol = 0;
+  getExercises(tabKey).forEach(ex => {
+    const e = session.entries[ex];
+    if(!e) return;
+    getPersonSets(e, personId).forEach(s => {
+      vol += (s.wt || 0) * (parseInt(s.reps, 10) || 0);
+    });
+  });
+  return vol;
+}
+
+function personSessionSummaryHtml(p, summary, prevVolume){
+  if(!summary || summary.exercises.length === 0) return "";
+  const prNames = summary.exercises.filter(e => e.isPR).map(e => e.ex);
+  const prBanner = prNames.length
+    ? `<div class="pb-banner">🎉 New PB${prNames.length > 1 ? "s" : ""} for <strong>${p.name}</strong>! ${prNames.map(n => `<span class="pb-chip">${n}</span>`).join("")}</div>`
+    : "";
+  const exListHtml = summary.exercises.map(e => `
+    <div class="session-summary-ex">
+      <span class="name">${e.ex}${e.isPR ? ' <span class="pr-badge">PR</span>' : (e.isReg ? ' <span class="reg-badge">↓</span>' : "")}</span>
+      <span class="vals">${setsSummary(e.sets)}</span>
+    </div>
+  `).join("");
+  const roundedVol = Math.round(summary.volume);
+  let volHtml = `Total volume: <strong>${roundedVol}kg</strong>`;
+  if(prevVolume !== null && prevVolume !== undefined && prevVolume > 0){
+    const delta = summary.volume - prevVolume;
+    const pct = Math.round((delta / prevVolume) * 100);
+    const sign = delta >= 0 ? "+" : "";
+    const cls = delta > 0 ? "vol-up" : (delta < 0 ? "vol-down" : "");
+    volHtml += ` <span class="${cls}">(${sign}${pct}% vs last time)</span>`;
+  }
+  return `
+    <div class="session-summary-person">
+      <div class="session-summary-person-name" style="color:${p.color};">${p.name}</div>
+      ${prBanner}
+      ${exListHtml}
+      <div class="session-summary-volume">${volHtml}</div>
+    </div>
+  `;
+}
+
+function showSessionSummary(date, personSummaries, prevVolumes){
+  const cfg = CONFIG[activeTab];
+  const title = document.getElementById("sessionSummaryTitle");
+  if(title) title.textContent = `${cfg.label} — ${fmtDate(date)}`;
+  const body = document.getElementById("sessionSummaryBody");
+  if(!body) return;
+  const html = people.map(p => personSessionSummaryHtml(p, personSummaries[p.id], prevVolumes[p.id])).join("");
+  body.innerHTML = html || `<p class="confirm-message">Nothing logged this session.</p>`;
+  openModal("sessionSummaryOverlay");
 }
 
 async function ensureAllLoaded(){
@@ -2986,7 +3158,6 @@ async function switchTab(tabKey){
     renderExerciseSettings();
     renderThemeSettings();
     applyBackupSettingsCollapsedState();
-    renderTimerSettings();
     applyCreditsCollapsedState();
     return;
   }
@@ -3936,8 +4107,7 @@ const WIZARD_STEPS = [
   { title: "Choose a theme", desc: "Sets the whole app's look. You can change this anytime in Settings." },
   { title: "Which days do you train?", desc: "Toggle the split you follow — you can change this later in Settings." },
   { title: "Your workouts", desc: "Recommended exercises are pre-filled for each day. Tap any exercise to swap it, add or remove one, or drag ⠿ to reorder." },
-  { title: "Sets per exercise", desc: "How many sets should new exercises start with? You can still adjust any single exercise later." },
-  { title: "Rest timer", desc: "Shows a countdown between sets after logging. You can turn this on or off anytime in Settings." }
+  { title: "Sets per exercise", desc: "How many sets should new exercises start with? You can still adjust any single exercise later." }
 ];
 
 function showWelcome(){
@@ -3985,13 +4155,13 @@ function renderWizardStep(){
   }
   const meta = WIZARD_STEPS[wizardStep];
   el.innerHTML = `
-    <div class="wizard-progress">STEP ${wizardStep} OF 8</div>
+    <div class="wizard-progress">STEP ${wizardStep} OF 7</div>
     <h2 class="wizard-step-title">${meta.title}</h2>
     <p class="wizard-step-desc">${meta.desc}</p>
     <div id="wizardStepBody"></div>
     <div class="modal-actions">
       <button type="button" class="btn-secondary" onclick="wizardBack()">Back</button>
-      ${wizardStep < 8
+      ${wizardStep < 7
         ? `<button type="button" class="btn-primary" onclick="wizardNext()">Next</button>`
         : `<button type="button" class="btn-primary" onclick="wizardFinish()">Finish</button>`}
     </div>
@@ -4052,19 +4222,11 @@ function renderWizardStepBody(){
         <button type="button" class="set-count-btn" id="wizardSetCountPlusBtn" onclick="adjustDefaultSetCount(1)" ${defaultSetCount>=6?"hidden":""}>+</button>
       </div>
     `;
-  } else if(wizardStep === 8){
-    body.innerHTML = `
-      <div class="wizard-yesno">
-        <button type="button" class="${!timerSettings.enabled?"active":""}" onclick="setWizardTimerEnabled(false)">No timer</button>
-        <button type="button" class="${timerSettings.enabled?"active":""}" onclick="setWizardTimerEnabled(true)">Show timer</button>
-      </div>
-      ${timerSettings.enabled ? `<p style="font-size:11.5px;color:var(--muted);margin:6px 0 0 0;line-height:1.5;">You can switch it between counting down and counting up, and set how long it counts down from, right on the timer footer itself.</p>` : ""}
-    `;
   }
 }
 
 function wizardBack(){ wizardStep = Math.max(0, wizardStep - 1); renderWizardStep(); }
-function wizardNext(){ wizardStep = Math.min(8, wizardStep + 1); renderWizardStep(); }
+function wizardNext(){ wizardStep = Math.min(7, wizardStep + 1); renderWizardStep(); }
 function wizardFinish(){
   // Persist even untouched defaults so detectNewUser() sees setup as done —
   // otherwise a user who accepted every default gets the wizard again
@@ -4090,15 +4252,6 @@ function setWizardPartner(want){
   }
   renderTabs();
   renderWizardStepBody();
-}
-
-function setWizardTimerEnabled(on){
-  timerSettings.enabled = on;
-  saveTimerSettings();
-  if(!on) timerStop();
-  renderTimerSettings();
-  renderWizardStepBody();
-  refreshTimerFooter();
 }
 
 function toggleTokenVisibility(){
@@ -4385,22 +4538,20 @@ function clearDraft(tabKey){
 }
 
 const TIMER_SETTINGS_KEY = "gymtracker:timerSettings";
-let timerSettings = { enabled: false, mode: "countdown", duration: 90 };
+let timerSettings = { mode: "countdown", duration: 90 };
 let timerIntervalId = null;
 let timerRemainingMs = 0;
 let timerElapsedMs = 0;
 let timerSegmentStart = 0;
-let timerSettingsCollapsed = true;
 let creditsSettingsCollapsed = true;
 
 function loadTimerSettings(){
-  const defaults = { enabled: false, mode: "countdown", duration: 90 };
+  const defaults = { mode: "countdown", duration: 90 };
   try{
     const raw = localStorage.getItem(TIMER_SETTINGS_KEY);
     if(raw){
       const parsed = JSON.parse(raw);
       return {
-        enabled: parsed.enabled ?? parsed.restEnabled ?? defaults.enabled,
         mode: parsed.mode === "countup" ? "countup" : "countdown",
         duration: typeof parsed.duration === "number" ? parsed.duration : (parsed.restDuration ?? defaults.duration)
       };
@@ -4424,7 +4575,7 @@ function formatStopwatch(ms){
 
 let timerRunState = "idle"; // "idle" | "running" | "paused" | "done"
 let lapCount = 0;
-let timerMinimized = false;
+let timerMinimized = true;
 
 function toggleTimerMinimize(){
   timerMinimized = !timerMinimized;
@@ -4460,7 +4611,7 @@ function refreshTimerFooter(){
   const w = document.getElementById("timerWidget");
   const bubble = document.getElementById("timerBubble");
   const main = document.querySelector("main");
-  const shouldShow = timerSettings.enabled && !!CONFIG[activeTab];
+  const shouldShow = !!CONFIG[activeTab];
   const showFull = shouldShow && !timerMinimized;
   const showBubble = shouldShow && timerMinimized;
   if(w) w.classList.toggle("visible", showFull);
@@ -4558,7 +4709,6 @@ function startEditTimerDuration(){
       const s = Math.round(secEl.scrollTop / TIMER_WHEEL_ITEM_H);
       timerSettings.duration = Math.max(5, m * 60 + s);
       saveTimerSettings();
-      renderTimerSettings();
     }, 120);
   }
   minEl.addEventListener("scroll", () => onWheelScroll(minEl));
@@ -4657,43 +4807,6 @@ function cycleTimerModeInline(){
   timerSettings.mode = timerSettings.mode === "countdown" ? "countup" : "countdown";
   saveTimerSettings();
   refreshTimerFooter();
-  renderTimerSettings();
-  if(wizardStep === 8) renderWizardStepBody();
-}
-
-function renderTimerSettings(){
-  const toggle = document.getElementById("timerEnabledToggle");
-  if(toggle) toggle.checked = timerSettings.enabled;
-  const modeWrap = document.getElementById("timerModeSettings");
-  if(modeWrap) modeWrap.style.display = timerSettings.enabled ? "block" : "none";
-  applyTimerCollapsedState();
-}
-
-function handleTimerEnabledToggle(checked){
-  timerSettings.enabled = checked;
-  saveTimerSettings();
-  if(!checked) timerStop();
-  renderTimerSettings();
-  refreshTimerFooter();
-}
-
-function loadTimerSettingsCollapsed(){
-  try{ return localStorage.getItem("gymtracker:timerSettingsCollapsed") !== "0"; }catch(e){ return true; }
-}
-function saveTimerSettingsCollapsed(){
-  try{ localStorage.setItem("gymtracker:timerSettingsCollapsed", timerSettingsCollapsed ? "1" : "0"); }catch(e){}
-}
-function toggleTimerCollapsed(){
-  timerSettingsCollapsed = !timerSettingsCollapsed;
-  saveTimerSettingsCollapsed();
-  applyTimerCollapsedState();
-}
-function applyTimerCollapsedState(){
-  const body = document.getElementById("timerSettingsBody");
-  const icon = document.getElementById("timerToggleIcon");
-  if(!body || !icon) return;
-  body.classList.toggle("is-collapsed", timerSettingsCollapsed);
-  icon.textContent = timerSettingsCollapsed ? "▸" : "▾";
 }
 
 function loadCreditsSettingsCollapsed(){
@@ -4772,7 +4885,6 @@ async function init(){
   commentsEnabled = loadCommentsEnabled();
   advancedMode = loadAdvancedMode();
   formDrafts = loadFormDrafts();
-  timerSettingsCollapsed = loadTimerSettingsCollapsed();
   creditsSettingsCollapsed = loadCreditsSettingsCollapsed();
   currentThemeState = loadTheme();
   applyTheme(currentThemeState.key, currentThemeState.custom);
@@ -5305,7 +5417,6 @@ async function deleteAllData(){
     localStorage.removeItem("gymtracker:peopleSettingsCollapsed");
     localStorage.removeItem("gymtracker:exerciseSettingsCollapsed");
     localStorage.removeItem("gymtracker:backupSettingsCollapsed");
-    localStorage.removeItem("gymtracker:timerSettingsCollapsed");
     localStorage.removeItem("gymtracker:creditsSettingsCollapsed");
     localStorage.removeItem("gymtrackerGithubConfig");
   }catch(e){

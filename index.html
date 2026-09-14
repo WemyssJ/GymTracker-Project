@@ -609,7 +609,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.3</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.4</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -1898,16 +1898,21 @@ function applyTheme(themeKey, custom){
 // cyan/green accent swept through purple/magenta on the way, which read as
 // an unrelated, confusing colour rather than "off track".
 const TRACK_RED_HUE = 2, TRACK_GREEN_HUE = 128;
+// Full colour intensity is reached at a fixed +/-5 (kg or reps) from
+// target/best, not scaled by the target's magnitude — a 5kg jump should read
+// as "maxed out" whether the lift is 20kg or 100kg, and further beyond that
+// still reads as fully green/red rather than fading back out.
+const TRACK_GRADIENT_RANGE = 5;
 function trackGradientColor(value, target, baseColor){
   baseColor = baseColor || currentAccentHex;
   if(!(target > 0) || !isFinite(value)) return baseColor;
   if(value === target) return baseColor;
   if(value > target){
-    const overshoot = Math.min(1, (value - target) / target);
-    return hslToHex(TRACK_GREEN_HUE, 40 + overshoot * 35, 78 - overshoot * 33);
+    const overshoot = Math.min(1, (value - target) / TRACK_GRADIENT_RANGE);
+    return hslToHex(TRACK_GREEN_HUE, 55 + overshoot * 35, 68 - overshoot * 30);
   }
-  const shortfall = Math.min(1, (target - value) / target);
-  return hslToHex(TRACK_RED_HUE, 45 + shortfall * 25, 78 - shortfall * 48);
+  const shortfall = Math.min(1, (target - value) / TRACK_GRADIENT_RANGE);
+  return hslToHex(TRACK_RED_HUE, 55 + shortfall * 30, 68 - shortfall * 33);
 }
 
 function renderThemeSettings(navId){

@@ -609,7 +609,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.4</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.5</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -2280,18 +2280,6 @@ function computeStatsFor(tabKey, exercise, personId){
   return { best, last };
 }
 
-function getLastEntry(tabKey, exercise){
-  const wantAssisted = !!assistedState[exercise];
-  const matching = [...cache[tabKey]]
-    .filter(s => s.entries[exercise] && !!s.entries[exercise].assisted === wantAssisted)
-    .sort((a, b) => b.date.localeCompare(a.date) || (b.id || "").localeCompare(a.id || ""));
-  // Deliberately no fallback to the other mode's entry: assisted and
-  // unassisted use unrelated weight scales (e.g. counterweight vs added
-  // load), so reusing one mode's number as a "starting suggestion" for the
-  // other is actively misleading — it looks like the toggle did nothing.
-  return matching.length ? matching[0].entries[exercise] : null;
-}
-
 function getNextSessionType(){
   let nextKey = null, minDate = null;
   activeDays.forEach(k => {
@@ -2676,22 +2664,6 @@ function toggleExerciseCollapse(exName){
   renderForm();
 }
 
-function fillForwardSets(sets){
-  // if set 1 has a weight but sets 2/3 don't, carry set 1's weight forward as a
-  // sensible prefill (most training uses the same weight across sets); an
-  // explicitly recorded later set always wins and is left untouched
-  const result = sets.map(s => ({ ...s }));
-  let lastWt = null;
-  result.forEach(s => {
-    if(s.wt !== null){
-      lastWt = s.wt;
-    } else if(lastWt !== null){
-      s.wt = lastWt;
-    }
-  });
-  return result;
-}
-
 function renderForm(){
   const cfg = CONFIG[activeTab];
   const form = document.getElementById("logForm");
@@ -2708,7 +2680,6 @@ function renderForm(){
     </div>
   `;
   getExercises(activeTab).forEach((ex, i)=>{
-    const lastEntry = getLastEntry(activeTab, ex);
     const safeName = ex.replace(/\\/g,"\\\\").replace(/'/g,"\\'");
     const count = exSetCounts[ex] ?? defaultSetCount;
     const assisted = !!assistedState[ex];
@@ -2729,18 +2700,17 @@ function renderForm(){
           <span>Assisted</span>
         </label>` : ""}`;
     people.forEach((p, pi) => {
-      const lastSets = lastEntry ? fillForwardSets(getPersonSets(lastEntry, p.id)) : [];
+      const personBest = computeStatsFor(activeTab, ex, p.id).best;
       const sets = Array.from({length: count}, (_, si) => {
-        const base = lastSets[si] || { wt: null };
         const wtDK = draftKey(ex, p.id, si, "wt");
         const repsDK = draftKey(ex, p.id, si, "reps");
         const wtIsDraft = wtDK in draftValues;
         const repsIsDraft = repsDK in draftValues;
-        const wt = wtIsDraft ? (draftValues[wtDK] === "" ? null : parseFloat(draftValues[wtDK])) : base.wt;
-        // Reps always preset to the user's default target rather than
-        // carrying forward the last session's actual reps text — historical
-        // reps entries are often messy free-text notes ("3r", "2x, 4r"),
-        // and a consistent clean default beats a mix of blank/garbled values.
+        // Weight and reps both default to the person's all-time best/target
+        // rather than carrying forward whatever was typed last session — a
+        // deload or an off day shouldn't lower tomorrow's suggested starting
+        // point.
+        const wt = wtIsDraft ? (draftValues[wtDK] === "" ? null : parseFloat(draftValues[wtDK])) : personBest;
         const reps = repsIsDraft ? draftValues[repsDK] : String(getPersonRepsTarget(p.id));
         return { wt, reps, wtIsDraft, repsIsDraft };
       });

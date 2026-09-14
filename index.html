@@ -609,7 +609,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.5</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.6</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -5626,7 +5626,7 @@ function renderPlateCalcPersonTabs(){
 
 function prefillPlateCalcWeight(){
   const stats = computeStatsFor(activeTab, plateCalcExName, plateCalcPersonId);
-  const prefill = stats.last ?? stats.best;
+  const prefill = stats.best ?? stats.last;
   document.getElementById("plateCalcWeight").value = prefill !== null && prefill !== undefined ? prefill : "";
   updatePlateCalc();
 }

@@ -609,7 +609,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.6</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.7</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -946,7 +946,8 @@ const CONFIG = {
       "Overhead Press",
       "Dumbbell Press",
       "Lateral Raise",
-      "Tricep Push"
+      "Tricep Push",
+      "Face Pull"
     ],
     "seedHistory": []
   },
@@ -972,7 +973,8 @@ const CONFIG = {
       "Leg Press",
       "Lunges",
       "Prone Leg Curl",
-      "Calf Raises"
+      "Calf Raises",
+      "Abductor Machine"
     ],
     "seedHistory": []
   },
@@ -984,7 +986,9 @@ const CONFIG = {
       "Crunch",
       "Leg Raise",
       "Russian Twist",
-      "Cable Crunch"
+      "Cable Crunch",
+      "Bicycle Crunch",
+      "Captain's Chair Leg Raise"
     ],
     "seedHistory": []
   }
@@ -1508,13 +1512,37 @@ const EXERCISE_INFO = {
       "Hold the contracted position for 1 second; return slowly to the start",
       "The cable keeps constant tension throughout — more effective than bodyweight crunches"
     ]
+  },
+  "Bicycle Crunch": {
+    image: "images/muscles/core/bicycle-crunch.webp",
+    primary: ["Rectus Abdominis", "Obliques"],
+    secondary: ["Hip Flexors"],
+    tips: [
+      "Lie on your back, hands lightly behind your ears, knees raised to a tabletop position",
+      "Bring one elbow toward the opposite knee while extending the other leg straight out, just above the floor",
+      "Rotate from your torso — twist through the ribcage, don't yank your neck with your hands",
+      "Keep the motion slow and controlled; a fast pedaling rhythm swaps momentum for muscle work",
+      "Alternate sides for one rep — touching elbow to knee isn't the goal, the twist is"
+    ]
+  },
+  "Captain's Chair Leg Raise": {
+    image: "images/muscles/core/captains-chair-leg-raise.webp",
+    primary: ["Rectus Abdominis (Lower)", "Hip Flexors"],
+    secondary: ["Obliques"],
+    tips: [
+      "Support your weight on the forearm pads/handles with your back flat against the pad",
+      "Raise your knees (or straight legs for a harder variation) toward your chest using your abs, not momentum",
+      "Avoid swinging — control both the lift and the lower back to the start",
+      "Keep your lower back pressed into the pad throughout; don't let it arch away",
+      "Add a slight posterior pelvic tilt at the top to fully engage the lower abs"
+    ]
   }
 };
 
 const EXERCISES_BY_DAY = {
   push: [
     "Arnold Press","Bench Press","Chest Dip","Chest Fly","Dumbbell Press",
-    "Front Raise","Incline Press","Lateral Raise","Overhead Press","Push Up",
+    "Face Pull","Front Raise","Incline Press","Lateral Raise","Overhead Press","Push Up",
     "Skull Crushers","Tricep Push","Upright Row"
   ],
   pull: [
@@ -1528,7 +1556,7 @@ const EXERCISES_BY_DAY = {
     "Prone Leg Curl","Squat","Sumo Squat"
   ],
   core: [
-    "Cable Crunch","Crunch","Leg Raise","Plank","Russian Twist"
+    "Bicycle Crunch","Cable Crunch","Captain's Chair Leg Raise","Crunch","Leg Raise","Plank","Russian Twist"
   ]
 };
 
@@ -1576,6 +1604,8 @@ const EXERCISE_REPDB = {
   "Glute Kickback":       { poses:["start","peak"], files:["images/exercises/glute-kickback-start.webp","images/exercises/glute-kickback-peak.webp"] },
   "Abductor Machine":     { poses:["start","peak"], files:["images/exercises/hip-abduction-start.webp","images/exercises/hip-abduction-peak.webp"] },
   "Adductor Machine":     { poses:["start","peak"], files:["images/exercises/hip-adduction-start.webp","images/exercises/hip-adduction-peak.webp"] },
+  "Bicycle Crunch":            { poses:["start","peak"], files:["images/exercises/bicycle-crunch-start.webp","images/exercises/bicycle-crunch-peak.webp"] },
+  "Captain's Chair Leg Raise": { poses:["start","peak"], files:["images/exercises/captains-chair-leg-raise-start.webp","images/exercises/captains-chair-leg-raise-peak.webp"] },
 };
 
 const MUSCLE_GROUPS = {
@@ -1585,11 +1615,13 @@ const MUSCLE_GROUPS = {
   "Arms":      ["Bicep Curl","Hammer Curl","Preacher Curl","Skull Crushers","Tricep Push"],
   "Legs":      ["Abductor Machine","Adductor Machine","Bulgarian Split Squat","Calf Raises","Leg Extension","Leg Press","Lunges","Prone Leg Curl","Squat","Sumo Squat"],
   "Glutes":    ["Glute Kickback","Hip Thrust"],
-  "Core":      ["Cable Crunch","Crunch","Leg Raise","Plank","Russian Twist"],
+  "Core":      ["Bicycle Crunch","Cable Crunch","Captain's Chair Leg Raise","Crunch","Leg Raise","Plank","Russian Twist"],
 };
 
 const ALL_PRESETS = Object.values(EXERCISES_BY_DAY).flat()
   .filter((v,i,a)=>a.indexOf(v)===i);
+
+const DURATION_EXERCISES = new Set(["Plank"]);
 
 let pickerTabKey = null, pickerIdx = -1;
 let pickerMuscle = "All", pickerSearch = "";
@@ -2545,26 +2577,29 @@ function renderStatStrip(){
 }
 
 function setBoxHtml(exIndex, person, setIndex, set, exName, personId){
+  const isDuration = DURATION_EXERCISES.has(exName);
   const wtVal = set.wt !== null && set.wt !== undefined ? set.wt : "";
   const repsVal = set.reps || "";
   const wtClass = (set.wt !== null && set.wt !== undefined && !set.wtIsDraft) ? "prefilled" : "";
   const repsClass = (set.reps && !set.repsIsDraft) ? "prefilled" : "";
   const safeExName = (exName || "").replace(/\\/g,"\\\\").replace(/'/g,"\\'");
-  return `
-    <div class="set-col">
-      <div class="set-label">SET ${setIndex + 1}</div>
-      <div class="mini-box wt-box">
-        <input type="number" step="0.1" inputmode="decimal" placeholder="kg"
-          class="${wtClass}" value="${wtVal}"
-          data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="wt"
-          oninput="this.classList.remove('prefilled'); updateWeightInputColor(this,'${safeExName}','${personId}'); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'wt',this.value);" onfocus="this.select()">
-      </div>
+  const repsBoxHtml = isDuration ? "" : `
       <div class="mini-box reps-box">
         <input type="text" inputmode="numeric" placeholder="reps"
           class="${repsClass}" value="${repsVal}"
           data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="reps"
           oninput="this.classList.remove('prefilled'); updateRepsInputColor(this,'${personId}'); checkOverloadHint(${exIndex},'${personId}'); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'reps',this.value);" onfocus="this.select()">
+      </div>`;
+  return `
+    <div class="set-col">
+      <div class="set-label">SET ${setIndex + 1}</div>
+      <div class="mini-box wt-box">
+        <input type="number" step="${isDuration ? "1" : "0.1"}" inputmode="decimal" placeholder="${isDuration ? "sec" : "kg"}"
+          class="${wtClass}" value="${wtVal}"
+          data-ex="${exIndex}" data-person="${person}" data-set="${setIndex}" data-field="wt"
+          oninput="this.classList.remove('prefilled'); updateWeightInputColor(this,'${safeExName}','${personId}'); recordDraftValue(activeTab,'${safeExName}','${personId}',${setIndex},'wt',this.value);" onfocus="this.select()">
       </div>
+      ${repsBoxHtml}
     </div>
   `;
 }
@@ -2835,7 +2870,7 @@ function renderHistory(){
         const display = top !== null ? top : "–";
         const cls = top !== null ? (pf[p.id] ? "pr-val" : (rf[p.id] ? "reg-val" : "")) : "";
         valsHtml += `<span class="${cls}">${display}</span>`;
-        const summary = setsSummary(getPersonSets(e, p.id));
+        const summary = setsSummary(getPersonSets(e, p.id), ex);
         if(summary){
           setsHtml += (setsHtml ? " · " : "") + `<span style="color:${p.color};font-weight:700;">${p.name}:</span> ${summary}`;
         }
@@ -2864,8 +2899,11 @@ function renderHistory(){
   applyHistoryCollapsedState();
 }
 
-function setsSummary(sets){
+function setsSummary(sets, ex){
   if(!sets) return "";
+  if(DURATION_EXERCISES.has(ex)){
+    return sets.filter(s => s.wt !== null && s.wt !== undefined).map(s => `${s.wt}s`).join(", ");
+  }
   return sets
     .filter(s => s.wt !== null || s.reps)
     .map(s => (s.wt !== null ? s.wt : "?") + (s.reps ? `x${s.reps}` : ""))
@@ -3110,6 +3148,7 @@ async function handleSave(evt){
 // but evaluated once against the final saved sets so the summary can point
 // out what to change next time without the user having to notice it live.
 function exerciseTip(ex, sets, target){
+  if(DURATION_EXERCISES.has(ex)) return null;
   const repsVals = (sets || []).map(s => parseInt(s.reps, 10)).filter(n => !isNaN(n) && n > 0);
   if(!repsVals.length) return null;
   const maxReps = Math.max(...repsVals);
@@ -3140,7 +3179,7 @@ function personSessionSummaryHtml(p, summary, prevVolume){
   const exListHtml = summary.exercises.map(e => `
     <div class="session-summary-ex">
       <span class="name">${e.ex}${e.isPR ? ' <span class="pr-badge">PR</span>' : (e.isReg ? ' <span class="reg-badge">↓</span>' : "")}</span>
-      <span class="vals">${setsSummary(e.sets)}</span>
+      <span class="vals">${setsSummary(e.sets, e.ex)}</span>
     </div>
   `).join("");
   const roundedVol = Math.round(summary.volume);
@@ -5560,7 +5599,7 @@ function buildExInfoRecentHtml(exName){
   }
   return rows.map(r=>{
     const parts = people.map(p=>{
-      const summary = setsSummary(getPersonSets(r.entry, p.id));
+      const summary = setsSummary(getPersonSets(r.entry, p.id), exName);
       return summary ? `<span style="color:${p.color};font-weight:700;">${p.name}:</span> ${summary}` : "";
     }).filter(Boolean).join(" · ");
     return `<div class="history-row" style="padding:10px 12px;">

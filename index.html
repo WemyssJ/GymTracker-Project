@@ -56,8 +56,9 @@
     padding:14px 16px 0 16px;border-bottom:1px solid var(--line);
     padding-top:calc(14px + env(safe-area-inset-top));
   }
+  .top-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px;}
   h1{
-    font-size:22px;font-weight:800;letter-spacing:-0.02em;margin:0 0 12px 0;
+    font-size:22px;font-weight:800;letter-spacing:-0.02em;margin:0;
     font-stretch:condensed;
   }
   h1 span{color:var(--amber);}
@@ -65,6 +66,11 @@
     color:var(--muted);font-size:10px;font-weight:400;letter-spacing:0;
     vertical-align:middle;
   }
+  .pt-mode-toggle{
+    flex:0 0 auto;background:var(--panel);border:1px solid var(--line);color:var(--muted);
+    font-size:12px;font-weight:800;letter-spacing:0.03em;border-radius:20px;padding:6px 14px;cursor:pointer;
+  }
+  .pt-mode-toggle.active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber);}
 
   nav.tabs{display:flex;gap:2px;}
   nav.tabs button{
@@ -331,6 +337,37 @@
   .pb-banner strong{color:var(--text);}
   .pb-chip{display:inline-block;background:var(--amber);color:var(--accent-ink);font-size:11px;
     font-weight:800;padding:2px 8px;border-radius:10px;margin:3px 4px 0 0;}
+
+  /* ── PT mode ──────────────────────────────────────────────────── */
+  .pt-day-header{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:4px;}
+  .pt-day-label{font-size:18px;font-weight:800;}
+  .pt-day-sub{font-size:11px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.04em;}
+  .pt-warmup{font-size:12.5px;color:var(--muted);background:var(--panel-2);border-radius:8px;padding:8px 10px;margin:10px 0 16px 0;}
+  .pt-warmup strong{color:var(--text);}
+  .pt-placeholder-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px 16px;text-align:center;}
+  .pt-placeholder-card p{font-size:13.5px;color:var(--muted);line-height:1.6;margin:10px 0 0 0;}
+  .pt-choice-chips{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+  .pt-suggested{font-size:11px;color:var(--muted);margin:-4px 0 10px 0;}
+  .pt-finish-btn{
+    width:100%;margin-top:18px;padding:14px;border:none;border-radius:10px;
+    background:var(--amber);color:var(--accent-ink);font-size:15px;font-weight:800;cursor:pointer;
+  }
+  .pt-finish-btn:active{opacity:0.85;}
+  .pt-summary-section{border-top:1px solid var(--line);padding:14px 0;}
+  .pt-summary-section:first-of-type{border-top:none;padding-top:0;}
+  .pt-summary-tab-label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;}
+  .pt-skipped{font-size:12px;color:var(--muted);margin-top:10px;}
+  .pt-next-day-card{background:var(--panel-2);border-radius:10px;padding:12px;margin-top:16px;}
+  .pt-next-day-card .pt-day-label{font-size:14px;}
+  .pt-continue-btn{
+    width:100%;margin-top:16px;padding:13px;border:1px solid var(--amber);border-radius:10px;
+    background:none;color:var(--amber);font-size:14px;font-weight:800;cursor:pointer;
+  }
+  .pt-log-activity-row{display:flex;gap:8px;align-items:center;margin-top:14px;}
+  .pt-log-activity-row select{
+    flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
+    border-radius:8px;padding:8px 10px;font-size:13px;
+  }
 
   /* ── Collapsible section transitions ─────────────────────────── */
   .collapsible-body{overflow:hidden;max-height:3000px;opacity:1;}
@@ -609,7 +646,10 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.9</span></h1>
+  <div class="top-title-row">
+    <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.10</span></h1>
+    <button type="button" id="ptModeToggleBtn" class="pt-mode-toggle" onclick="togglePtMode()">PT</button>
+  </div>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -663,6 +703,8 @@
     </div>
   </div>
 
+  <div id="ptView" style="display:none;"></div>
+
   <div id="settingsView" style="display:none;">
     <div class="settings-row" style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line);">
       <div class="settings-row-info">
@@ -678,6 +720,45 @@
     <div class="section-label" id="settingsDaysLabel" style="margin-top:0;">Days</div>
     <div id="dayTogglesContainer" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;"></div>
     <p style="font-size:11.5px;color:var(--muted);margin:0 0 26px 0;line-height:1.5;">Toggle which workout days appear. Disabling a day hides its tab but keeps all logged data.</p>
+
+    <div class="section-label collapsible" id="settingsPtLabel" onclick="togglePtSettingsCollapsed()">
+      <span id="ptSettingsToggleIcon">▾</span> PT Mode
+    </div>
+    <div id="ptSettingsBody" class="collapsible-body">
+      <div class="settings-row" style="border-top:none;padding-top:0;">
+        <div class="settings-row-info">
+          <div class="settings-row-title">Follow the PT programme</div>
+          <div class="settings-row-desc">Replaces the day tabs with a fixed 7-day programme. Logs into the exact same history as the day tabs — nothing is kept separate.</div>
+        </div>
+        <label class="toggle-switch" aria-label="PT mode">
+          <input type="checkbox" id="ptModeSettingsToggle" onchange="handlePtModeSettingsToggle(this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <div style="margin-top:14px;">
+        <div class="settings-row-title" style="margin-bottom:8px;">Primary person</div>
+        <nav class="subtabs" id="ptPrimaryPersonChips"></nav>
+        <p style="font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.5;">PT mode is single-user — pick which person it logs sets against.</p>
+      </div>
+      <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:12px;color:var(--muted);font-weight:700;">Dumbbell/cable increment</span>
+          <div class="set-count-row" style="margin-top:0;">
+            <button type="button" class="set-count-btn" onclick="adjustPtIncrement('db',-0.5)" aria-label="Decrease">−</button>
+            <span class="set-count-label" id="ptIncrementDbLabel"></span>
+            <button type="button" class="set-count-btn" onclick="adjustPtIncrement('db',0.5)" aria-label="Increase">+</button>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-size:12px;color:var(--muted);font-weight:700;">Barbell increment</span>
+          <div class="set-count-row" style="margin-top:0;">
+            <button type="button" class="set-count-btn" onclick="adjustPtIncrement('barbell',-0.5)" aria-label="Decrease">−</button>
+            <span class="set-count-label" id="ptIncrementBarbellLabel"></span>
+            <button type="button" class="set-count-btn" onclick="adjustPtIncrement('barbell',0.5)" aria-label="Increase">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <div class="section-label collapsible" id="settingsThemeLabel" onclick="toggleThemeCollapsed()">
       <span id="themeToggleIcon">▾</span> Theme
@@ -1898,6 +1979,68 @@ function savePtExerciseChoice(dayIndex, blockIndex, exerciseName){
   try{ localStorage.setItem(ptExerciseChoiceKey(dayIndex, blockIndex), exerciseName); }catch(e){}
 }
 
+// In-progress PT day inputs, mirroring formDrafts' role for Classic mode —
+// pure UI-state resilience (survives a crash/close mid-day), not a parallel
+// history store. Cleared once finishPtDay() turns it into real sessions.
+const PT_FORM_DRAFTS_KEY = "gymtracker:ptFormDrafts";
+let ptFormDrafts = {};
+function loadPtFormDrafts(){ try{ return JSON.parse(localStorage.getItem(PT_FORM_DRAFTS_KEY)) || {}; }catch(e){ return {}; } }
+function savePtFormDrafts(){ try{ localStorage.setItem(PT_FORM_DRAFTS_KEY, JSON.stringify(ptFormDrafts)); }catch(e){} }
+
+function ptDraftValueKey(tabKey, exName, setIndex, field){
+  return tabKey + "|" + exName + "|" + setIndex + "|" + field;
+}
+function recordPtDraftValue(dayIndex, tabKey, exName, setIndex, field, value){
+  if(!ptFormDrafts[dayIndex]) ptFormDrafts[dayIndex] = { values: {} };
+  ptFormDrafts[dayIndex].values[ptDraftValueKey(tabKey, exName, setIndex, field)] = value;
+  savePtFormDrafts();
+}
+
+const PT_INCREMENTS_KEY = "gymtracker:ptIncrements";
+let ptIncrements = { db: 2, barbell: 2.5 };
+function loadPtIncrements(){
+  try{
+    const parsed = JSON.parse(localStorage.getItem(PT_INCREMENTS_KEY));
+    return {
+      db: (parsed && typeof parsed.db === "number") ? parsed.db : 2,
+      barbell: (parsed && typeof parsed.barbell === "number") ? parsed.barbell : 2.5
+    };
+  }catch(e){ return { db: 2, barbell: 2.5 }; }
+}
+function savePtIncrements(){ try{ localStorage.setItem(PT_INCREMENTS_KEY, JSON.stringify(ptIncrements)); }catch(e){} }
+function adjustPtIncrement(kind, delta){
+  ptIncrements[kind] = Math.max(0.5, Math.round((ptIncrements[kind] + delta) * 10) / 10);
+  savePtIncrements();
+  renderPtSettings();
+}
+
+// Barbell/trap-bar movements in the programme step in bigger increments than
+// dumbbell/cable ones — everything not listed here uses the dumbbell/cable increment.
+const PT_BARBELL_EXERCISES = new Set(["Squat", "Trap-Bar Deadlift"]);
+function ptIncrementFor(exName){
+  return PT_BARBELL_EXERCISES.has(exName) ? ptIncrements.barbell : ptIncrements.db;
+}
+
+function loadPtSettingsCollapsed(){
+  try{ return localStorage.getItem("gymtracker:ptSettingsCollapsed") === "1"; }catch(e){ return false; }
+}
+function savePtSettingsCollapsed(){
+  try{ localStorage.setItem("gymtracker:ptSettingsCollapsed", ptSettingsCollapsed ? "1" : "0"); }catch(e){}
+}
+let ptSettingsCollapsed = false;
+function togglePtSettingsCollapsed(){
+  ptSettingsCollapsed = !ptSettingsCollapsed;
+  savePtSettingsCollapsed();
+  applyPtSettingsCollapsedState();
+}
+function applyPtSettingsCollapsedState(){
+  const body = document.getElementById("ptSettingsBody");
+  const icon = document.getElementById("ptSettingsToggleIcon");
+  if(!body || !icon) return;
+  body.classList.toggle("is-collapsed", ptSettingsCollapsed);
+  icon.textContent = ptSettingsCollapsed ? "▸" : "▾";
+}
+
 let pickerTabKey = null, pickerIdx = -1;
 let pickerMuscle = "All", pickerSearch = "";
 
@@ -2605,14 +2748,21 @@ function getNextSessionType(){
 function renderTabs(){
   const nav = document.getElementById("tabs");
   nav.innerHTML = "";
-  const nextKey = getNextSessionType();
-  [...activeDays, "progress", "settings"].forEach(key=>{
+  const toggleBtn = document.getElementById("ptModeToggleBtn");
+  if(toggleBtn) toggleBtn.classList.toggle("active", ptMode);
+  const keys = ptMode ? ["pt", "progress", "settings"] : [...activeDays, "progress", "settings"];
+  const nextKey = ptMode ? null : getNextSessionType();
+  keys.forEach(key=>{
     const btn = document.createElement("button");
     const isNext = key === nextKey && key !== "progress" && key !== "settings";
     if(key === "settings"){
       btn.innerHTML = ICON.gear;
       btn.setAttribute("aria-label", "Settings");
       btn.className = "settings-tab" + (key === activeTab ? " active" : "");
+    } else if(key === "pt"){
+      const day = PT_PROGRAM[ptViewDayIndex ?? ptCurrentDayIndex];
+      btn.innerHTML = day ? day.label : "PT Day";
+      btn.className = key === activeTab ? "active" : "";
     } else {
       const label = key === "progress" ? "Progress" : CONFIG[key].label;
       btn.innerHTML = label + (isNext ? ' <span class="due-dot" title="Next session due"></span>' : "");
@@ -3509,6 +3659,620 @@ function showSessionSummary(date, personSummaries, prevVolumes){
   openModal("sessionSummaryOverlay");
 }
 
+// ── PT mode ──────────────────────────────────────────────────────────────
+// A scheduling/UI layer over PT_PROGRAM — reads/writes the exact same
+// CONFIG/cache/exercisesConfig stores Classic mode does (see PT_PROGRAM's
+// own comment above). ptViewDayIndex is the day currently on screen; it can
+// briefly lag ptCurrentDayIndex (the persisted programme pointer) by design —
+// see mountPtDay().
+
+let ptViewDayIndex = null;
+let ptSummaryResult = null;
+const ptSetCountOverrides = {}; // "{dayIndex}:{blockIndex}" -> count, in-memory only (resets on reload)
+
+function togglePtMode(){
+  ptMode = !ptMode;
+  savePtMode();
+  if(ptMode){
+    mountPtDay();
+    switchTab("pt");
+  } else {
+    ptSummaryResult = null;
+    switchTab(lastActiveDayTab || activeDays[0] || "push");
+  }
+}
+
+// Snapshots the day about to be displayed, then silently advances the
+// persisted pointer past any rest/active-recovery day (they have no Finish
+// tap) — training days only advance via finishPtDay(). The snapshot means
+// the screen still shows that rest/recovery day's content for this viewing,
+// even though the pointer has already moved on to the next one.
+function mountPtDay(){
+  ptSummaryResult = null;
+  ptViewDayIndex = ptCurrentDayIndex;
+  const day = PT_PROGRAM[ptViewDayIndex];
+  if(day && (day.type === "rest" || day.type === "activeRecovery")){
+    ptCurrentDayIndex = (ptCurrentDayIndex + 1) % PT_PROGRAM.length;
+    savePtDayIndex();
+  }
+}
+
+function minutesRangeText(range){
+  return Array.isArray(range) ? `${range[0]}–${range[1]} min` : `${range} min`;
+}
+function repRangeText(range){
+  return Array.isArray(range) ? `${range[0]}–${range[1]}` : String(range);
+}
+function midOfRange(v){
+  return Array.isArray(v) ? Math.round((v[0] + v[1]) / 2) : v;
+}
+
+function renderPtView(){
+  const container = document.getElementById("ptView");
+  if(!container) return;
+  if(!primaryPersonId){
+    container.innerHTML = `<div class="pt-placeholder-card"><div class="pt-day-label">No primary person set</div><p>Pick who PT mode logs against in Settings first.</p></div>`;
+    return;
+  }
+  if(ptSummaryResult){
+    renderPtSummary(container);
+    return;
+  }
+  const day = PT_PROGRAM[ptViewDayIndex];
+  if(!day) return;
+  if(day.type === "rest") renderPtRestView(container, day);
+  else if(day.type === "activeRecovery") renderPtActiveRecoveryView(container, day);
+  else renderPtTrainingView(container, day);
+  refreshTimerFooter();
+}
+
+function renderPtRestView(container, day){
+  container.innerHTML = `
+    <div class="pt-day-header"><span class="pt-day-label">${day.label}</span><span class="pt-day-sub">${day.dayOfWeekHint}</span></div>
+    <div class="pt-placeholder-card">
+      <div class="pt-day-label">Rest day</div>
+      <p>${PT_REST_DAY_COPY}</p>
+    </div>
+  `;
+}
+
+function renderPtActiveRecoveryView(container, day){
+  const cardioOptions = getExercises("cardio").map(ex => `<option value="${ex}">${ex}</option>`).join("");
+  container.innerHTML = `
+    <div class="pt-day-header"><span class="pt-day-label">${day.label}</span><span class="pt-day-sub">${day.dayOfWeekHint}</span></div>
+    <div class="pt-placeholder-card">
+      <div class="pt-day-label">${day.activity.text}</div>
+      <p>${minutesRangeText(day.activity.minutes)}<br>${PT_REST_DAY_COPY}</p>
+      ${day.activity.loggable ? `
+        <div class="pt-log-activity-row">
+          <select id="ptActivitySelect">${cardioOptions}</select>
+        </div>
+        <div class="set-row" style="margin-top:10px;">
+          <div class="set-col"><div class="set-label">MIN</div><div class="mini-box wt-box"><input type="number" step="1" inputmode="decimal" id="ptActivityMinutes" placeholder="min"></div></div>
+          <div class="set-col"><div class="set-label">KM</div><div class="mini-box reps-box"><input type="text" inputmode="decimal" id="ptActivityKm" placeholder="km"></div></div>
+        </div>
+        <button type="button" class="pt-finish-btn" onclick="logPtActivity()">Log activity</button>
+      ` : ""}
+      <p style="margin-top:14px;">${day.finisher.text} — ${minutesRangeText(day.finisher.minutes)} (not logged)</p>
+    </div>
+  `;
+}
+
+function logPtActivity(){
+  const select = document.getElementById("ptActivitySelect");
+  const minInput = document.getElementById("ptActivityMinutes");
+  const kmInput = document.getElementById("ptActivityKm");
+  const ex = select.value;
+  const minutes = minInput.value === "" ? null : parseFloat(minInput.value);
+  const km = kmInput.value.trim();
+  if(minutes === null && !km){ showToast("Enter a duration or distance first"); return; }
+  const date = todayStr();
+  const sets = emptySets();
+  sets[0] = { wt: minutes, reps: km };
+  const entries = { [ex]: { sets: { [primaryPersonId]: sets }, assisted: false, notes: {} } };
+  cache.cardio.push({ id: nextSessionId(), date, entries });
+  cache.cardio.sort((a, b) => a.date.localeCompare(b.date) || (a.id || "").localeCompare(b.id || ""));
+  saveTab("cardio");
+  renderTabs();
+  showToast("Activity logged");
+  minInput.value = ""; kmInput.value = "";
+}
+
+function ptBlockKey(dayIndex, blockIndex){
+  return "pt" + dayIndex + "_" + blockIndex;
+}
+
+function resolvePtChoice(dayIndex, blockIndex, block){
+  if(block.exercise) return block.exercise;
+  if(!block.choice || !block.choice.length) return null;
+  const saved = loadPtExerciseChoice(dayIndex, blockIndex);
+  return (saved && block.choice.includes(saved)) ? saved : block.choice[0];
+}
+
+function selectPtChoice(dayIndex, blockIndex, name){
+  savePtExerciseChoice(dayIndex, blockIndex, name);
+  renderPtView();
+}
+
+function ptBlockContext(dayIndex, blockIndex){
+  const block = PT_PROGRAM[dayIndex].blocks[blockIndex];
+  const exName = resolvePtChoice(dayIndex, blockIndex, block);
+  return { block, tabKey: block.tab, exName, blockKey: ptBlockKey(dayIndex, blockIndex) };
+}
+
+function ptBlockSetCount(dayIndex, blockIndex){
+  const key = dayIndex + ":" + blockIndex;
+  if(key in ptSetCountOverrides) return ptSetCountOverrides[key];
+  const block = PT_PROGRAM[dayIndex].blocks[blockIndex];
+  return Array.isArray(block.sets) ? block.sets[0] : block.sets;
+}
+
+function adjustPtSetCount(dayIndex, blockIndex, delta){
+  const key = dayIndex + ":" + blockIndex;
+  const current = ptBlockSetCount(dayIndex, blockIndex);
+  ptSetCountOverrides[key] = Math.max(1, Math.min(6, current + delta));
+  renderPtView();
+}
+
+function ptDraftValueKey(tabKey, exName, setIndex, field){
+  return tabKey + "|" + exName + "|" + setIndex + "|" + field;
+}
+
+function recordPtDraftValue(dayIndex, blockIndex, setIndex, field, value){
+  const { tabKey, exName } = ptBlockContext(dayIndex, blockIndex);
+  if(!exName) return;
+  if(!ptFormDrafts[dayIndex]) ptFormDrafts[dayIndex] = { values: {} };
+  ptFormDrafts[dayIndex].values[ptDraftValueKey(tabKey, exName, setIndex, field)] = value;
+  savePtFormDrafts();
+}
+
+function startPtRestTimerFor(seconds){
+  const prevDuration = timerSettings.duration;
+  timerSettings.duration = seconds;
+  startRestTimer();
+  timerSettings.duration = prevDuration;
+}
+
+function updatePtWeightInputColor(input, dayIndex, blockIndex){
+  input.classList.remove("pr-val", "reg-val");
+  input.style.color = ""; input.style.fontWeight = "";
+  const val = parseFloat(input.value);
+  if(isNaN(val)) return;
+  const { tabKey, exName } = ptBlockContext(dayIndex, blockIndex);
+  const stats = computeStatsFor(tabKey, exName, primaryPersonId);
+  if(stats.best === null || stats.best <= 0) return;
+  input.style.color = trackGradientColor(val, stats.best, getPersonColor(primaryPersonId));
+  if(val > stats.best) input.style.fontWeight = "800";
+}
+
+function updatePtRepsInputColor(input, dayIndex, blockIndex){
+  input.classList.remove("pr-val", "reg-val");
+  input.style.color = ""; input.style.fontWeight = "";
+  const val = parseInt(input.value, 10);
+  if(isNaN(val)) return;
+  const block = PT_PROGRAM[dayIndex].blocks[blockIndex];
+  const target = Array.isArray(block.repRange) ? block.repRange[1] : block.repRange;
+  if(!target) return;
+  input.style.color = trackGradientColor(val, target, getPersonColor(primaryPersonId));
+  if(val > target) input.style.fontWeight = "800";
+}
+
+function checkPtOverloadHint(dayIndex, blockIndex){
+  const block = PT_PROGRAM[dayIndex].blocks[blockIndex];
+  const blockKey = ptBlockKey(dayIndex, blockIndex);
+  const hint = document.getElementById(`overloadHint-${blockKey}-${primaryPersonId}`);
+  if(!hint) return;
+  const bottom = Array.isArray(block.repRange) ? block.repRange[0] : (block.repRange || 0);
+  let maxReps = 0, minReps = null;
+  document.querySelectorAll(`[data-ex="${blockKey}"][data-field="reps"]`).forEach(inp=>{
+    const n = parseInt(inp.value, 10);
+    if(isNaN(n) || n <= 0) return;
+    if(n > maxReps) maxReps = n;
+    if(minReps === null || n < minReps) minReps = n;
+  });
+  hint.classList.remove("overload-hint-warn");
+  if(maxReps >= 15){
+    hint.style.display = "block";
+    hint.textContent = `${maxReps} reps is high — try adding weight next time.`;
+  } else if(bottom > 0 && minReps !== null && minReps <= Math.max(2, Math.floor(bottom / 2))){
+    hint.style.display = "block";
+    hint.classList.add("overload-hint-warn");
+    hint.textContent = `Only ${minReps} rep${minReps === 1 ? "" : "s"} on a set — that weight may be too heavy.`;
+  } else {
+    hint.style.display = "none";
+  }
+}
+
+function ptCopySetOneToAll(dayIndex, blockIndex){
+  const { blockKey } = ptBlockContext(dayIndex, blockIndex);
+  const wt0 = document.querySelector(`[data-ex="${blockKey}"][data-set="0"][data-field="wt"]`);
+  const reps0 = document.querySelector(`[data-ex="${blockKey}"][data-set="0"][data-field="reps"]`);
+  if(!reps0) return;
+  const wtVal = wt0 ? wt0.value : "", repsVal = reps0.value;
+  document.querySelectorAll(`[data-ex="${blockKey}"][data-field="wt"]`).forEach(inp=>{
+    inp.value = wtVal;
+    inp.classList.remove("prefilled");
+    updatePtWeightInputColor(inp, dayIndex, blockIndex);
+    recordPtDraftValue(dayIndex, blockIndex, inp.dataset.set, "wt", wtVal);
+  });
+  document.querySelectorAll(`[data-ex="${blockKey}"][data-field="reps"]`).forEach(inp=>{
+    inp.value = repsVal;
+    inp.classList.remove("prefilled");
+    updatePtRepsInputColor(inp, dayIndex, blockIndex);
+    recordPtDraftValue(dayIndex, blockIndex, inp.dataset.set, "reps", repsVal);
+  });
+  checkPtOverloadHint(dayIndex, blockIndex);
+}
+
+function ptSetBoxHtml(dayIndex, blockIndex, setIndex, set, restSeconds){
+  const { blockKey } = ptBlockContext(dayIndex, blockIndex);
+  const wtVal = set.wt !== null && set.wt !== undefined ? set.wt : "";
+  const repsVal = set.reps || "";
+  const wtClass = (set.wt !== null && set.wt !== undefined && !set.wtIsDraft) ? "prefilled" : "";
+  const repsClass = (set.reps && !set.repsIsDraft) ? "prefilled" : "";
+  const restCall = restSeconds ? `startPtRestTimerFor(${restSeconds});` : "";
+  return `
+    <div class="set-col">
+      <div class="set-label">SET ${setIndex + 1}</div>
+      <div class="mini-box wt-box">
+        <input type="number" step="0.1" inputmode="decimal" placeholder="kg"
+          class="${wtClass}" value="${wtVal}"
+          data-ex="${blockKey}" data-person="${primaryPersonId}" data-set="${setIndex}" data-field="wt"
+          oninput="this.classList.remove('prefilled'); updatePtWeightInputColor(this,${dayIndex},${blockIndex}); recordPtDraftValue(${dayIndex},${blockIndex},${setIndex},'wt',this.value);"
+          onfocus="this.select()">
+      </div>
+      <div class="mini-box reps-box">
+        <input type="text" inputmode="numeric" placeholder="reps"
+          class="${repsClass}" value="${repsVal}"
+          data-ex="${blockKey}" data-person="${primaryPersonId}" data-set="${setIndex}" data-field="reps"
+          oninput="this.classList.remove('prefilled'); updatePtRepsInputColor(this,${dayIndex},${blockIndex}); checkPtOverloadHint(${dayIndex},${blockIndex}); recordPtDraftValue(${dayIndex},${blockIndex},${setIndex},'reps',this.value);"
+          onchange="${restCall}"
+          onfocus="this.select()">
+      </div>
+    </div>
+  `;
+}
+
+function ptRepsOnlyBoxHtml(dayIndex, blockIndex, setIndex, set, restSeconds){
+  const { blockKey } = ptBlockContext(dayIndex, blockIndex);
+  const repsVal = set.reps || "";
+  const repsClass = (set.reps && !set.repsIsDraft) ? "prefilled" : "";
+  const restCall = restSeconds ? `startPtRestTimerFor(${restSeconds});` : "";
+  return `
+    <div class="set-col">
+      <div class="set-label">SET ${setIndex + 1}</div>
+      <div class="mini-box reps-box">
+        <input type="text" inputmode="numeric" placeholder="reps"
+          class="${repsClass}" value="${repsVal}"
+          data-ex="${blockKey}" data-person="${primaryPersonId}" data-set="${setIndex}" data-field="reps"
+          oninput="this.classList.remove('prefilled'); updatePtRepsInputColor(this,${dayIndex},${blockIndex}); checkPtOverloadHint(${dayIndex},${blockIndex}); recordPtDraftValue(${dayIndex},${blockIndex},${setIndex},'reps',this.value);"
+          onchange="${restCall}"
+          onfocus="this.select()">
+      </div>
+    </div>
+  `;
+}
+
+function ptBlockHtml(dayIndex, blockIndex){
+  const { block, tabKey, exName, blockKey } = ptBlockContext(dayIndex, blockIndex);
+  const choiceHtml = block.choice ? `
+    <div class="pt-choice-chips">
+      ${block.choice.map(name => `<button type="button" class="muscle-chip${name===exName?" active":""}" onclick="selectPtChoice(${dayIndex},${blockIndex},'${name.replace(/'/g,"\\'")}')">${name}</button>`).join("")}
+    </div>` : "";
+
+  if(!exName){
+    return `<div class="exercise-block">${choiceHtml}<div class="pt-suggested">Pick an exercise to continue.</div></div>`;
+  }
+
+  const count = ptBlockSetCount(dayIndex, blockIndex);
+  const stats = computeStatsFor(tabKey, exName, primaryPersonId);
+  const isBodyweightPhase = !!block.bodyweightStart && stats.best === null;
+  const repTarget = Array.isArray(block.repRange) ? block.repRange[1] : (block.repRange || null);
+  const restSeconds = block.restSeconds ? midOfRange(block.restSeconds) : null;
+
+  const suggestedHtml = (stats.best === null && block.startWeight)
+    ? `<p class="pt-suggested">Suggested starting point: ${block.startWeight}</p>` : "";
+  const perSideNote = block.repsPerSide
+    ? `<p class="pt-suggested">${repRangeText(block.repsPerSide)} reps per side</p>` : "";
+
+  const draft = ptFormDrafts[dayIndex];
+  const draftValues = (draft && draft.values) || {};
+  const sets = Array.from({length: count}, (_, si) => {
+    const wtDK = ptDraftValueKey(tabKey, exName, si, "wt");
+    const repsDK = ptDraftValueKey(tabKey, exName, si, "reps");
+    const wtIsDraft = wtDK in draftValues;
+    const repsIsDraft = repsDK in draftValues;
+    const wt = wtIsDraft ? (draftValues[wtDK] === "" ? null : parseFloat(draftValues[wtDK])) : stats.best;
+    const reps = repsIsDraft ? draftValues[repsDK] : (repTarget !== null ? String(repTarget) : "");
+    return { wt, reps, wtIsDraft, repsIsDraft };
+  });
+
+  const setRowHtml = isBodyweightPhase
+    ? `<div class="set-row">${sets.map((set, si) => ptRepsOnlyBoxHtml(dayIndex, blockIndex, si, set, restSeconds)).join("")}</div>`
+    : `<div class="set-row">
+        ${sets.map((set, si) => ptSetBoxHtml(dayIndex, blockIndex, si, set, restSeconds)).join("")}
+        ${count > 1 ? `<div class="set-col copy-set-col"><div class="set-label">&nbsp;</div><button type="button" class="copy-set-btn" onclick="ptCopySetOneToAll(${dayIndex},${blockIndex})" aria-label="Copy set 1 into all sets">⧉</button></div>` : ""}
+      </div>`;
+
+  const personName = (people.find(p=>p.id===primaryPersonId)||{}).name || "";
+  const infoBtn = EXERCISE_INFO[exName]
+    ? `<button type="button" class="ex-info-btn" onclick="showExerciseInfo('${exName.replace(/'/g,"\\'")}')" aria-label="Exercise info">i</button>` : "";
+
+  return `
+    <div class="exercise-block" data-ex-name="${exName.replace(/"/g,"&quot;")}">
+      <div class="exercise-title-row">
+        <div class="exercise-title">${exName}</div>
+        ${infoBtn}
+      </div>
+      ${choiceHtml}
+      <div class="p-label" style="color:${getPersonColor(primaryPersonId)};">${personName.toUpperCase()}${block.repRange ? ` · target ${repRangeText(block.repRange)} reps` : ""}</div>
+      ${setRowHtml}
+      ${suggestedHtml}
+      ${perSideNote}
+      <div class="overload-hint" id="overloadHint-${blockKey}-${primaryPersonId}" style="display:none;"></div>
+      <div class="set-count-row">
+        ${count > 1 ? `<button type="button" class="set-count-btn" onclick="adjustPtSetCount(${dayIndex},${blockIndex},-1)" aria-label="Remove set">−</button>` : ""}
+        <span class="set-count-label">${count} set${count!==1?"s":""}</span>
+        ${count < 6 ? `<button type="button" class="set-count-btn" onclick="adjustPtSetCount(${dayIndex},${blockIndex},1)" aria-label="Add set">+</button>` : ""}
+      </div>
+    </div>
+  `;
+}
+
+function renderPtTrainingView(container, day){
+  const dayIndex = ptViewDayIndex;
+  const warmupHtml = day.warmup ? `<div class="pt-warmup"><strong>Warm-up:</strong> ${day.warmup.text} — ${minutesRangeText(day.warmup.minutes)}</div>` : "";
+  const blocksHtml = day.blocks.map((b, bi) => ptBlockHtml(dayIndex, bi)).join("");
+  const finisherHtml = day.finisher ? `<p class="pt-suggested">${day.finisher.text} — ${minutesRangeText(day.finisher.minutes)} (not logged)</p>` : "";
+  container.innerHTML = `
+    <div class="pt-day-header"><span class="pt-day-label">${day.label}</span><span class="pt-day-sub">${day.dayOfWeekHint}</span></div>
+    ${warmupHtml}
+    <div class="log-form-card">${blocksHtml}</div>
+    ${finisherHtml}
+    <button type="button" class="pt-finish-btn" id="ptFinishBtn" onclick="finishPtDay()">Finish day</button>
+  `;
+  day.blocks.forEach((block, bi) => {
+    const { exName } = ptBlockContext(dayIndex, bi);
+    if(!exName || DURATION_EXERCISES.has(exName) || CARDIO_EXERCISES.has(exName)) return;
+    checkPtOverloadHint(dayIndex, bi);
+    const blockKey = ptBlockKey(dayIndex, bi);
+    document.querySelectorAll(`[data-ex="${blockKey}"][data-field="wt"]`).forEach(inp => updatePtWeightInputColor(inp, dayIndex, bi));
+    document.querySelectorAll(`[data-ex="${blockKey}"][data-field="reps"]`).forEach(inp => updatePtRepsInputColor(inp, dayIndex, bi));
+  });
+}
+
+// Same thresholds/spirit as exerciseTip, but PT-specific: evaluated against
+// the *prior* logged session (cache state before today's is pushed) so it
+// can recommend a concrete next weight, and requires 2 consecutive sessions
+// below range (not 1) before suggesting a deload.
+function checkGoldenRuleHint(tabKey, exercise, personId, block){
+  const sessions = (cache[tabKey] || [])
+    .filter(s => s.entries[exercise])
+    .slice()
+    .sort((a, b) => a.date.localeCompare(b.date) || (a.id || "").localeCompare(b.id || ""));
+  if(!sessions.length) return null;
+  const last = sessions[sessions.length - 1];
+  const lastSets = getPersonSets(last.entries[exercise], personId).filter(s => s.reps !== "" && s.reps !== undefined && s.reps !== null);
+  const lastRepVals = lastSets.map(s => parseInt(s.reps, 10)).filter(n => !isNaN(n));
+  if(!lastRepVals.length) return null;
+  const lastWeight = topSetWeight(lastSets);
+  const isBodyweightPhase = !!block.bodyweightStart && lastWeight === null;
+  const top = Array.isArray(block.repRange) ? block.repRange[1] : block.repRange;
+  const bottom = Array.isArray(block.repRange) ? block.repRange[0] : block.repRange;
+  if(!top) return null;
+  const increment = ptIncrementFor(exercise);
+
+  const allAtTop = lastRepVals.every(n => n >= top);
+  if(allAtTop){
+    if(isBodyweightPhase) return "You hit the top of range last time bodyweight-only — try holding light dumbbells next time.";
+    if(lastWeight === null) return null;
+    return `You hit the top of range last time at ${lastWeight}kg — try ${Math.round((lastWeight + increment) * 10) / 10}kg next time.`;
+  }
+
+  if(!isBodyweightPhase && sessions.length >= 2 && bottom){
+    const prev = sessions[sessions.length - 2];
+    const prevSets = getPersonSets(prev.entries[exercise], personId).filter(s => s.reps !== "" && s.reps !== undefined && s.reps !== null);
+    const prevRepVals = prevSets.map(s => parseInt(s.reps, 10)).filter(n => !isNaN(n));
+    const prevWeight = topSetWeight(prevSets);
+    const lastMin = Math.min(...lastRepVals);
+    const prevMin = prevRepVals.length ? Math.min(...prevRepVals) : null;
+    if(lastWeight !== null && prevWeight !== null && lastWeight === prevWeight &&
+       lastMin < bottom && prevMin !== null && prevMin < bottom){
+      return `Struggling at this weight — try dropping to ${Math.round((lastWeight - increment) * 10) / 10}kg next time.`;
+    }
+  }
+  return null;
+}
+
+function finishPtDay(){
+  const dayIndex = ptViewDayIndex;
+  const day = PT_PROGRAM[dayIndex];
+  const date = todayStr();
+  if(!people.some(p => p.id === primaryPersonId)) return;
+
+  const byTab = {};
+  const skipped = [];
+
+  day.blocks.forEach((block, bi) => {
+    const { tabKey, exName, blockKey } = ptBlockContext(dayIndex, bi);
+    if(!exName) return;
+    if(!byTab[tabKey]) byTab[tabKey] = { entries: {}, results: [] };
+
+    const count = ptBlockSetCount(dayIndex, bi);
+    const isBodyweightPhase = !!block.bodyweightStart && computeStatsFor(tabKey, exName, primaryPersonId).best === null;
+    const sets = Array.from({length: count}, (_, si) => {
+      const wtInput = isBodyweightPhase ? null : document.querySelector(`[data-ex="${blockKey}"][data-set="${si}"][data-field="wt"]`);
+      const repsInput = document.querySelector(`[data-ex="${blockKey}"][data-set="${si}"][data-field="reps"]`);
+      return {
+        wt: (wtInput && wtInput.value !== "") ? parseFloat(wtInput.value) : null,
+        reps: repsInput ? repsInput.value : "",
+        wtReal: !!(wtInput && wtInput.value !== "" && !wtInput.classList.contains("prefilled")),
+        repsReal: !!(repsInput && repsInput.value !== "" && !repsInput.classList.contains("prefilled"))
+      };
+    });
+
+    const hasAnyData = sets.some(s => s.wt !== null || s.reps.trim() !== "");
+    if(!hasAnyData){ skipped.push(exName); return; }
+    const hasRealData = sets.some(s => s.wtReal || s.repsReal);
+    if(hasRealData){
+      sets.forEach(s => {
+        if(s.wt === null && !isBodyweightPhase) s.wt = 0;
+        if(s.reps.trim() === "") s.reps = "0";
+      });
+    }
+    const finalSets = sets.map(({wt, reps}) => ({wt, reps}));
+
+    // Golden Rule must see the prior logged session, so it's evaluated here —
+    // before this exercise's new session data gets pushed into cache below.
+    const goldenTip = checkGoldenRuleHint(tabKey, exName, primaryPersonId, block);
+    const repFallbackTarget = (Array.isArray(block.repRange) ? block.repRange[1] : block.repRange) || getPersonRepsTarget(primaryPersonId);
+
+    const stats = computeStatsFor(tabKey, exName, primaryPersonId);
+    const top = topSetWeight(finalSets);
+    let isPR = false, isReg = false;
+    if(top !== null){
+      if(stats.best !== null && top > stats.best) isPR = true;
+      if(stats.last !== null && top < stats.last) isReg = true;
+    }
+
+    byTab[tabKey].entries[exName] = { sets: { [primaryPersonId]: finalSets }, assisted: false, notes: {} };
+    byTab[tabKey].results.push({
+      ex: exName, sets: finalSets, isPR, isReg,
+      tip: goldenTip || exerciseTip(exName, finalSets, repFallbackTarget)
+    });
+  });
+
+  if(Object.keys(byTab).length === 0){
+    showToast("Nothing logged this session");
+    return;
+  }
+
+  const tabSummaries = {};
+  Object.keys(byTab).forEach(tabKey => {
+    const priorSessions = cache[tabKey].filter(s => s.date < date);
+    const prevSession = priorSessions.length ? priorSessions.reduce((a, b) => (a.date > b.date ? a : b)) : null;
+    const prevVolume = prevSession ? computePersonVolume(prevSession, tabKey, primaryPersonId) : null;
+
+    cache[tabKey].push({ id: nextSessionId(), date, entries: byTab[tabKey].entries });
+    cache[tabKey].sort((a, b) => a.date.localeCompare(b.date) || (a.id || "").localeCompare(b.id || ""));
+    saveTab(tabKey);
+
+    const volume = computePersonVolume({ date, entries: byTab[tabKey].entries }, tabKey, primaryPersonId);
+    tabSummaries[tabKey] = { exercises: byTab[tabKey].results, volume, prevVolume };
+  });
+
+  delete ptFormDrafts[dayIndex];
+  savePtFormDrafts();
+
+  ptCurrentDayIndex = (dayIndex + 1) % PT_PROGRAM.length;
+  savePtDayIndex();
+
+  timerStop();
+  renderTabs();
+
+  const ghCfg = getGithubConfig();
+  const hasGithub = !!(ghCfg && ghCfg.token && ghCfg.repo);
+  const prCount = Object.values(tabSummaries).reduce((n, s) => n + s.exercises.filter(e => e.isPR).length, 0);
+  const regCount = Object.values(tabSummaries).reduce((n, s) => n + s.exercises.filter(e => e.isReg).length, 0);
+  showToast(hasGithub ? "Saved" : "Saved locally", prCount > 0 ? "pr" : (regCount > 0 ? "reg" : undefined));
+  if(hasGithub) autoPushToGithub();
+
+  ptSummaryResult = { dayLabel: day.label, date, tabSummaries, skipped, nextDayIndex: ptCurrentDayIndex };
+  renderPtView();
+}
+
+function renderPtSummary(container){
+  const r = ptSummaryResult;
+  const nextDay = PT_PROGRAM[r.nextDayIndex];
+  const sectionsHtml = Object.keys(r.tabSummaries).map(tabKey => {
+    const s = r.tabSummaries[tabKey];
+    const exHtml = s.exercises.map(e => `
+      <div class="session-summary-ex">
+        <span class="name">${e.ex}${e.isPR ? ' <span class="pr-badge">PR</span>' : (e.isReg ? ' <span class="reg-badge">↓</span>' : "")}</span>
+        <span class="vals">${setsSummary(e.sets, e.ex)}</span>
+      </div>`).join("");
+    const roundedVol = Math.round(s.volume);
+    let volHtml = `Total volume: <strong>${roundedVol}kg</strong>`;
+    if(s.prevVolume !== null && s.prevVolume !== undefined && s.prevVolume > 0){
+      const delta = s.volume - s.prevVolume;
+      const pct = Math.round((delta / s.prevVolume) * 100);
+      const cls = delta > 0 ? "vol-up" : (delta < 0 ? "vol-down" : "");
+      volHtml += ` <span class="${cls}">(${delta >= 0 ? "+" : ""}${pct}% vs last time)</span>`;
+    }
+    const tipped = s.exercises.filter(e => e.tip);
+    const tipsHtml = tipped.length ? `
+      <div class="session-summary-tips">
+        <div class="session-summary-tips-title">Next session</div>
+        ${tipped.map(e => `<div class="session-summary-tip"><strong>${e.ex}:</strong> ${e.tip}</div>`).join("")}
+      </div>` : "";
+    return `
+      <div class="pt-summary-section">
+        <div class="pt-summary-tab-label">${CONFIG[tabKey].label}</div>
+        ${exHtml}
+        <div class="session-summary-volume">${volHtml}</div>
+        ${tipsHtml}
+      </div>`;
+  }).join("");
+  const skippedHtml = r.skipped.length ? `<div class="pt-skipped">Skipped (no sets logged): ${r.skipped.join(", ")}</div>` : "";
+  const nextDayBody = !nextDay ? "" : (nextDay.type === "training"
+    ? ptDayExerciseListText(nextDay)
+    : (nextDay.type === "rest" ? "Rest day" : "Active recovery day"));
+  const nextDayHtml = nextDay ? `
+    <div class="pt-next-day-card">
+      <div class="pt-day-label">Next: ${nextDay.label}</div>
+      <p style="font-size:12px;color:var(--muted);margin-top:6px;">${nextDayBody}</p>
+    </div>` : "";
+  container.innerHTML = `
+    <div class="pt-day-header"><span class="pt-day-label">${r.dayLabel} — done</span></div>
+    ${sectionsHtml || '<p class="confirm-message">Nothing logged this session.</p>'}
+    ${skippedHtml}
+    ${nextDayHtml}
+    <button type="button" class="pt-continue-btn" onclick="continuePtAfterSummary()">Continue</button>
+  `;
+}
+
+function ptDayExerciseListText(day){
+  return day.blocks.map(b => b.exercise || (b.choice || []).join(" / ")).join(", ");
+}
+
+function continuePtAfterSummary(){
+  mountPtDay();
+  renderPtView();
+  renderTabs();
+}
+
+function renderPtSettings(){
+  const toggle = document.getElementById("ptModeSettingsToggle");
+  if(toggle) toggle.checked = ptMode;
+  renderPtPrimaryPersonChips();
+  const dbLabel = document.getElementById("ptIncrementDbLabel");
+  const barbellLabel = document.getElementById("ptIncrementBarbellLabel");
+  if(dbLabel) dbLabel.textContent = ptIncrements.db + " kg";
+  if(barbellLabel) barbellLabel.textContent = ptIncrements.barbell + " kg";
+}
+
+function renderPtPrimaryPersonChips(){
+  const nav = document.getElementById("ptPrimaryPersonChips");
+  if(!nav) return;
+  nav.innerHTML = people.map(p => {
+    const sel = p.id === primaryPersonId;
+    const style = sel ? `background:${p.color}22;color:${p.color};border-color:${p.color};` : "";
+    return `<button type="button" style="${style}" onclick="selectPrimaryPerson('${p.id}')">${p.name}</button>`;
+  }).join("");
+}
+
+function selectPrimaryPerson(id){
+  primaryPersonId = id;
+  savePrimaryPersonId();
+  renderPtPrimaryPersonChips();
+  if(activeTab === "pt") renderPtView();
+}
+
+function handlePtModeSettingsToggle(checked){
+  if(checked === ptMode) return;
+  togglePtMode();
+}
+
 async function ensureAllLoaded(){
   for(const k of Object.keys(CONFIG)){
     if(!cache[k]) await loadTab(k);
@@ -3532,6 +4296,14 @@ async function switchTab(tabKey){
   document.getElementById("dayView").style.display = "none";
   document.getElementById("progressView").style.display = "none";
   document.getElementById("settingsView").style.display = "none";
+  document.getElementById("ptView").style.display = "none";
+
+  if(tabKey === "pt"){
+    document.getElementById("ptView").style.display = "block";
+    await ensureAllLoaded();
+    renderPtView();
+    return;
+  }
 
   if(tabKey === "progress"){
     document.getElementById("progressView").style.display = "block";
@@ -3547,8 +4319,10 @@ async function switchTab(tabKey){
     renderPeopleSettings();
     renderExerciseSettings();
     renderThemeSettings();
+    renderPtSettings();
     applyBackupSettingsCollapsedState();
     applyCreditsCollapsedState();
+    applyPtSettingsCollapsedState();
     return;
   }
 
@@ -3620,6 +4394,7 @@ function addPerson(){
   people.push({ id: nextPersonId(), name: "New person", color: nextColor() });
   savePeople();
   renderPeopleSettings();
+  renderPtSettings();
   renderTabs();
 }
 
@@ -3634,7 +4409,12 @@ async function removePerson(idx){
   }
   people.splice(idx, 1);
   savePeople();
+  if(!people.some(pp => pp.id === primaryPersonId)){
+    primaryPersonId = people[0] ? people[0].id : null;
+    savePrimaryPersonId();
+  }
   renderPeopleSettings();
+  renderPtSettings();
   renderTabs();
 }
 
@@ -5001,7 +5781,8 @@ function refreshTimerFooter(){
   const w = document.getElementById("timerWidget");
   const bubble = document.getElementById("timerBubble");
   const main = document.querySelector("main");
-  const shouldShow = !!CONFIG[activeTab];
+  const ptDay = activeTab === "pt" ? PT_PROGRAM[ptViewDayIndex] : null;
+  const shouldShow = !!CONFIG[activeTab] || (!!ptDay && ptDay.type === "training");
   const showFull = shouldShow && !timerMinimized;
   const showBubble = shouldShow && timerMinimized;
   if(w) w.classList.toggle("visible", showFull);
@@ -5241,7 +6022,7 @@ function exInfoSwipe(dir){
 }
 
 function mainTabSwipe(dir){
-  const tabs = [...activeDays, "progress", "settings"];
+  const tabs = ptMode ? ["pt", "progress", "settings"] : [...activeDays, "progress", "settings"];
   const idx = tabs.indexOf(activeTab);
   const next = idx + dir;
   if(next >= 0 && next < tabs.length){
@@ -5269,7 +6050,14 @@ async function init(){
   timerSettings = loadTimerSettings();
   ptMode = loadPtMode();
   primaryPersonId = loadPrimaryPersonId();
+  if(!primaryPersonId || !people.some(p => p.id === primaryPersonId)){
+    primaryPersonId = people[0] ? people[0].id : null;
+    savePrimaryPersonId();
+  }
   ptCurrentDayIndex = loadPtDayIndex();
+  ptFormDrafts = loadPtFormDrafts();
+  ptIncrements = loadPtIncrements();
+  ptSettingsCollapsed = loadPtSettingsCollapsed();
   exSetCounts = loadSetCounts();
   defaultSetCount = loadDefaultSetCount();
   defaultRepsTargets = loadDefaultRepsTargets();
@@ -5282,10 +6070,19 @@ async function init(){
   currentThemeState = loadTheme();
   applyTheme(currentThemeState.key, currentThemeState.custom);
   await ensureAllLoaded();
-  renderTabs();
-  renderStatStrip();
-  renderForm();
-  renderHistory();
+  if(ptMode){
+    activeTab = "pt";
+    mountPtDay();
+    document.getElementById("dayView").style.display = "none";
+    document.getElementById("ptView").style.display = "block";
+    renderTabs();
+    renderPtView();
+  } else {
+    renderTabs();
+    renderStatStrip();
+    renderForm();
+    renderHistory();
+  }
   refreshTimerFooter();
   if(isNewUser) showWelcome();
   else {

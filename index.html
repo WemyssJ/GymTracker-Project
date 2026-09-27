@@ -83,13 +83,20 @@
   nav.tabs button.settings-tab{flex:0 0 auto;font-size:17px;padding:10px 10px;}
   nav.tabs.pt-tabs{align-items:stretch;}
   nav.tabs.pt-tabs > button{flex:0 0 auto;}
+  .pt-day-tabs-wrap{position:relative;flex:1;min-width:0;display:flex;}
+  .pt-day-tabs-wrap::after{
+    content:"";position:absolute;top:0;right:0;bottom:0;width:20px;
+    background:linear-gradient(to right, transparent, var(--bg));
+    pointer-events:none;opacity:0;transition:opacity 0.15s ease;
+  }
+  .pt-day-tabs-wrap.has-more::after{opacity:1;}
   .pt-day-tabs-scroll{
-    display:flex;gap:2px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none;
+    display:flex;gap:1px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none;
   }
   .pt-day-tabs-scroll::-webkit-scrollbar{display:none;}
   .pt-day-tabs-scroll button{
-    flex:0 0 auto;white-space:nowrap;padding:10px 10px;background:none;border:none;
-    color:var(--muted);font-size:13px;font-weight:700;letter-spacing:0.02em;cursor:pointer;
+    flex:0 0 auto;white-space:nowrap;padding:10px 7px;background:none;border:none;
+    color:var(--muted);font-size:12.5px;font-weight:700;letter-spacing:0.01em;cursor:pointer;
     border-bottom:3px solid transparent;
   }
   .pt-day-tabs-scroll button.active{color:var(--text);border-bottom-color:var(--amber);}
@@ -664,7 +671,7 @@
 
 <header class="top">
   <div class="top-title-row">
-    <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.12</span></h1>
+    <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.13</span></h1>
     <button type="button" id="ptModeToggleBtn" class="pt-mode-toggle" onclick="togglePtMode()">PT</button>
   </div>
   <nav class="tabs" id="tabs"></nav>
@@ -1878,6 +1885,7 @@ const PT_PROGRAM = [
   { // index 0
     label: "Upper Body (Back, Chest & Shoulders)",
     shortLabel: "Upper",
+    titleLabel: "Upper Body",
     dayOfWeekHint: "Sunday",
     type: "training",
     warmup: { text: "Rowing Machine, moderate pace", minutes: [5, 7] },
@@ -1894,6 +1902,7 @@ const PT_PROGRAM = [
   { // index 1
     label: "Lower Body & Abs",
     shortLabel: "Lower",
+    titleLabel: "Lower Body & Abs",
     dayOfWeekHint: "Monday",
     type: "training",
     warmup: { text: "Treadmill Incline Walk", minutes: [5, 8] },
@@ -1910,6 +1919,7 @@ const PT_PROGRAM = [
   { // index 2
     label: "Active Recovery",
     shortLabel: "Recovery",
+    titleLabel: "Active Recovery",
     dayOfWeekHint: "Tuesday",
     type: "activeRecovery", // auto-advances on view, no Finish tap
     activity: { text: "Brisk walking or light cycling", minutes: [30, 45], tab: "cardio", loggable: true },
@@ -1918,6 +1928,7 @@ const PT_PROGRAM = [
   { // index 3
     label: "Full Body / Athletic",
     shortLabel: "Full Body",
+    titleLabel: "Full Body",
     dayOfWeekHint: "Wednesday",
     type: "training",
     warmup: { text: "Dynamic movements (arm circles, leg swings, bodyweight squats)", minutes: [5, 5] },
@@ -1935,6 +1946,7 @@ const PT_PROGRAM = [
   { // index 4
     label: "Upper Body + Arms & Abs",
     shortLabel: "Arms & Abs",
+    titleLabel: "Arms & Abs",
     dayOfWeekHint: "Thursday",
     type: "training",
     warmup: { text: "Treadmill brisk walk", minutes: [5, 5] },
@@ -1952,12 +1964,14 @@ const PT_PROGRAM = [
   { // index 5
     label: "Rest",
     shortLabel: "Rest",
+    titleLabel: "Rest",
     dayOfWeekHint: "Friday",
     type: "rest"
   },
   { // index 6
     label: "Rest",
     shortLabel: "Rest",
+    titleLabel: "Rest",
     dayOfWeekHint: "Saturday",
     type: "rest"
   }
@@ -2858,18 +2872,33 @@ function renderTabs(){
   if(toggleBtn) toggleBtn.classList.toggle("active", ptMode);
 
   if(ptMode){
+    const wrap = document.createElement("div");
+    wrap.className = "pt-day-tabs-wrap";
     const scroll = document.createElement("div");
     scroll.className = "pt-day-tabs-scroll";
+    let activeBtn = null;
     PT_PROGRAM.forEach((day, i) => {
       const key = "pt" + i;
       const btn = document.createElement("button");
       const isDue = i === ptCurrentDayIndex;
       btn.innerHTML = day.shortLabel + (isDue ? ' <span class="due-dot" title="Programme is here"></span>' : "");
       btn.className = key === activeTab ? "active" : "";
+      if(key === activeTab) activeBtn = btn;
       btn.onclick = () => switchTab(key);
       scroll.appendChild(btn);
     });
-    nav.appendChild(scroll);
+    wrap.appendChild(scroll);
+    nav.appendChild(wrap);
+    // The row is almost always wider than the screen (7 days + Progress +
+    // Settings) — a right-edge fade hints there's more instead of the text
+    // just clipping with no explanation, and the active tab scrolls into
+    // view so finishing a day never leaves the "current" tab off-screen.
+    const updateFade = () => wrap.classList.toggle("has-more", scroll.scrollWidth - scroll.clientWidth - scroll.scrollLeft > 2);
+    scroll.addEventListener("scroll", updateFade, { passive: true });
+    requestAnimationFrame(() => {
+      updateFade();
+      if(activeBtn) activeBtn.scrollIntoView({ block: "nearest", inline: "nearest" });
+    });
     ["progress", "settings"].forEach(key => {
       const btn = document.createElement("button");
       if(key === "settings"){
@@ -3866,7 +3895,7 @@ function renderPtView(){
 
 function renderPtRestView(container, day){
   container.innerHTML = `
-    <div class="pt-day-header"><span class="pt-day-label">${day.label}</span><span class="pt-day-sub">${day.dayOfWeekHint}</span></div>
+    <div class="pt-day-header"><span class="pt-day-label">${day.titleLabel}</span><span class="pt-day-sub">${day.dayOfWeekHint}</span></div>
     <div class="pt-placeholder-card">
       <div class="pt-day-label">Rest day</div>
       <p>${PT_REST_DAY_COPY}</p>
@@ -3877,7 +3906,7 @@ function renderPtRestView(container, day){
 function renderPtActiveRecoveryView(container, day){
   const cardioOptions = getExercises("cardio").map(ex => `<option value="${ex}">${ex}</option>`).join("");
   container.innerHTML = `
-    <div class="pt-day-header"><span class="pt-day-label">${day.label}</span><span class="pt-day-sub">${day.dayOfWeekHint}</span></div>
+    <div class="pt-day-header"><span class="pt-day-label">${day.titleLabel}</span><span class="pt-day-sub">${day.dayOfWeekHint}</span></div>
     <div class="pt-placeholder-card">
       <div class="pt-day-label">${day.activity.text}</div>
       <p>${minutesRangeText(day.activity.minutes)}<br>${PT_REST_DAY_COPY}</p>
@@ -4195,7 +4224,7 @@ function renderPtTrainingView(container, day){
   const blocksHtml = day.blocks.map((b, bi) => ptBlockHtml(dayIndex, bi)).join("");
   const finisherHtml = day.finisher ? `<p class="pt-suggested">${day.finisher.text} — ${minutesRangeText(day.finisher.minutes)} (not logged)</p>` : "";
   container.innerHTML = `
-    <div class="pt-day-header"><span class="pt-day-label">${day.label}</span><span class="pt-day-sub">${day.dayOfWeekHint}</span></div>
+    <div class="pt-day-header"><span class="pt-day-label">${day.titleLabel}</span><span class="pt-day-sub">${day.dayOfWeekHint}</span></div>
     ${warmupHtml}
     <div class="log-form-card">${blocksHtml}</div>
     ${finisherHtml}
@@ -4355,7 +4384,7 @@ function finishPtDay(){
   showToast(hasGithub ? "Saved" : "Saved locally", prCount > 0 ? "pr" : (regCount > 0 ? "reg" : undefined));
   if(hasGithub) autoPushToGithub();
 
-  ptSummaryResult = { dayLabel: day.label, date, tabSummaries, skipped, nextDayIndex: ptCurrentDayIndex };
+  ptSummaryResult = { dayLabel: day.titleLabel, date, tabSummaries, skipped, nextDayIndex: ptCurrentDayIndex };
   renderPtView();
 }
 
@@ -4397,7 +4426,7 @@ function renderPtSummary(container){
     : (nextDay.type === "rest" ? "Rest day" : "Active recovery day"));
   const nextDayHtml = nextDay ? `
     <div class="pt-next-day-card">
-      <div class="pt-day-label">Next: ${nextDay.label}</div>
+      <div class="pt-day-label">Next: ${nextDay.titleLabel}</div>
       <p style="font-size:12px;color:var(--muted);margin-top:6px;">${nextDayBody}</p>
     </div>` : "";
   container.innerHTML = `

@@ -609,7 +609,7 @@
 <body>
 
 <header class="top">
-  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.8</span></h1>
+  <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.9</span></h1>
   <nav class="tabs" id="tabs"></nav>
   <input type="file" id="importFileInput" accept=".xlsx" style="display:none">
 </header>
@@ -944,7 +944,7 @@ const CONFIG = {
       "Bench Press",
       "Incline Press",
       "Overhead Press",
-      "Dumbbell Press",
+      "Chest Fly",
       "Lateral Raise",
       "Tricep Push",
       "Face Pull"
@@ -958,7 +958,7 @@ const CONFIG = {
       "Deadlift",
       "Pull ups",
       "Weighted Row",
-      "Lat Pulldown",
+      "Rear Delt Fly",
       "Bicep Curl",
       "Hammer Curl"
     ],
@@ -970,7 +970,7 @@ const CONFIG = {
     "exercises": [
       "Squat",
       "Hip Thrust",
-      "Leg Press",
+      "Leg Extension",
       "Lunges",
       "Prone Leg Curl",
       "Calf Raises",
@@ -5669,13 +5669,13 @@ async function showExerciseInfo(exName){
   if(repdb){
     const multi = repdb.poses.length > 1;
     const imgsHtml = repdb.poses.map((pose, i) =>
-      `<div style="flex:1;min-width:0;text-align:center;">
+      `<div style="flex:${multi ? "1" : "0 0 50%"};min-width:0;text-align:center;">
         <img src="${repdb.files[i]}" style="width:100%;border-radius:10px;display:block;" alt="${exName} ${pose}" onerror="this.parentElement.style.display='none'">
         ${multi ? `<div style="font-size:10px;font-weight:800;color:var(--muted);letter-spacing:0.08em;margin-top:5px;">${pose.toUpperCase()}</div>` : ""}
       </div>`
     ).join("");
     document.getElementById("exInfoRepdbImgs").innerHTML =
-      `<div style="display:flex;gap:10px;margin-bottom:10px;">${imgsHtml}</div>` +
+      `<div style="display:flex;gap:10px;margin-bottom:10px;justify-content:center;">${imgsHtml}</div>` +
       `<p style="font-size:11px;color:var(--muted);text-align:center;margin:0 0 14px 0;">Images via <a href="https://github.com/RepDB/exercise-dataset" target="_blank" rel="noopener" style="color:var(--amber);">RepDB</a></p>`;
   } else {
     document.getElementById("exInfoRepdbImgs").innerHTML = "";

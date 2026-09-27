@@ -1390,6 +1390,30 @@ const EXERCISE_INFO = {
       "The stretched position at the bottom is particularly effective — control it"
     ]
   },
+  "Incline Dumbbell Bicep Curls": {
+    image: "images/muscles/pull/incline-dumbbell-bicep-curls.webp",
+    primary: ["Biceps Brachii (Long Head)"],
+    secondary: ["Brachialis", "Brachioradialis"],
+    tips: [
+      "Set the bench to 45–60° and let your arms hang straight down behind your torso",
+      "The incline puts the long head under a deep stretch at the bottom — don't cut that short",
+      "Curl with a supinated (palms-up) grip, keeping upper arms fixed against the pad",
+      "Squeeze hard at the top, then lower slowly back to a full stretch",
+      "Use lighter weight than a standing curl — the stretched start position is unforgiving"
+    ]
+  },
+  "Trap-Bar Deadlift": {
+    image: "images/muscles/pull/trap-bar-deadlift.webp",
+    primary: ["Gluteus Maximus", "Hamstrings", "Quadriceps"],
+    secondary: ["Erector Spinae", "Trapezius", "Forearms"],
+    tips: [
+      "Step inside the frame; the neutral grip and centered load make this more upright than a barbell pull",
+      "Push your knees out and drop your hips down to the handles — closer to a squat pattern than a hinge",
+      "Keep the bar path close to your body and drive through the whole foot",
+      "Brace your core before you break the weight off the floor",
+      "Lock out by squeezing glutes, not by leaning your torso back"
+    ]
+  },
 
   // LEG
   "Leg Extension": {
@@ -1550,6 +1574,30 @@ const EXERCISE_INFO = {
       "Add a slight posterior pelvic tilt at the top to fully engage the lower abs"
     ]
   },
+  "Ab Wheel Rollouts": {
+    image: "images/muscles/core/ab-wheel-rollouts.webp",
+    primary: ["Rectus Abdominis"],
+    secondary: ["Obliques", "Hip Flexors", "Erector Spinae"],
+    tips: [
+      "Kneel and grip the wheel with arms straight below your shoulders",
+      "Roll forward only as far as you can keep your lower back flat — no sagging or arching",
+      "Brace your abs as if bracing for a punch throughout the whole roll",
+      "Pull back in using your abs, not your hip flexors or arms",
+      "Start with a short range of motion and build it up as your core strength improves"
+    ]
+  },
+  "Hanging Knee Raises": {
+    image: "images/muscles/core/hanging-knee-raises.webp",
+    primary: ["Rectus Abdominis (Lower)", "Hip Flexors"],
+    secondary: ["Obliques", "Forearms"],
+    tips: [
+      "Hang from a pull-up bar with a full grip, shoulders active (not fully dead-hanging)",
+      "Raise your knees toward your chest using your abs, not by swinging your legs",
+      "Posteriorly tilt your pelvis at the top for a full lower-ab contraction",
+      "Lower with control back to a straight-leg hang — don't just let them drop",
+      "Keep the swing out of it; a slow, controlled rep beats a fast kipping one"
+    ]
+  },
   "Treadmill Run": {
     image: "images/muscles/cardio/treadmill-run.webp",
     primary: ["Quadriceps", "Hamstrings", "Cardiovascular System"],
@@ -1632,8 +1680,8 @@ const EXERCISES_BY_DAY = {
   ],
   pull: [
     "Bicep Curl","Cable Row","Chin Up","Deadlift","Face Pull","Hammer Curl",
-    "Lat Pulldown","Preacher Curl","Pull ups","Rear Delt Fly","Romanian Deadlift",
-    "Seated Cable Row","Weighted Row"
+    "Incline Dumbbell Bicep Curls","Lat Pulldown","Preacher Curl","Pull ups","Rear Delt Fly","Romanian Deadlift",
+    "Seated Cable Row","Trap-Bar Deadlift","Weighted Row"
   ],
   leg: [
     "Abductor Machine","Adductor Machine","Bulgarian Split Squat","Calf Raises",
@@ -1641,7 +1689,7 @@ const EXERCISES_BY_DAY = {
     "Prone Leg Curl","Squat","Sumo Squat"
   ],
   core: [
-    "Bicycle Crunch","Cable Crunch","Captain's Chair Leg Raise","Crunch","Leg Raise","Plank","Russian Twist"
+    "Ab Wheel Rollouts","Bicycle Crunch","Cable Crunch","Captain's Chair Leg Raise","Crunch","Hanging Knee Raises","Leg Raise","Plank","Russian Twist"
   ],
   cardio: [
     "Cycling","Elliptical","Jump Rope","Rowing Machine","Stair Climber","Treadmill Run"
@@ -1694,16 +1742,20 @@ const EXERCISE_REPDB = {
   "Adductor Machine":     { poses:["start","peak"], files:["images/exercises/hip-adduction-start.webp","images/exercises/hip-adduction-peak.webp"] },
   "Bicycle Crunch":            { poses:["start","peak"], files:["images/exercises/bicycle-crunch-start.webp","images/exercises/bicycle-crunch-peak.webp"] },
   "Captain's Chair Leg Raise": { poses:["start","peak"], files:["images/exercises/captains-chair-leg-raise-start.webp","images/exercises/captains-chair-leg-raise-peak.webp"] },
+  "Incline Dumbbell Bicep Curls": { poses:["start","peak"], files:["images/exercises/incline-db-bicep-curl-start.webp","images/exercises/incline-db-bicep-curl-peak.webp"] },
+  "Trap-Bar Deadlift":         { poses:["start","peak"], files:["images/exercises/trap-bar-deadlift-start.webp","images/exercises/trap-bar-deadlift-peak.webp"] },
+  "Ab Wheel Rollouts":         { poses:["start","peak"], files:["images/exercises/ab-wheel-rollout-start.webp","images/exercises/ab-wheel-rollout-peak.webp"] },
+  "Hanging Knee Raises":       { poses:["start","peak"], files:["images/exercises/hanging-knee-raise-start.webp","images/exercises/hanging-knee-raise-peak.webp"] },
 };
 
 const MUSCLE_GROUPS = {
   "Chest":     ["Bench Press","Chest Dip","Chest Fly","Dumbbell Press","Incline Press","Push Up"],
   "Shoulders": ["Arnold Press","Face Pull","Front Raise","Lateral Raise","Overhead Press","Rear Delt Fly","Upright Row"],
-  "Back":      ["Cable Row","Chin Up","Deadlift","Lat Pulldown","Pull ups","Romanian Deadlift","Seated Cable Row","Weighted Row"],
-  "Arms":      ["Bicep Curl","Hammer Curl","Preacher Curl","Skull Crushers","Tricep Push"],
+  "Back":      ["Cable Row","Chin Up","Deadlift","Lat Pulldown","Pull ups","Romanian Deadlift","Seated Cable Row","Trap-Bar Deadlift","Weighted Row"],
+  "Arms":      ["Bicep Curl","Hammer Curl","Incline Dumbbell Bicep Curls","Preacher Curl","Skull Crushers","Tricep Push"],
   "Legs":      ["Abductor Machine","Adductor Machine","Bulgarian Split Squat","Calf Raises","Leg Extension","Leg Press","Lunges","Prone Leg Curl","Squat","Sumo Squat"],
   "Glutes":    ["Glute Kickback","Hip Thrust"],
-  "Core":      ["Bicycle Crunch","Cable Crunch","Captain's Chair Leg Raise","Crunch","Leg Raise","Plank","Russian Twist"],
+  "Core":      ["Ab Wheel Rollouts","Bicycle Crunch","Cable Crunch","Captain's Chair Leg Raise","Crunch","Hanging Knee Raises","Leg Raise","Plank","Russian Twist"],
   "Cardio":    ["Cycling","Elliptical","Jump Rope","Rowing Machine","Stair Climber","Treadmill Run"],
 };
 
@@ -1712,6 +1764,139 @@ const ALL_PRESETS = Object.values(EXERCISES_BY_DAY).flat()
 
 const DURATION_EXERCISES = new Set(["Plank"]);
 const CARDIO_EXERCISES = new Set(["Cycling","Elliptical","Jump Rope","Rowing Machine","Stair Climber","Treadmill Run"]);
+
+// PT mode reads/writes the exact same CONFIG/cache/exercisesConfig stores as
+// Classic mode — it's a scheduling/UI layer, not a parallel data model. Every
+// `exercise`/`choice` name below must exist in EXERCISES_BY_DAY under the
+// matching `tab`, so it's loggable (and shows up in Classic mode's history)
+// the moment it's added via the normal addExercise() flow.
+const PT_PROGRAM = [
+  { // index 0
+    label: "Upper Body (Back, Chest & Shoulders)",
+    dayOfWeekHint: "Sunday",
+    type: "training",
+    warmup: { text: "Rowing Machine, moderate pace", minutes: [5, 7] },
+    blocks: [
+      { exercise: "Incline Press",  tab: "push", sets: 3, repRange: [8, 12],  restSeconds: 90, startWeight: "8–12 kg dumbbells (per hand)" },
+      { exercise: "Lat Pulldown",   tab: "pull", sets: 3, repRange: [8, 12],  restSeconds: 90, startWeight: "~20–25 kg cable stack" },
+      { exercise: "Seated Cable Row", tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "~20–25 kg cable stack" },
+      { exercise: "Overhead Press", tab: "push", sets: 3, repRange: [8, 12],  restSeconds: 90, startWeight: "6–8 kg dumbbells (per hand)" },
+      { exercise: "Lateral Raise",  tab: "push", sets: 3, repRange: [12, 15], restSeconds: 60, startWeight: "3–5 kg dumbbells (per hand)" },
+      { exercise: "Incline Dumbbell Bicep Curls", tab: "pull", sets: 2, repRange: [10, 15], restSeconds: 60, startWeight: "5–7 kg dumbbells (per hand)", isNew: true },
+      { exercise: "Tricep Push",    tab: "push", sets: 2, repRange: [10, 15], restSeconds: 60, startWeight: "~10–12.5 kg cable stack" }
+    ]
+  },
+  { // index 1
+    label: "Lower Body & Abs",
+    dayOfWeekHint: "Monday",
+    type: "training",
+    warmup: { text: "Treadmill Incline Walk", minutes: [5, 8] },
+    blocks: [
+      { choice: ["Squat", "Leg Press"], tab: "leg", sets: 3, repRange: [8, 12], restSeconds: 120, startWeight: "Empty barbell 20 kg (Squat) / ~40–50 kg (Leg Press)", askEachTime: true },
+      { exercise: "Romanian Deadlift", tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 120, startWeight: "8–10 kg dumbbells (per hand) OR 25 kg barbell" },
+      { exercise: "Lunges", tab: "leg", sets: 2, repsPerSide: 10, restSeconds: 90, startWeight: "Bodyweight", bodyweightStart: true },
+      { exercise: "Prone Leg Curl", tab: "leg", sets: 3, repRange: [10, 15], restSeconds: [60, 90] },
+      { exercise: "Calf Raises", tab: "leg", sets: 3, repRange: [12, 15], restSeconds: 60 },
+      { exercise: "Cable Crunch", tab: "core", sets: 3, repRange: [10, 15], restSeconds: 60, startWeight: "~15–20 kg cable stack" },
+      { exercise: "Hanging Knee Raises", tab: "core", sets: 3, repRange: [8, 15], restSeconds: 60, startWeight: "Bodyweight", bodyweightStart: true, isNew: true }
+    ]
+  },
+  { // index 2
+    label: "Active Recovery",
+    dayOfWeekHint: "Tuesday",
+    type: "activeRecovery", // auto-advances on view, no Finish tap
+    activity: { text: "Brisk walking or light cycling", minutes: [30, 45], tab: "cardio", loggable: true },
+    finisher: { text: "Gentle full-body stretching", minutes: [5, 10], loggable: false }
+  },
+  { // index 3
+    label: "Full Body / Athletic",
+    dayOfWeekHint: "Wednesday",
+    type: "training",
+    warmup: { text: "Dynamic movements (arm circles, leg swings, bodyweight squats)", minutes: [5, 5] },
+    blocks: [
+      { exercise: "Trap-Bar Deadlift", tab: "pull", sets: 3, repRange: [5, 8], restSeconds: [120, 180], startWeight: "Empty trap bar ~20–25 kg + 5 kg plates/side (~30–35 kg total)", isNew: true },
+      { exercise: "Dumbbell Press", tab: "push", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "10–12 kg dumbbells (per hand)" },
+      { choice: ["Lat Pulldown", "Pull ups"], tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90, askEachTime: true },
+      { exercise: "Bulgarian Split Squat", tab: "leg", sets: 2, repsPerSide: [8, 10], restSeconds: 90, startWeight: "Bodyweight", bodyweightStart: true },
+      { exercise: "Lateral Raise", tab: "push", sets: 3, repRange: [12, 15], restSeconds: 60 },
+      { exercise: "Face Pull", tab: "push", sets: 2, repRange: [12, 15], restSeconds: 60, startWeight: "~7.5–10 kg cable stack" },
+      { exercise: "Ab Wheel Rollouts", tab: "core", sets: 3, repRange: [8, 12], restSeconds: 60, startWeight: "Bodyweight", bodyweightStart: true, isNew: true }
+    ],
+    finisher: { text: "Treadmill walk (optional)", minutes: [10, 10], loggable: false }
+  },
+  { // index 4
+    label: "Upper Body + Arms & Abs",
+    dayOfWeekHint: "Thursday",
+    type: "training",
+    warmup: { text: "Treadmill brisk walk", minutes: [5, 5] },
+    blocks: [
+      { choice: ["Pull ups", "Lat Pulldown"], tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90, askEachTime: true },
+      { exercise: "Dumbbell Press", tab: "push", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "10–12 kg dumbbells (per hand)" },
+      { exercise: "Seated Cable Row", tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90 },
+      { exercise: "Lateral Raise", tab: "push", sets: 3, repRange: [12, 15], restSeconds: 60 },
+      { exercise: "Bicep Curl", tab: "pull", sets: 3, repRange: [10, 15], restSeconds: 60, startWeight: "5–7 kg dumbbells (per hand)" },
+      { exercise: "Tricep Push", tab: "push", sets: 3, repRange: [10, 15], restSeconds: 60 },
+      { exercise: "Cable Crunch", tab: "core", sets: 3, repRange: [10, 15], restSeconds: 60 },
+      { exercise: "Hanging Knee Raises", tab: "core", sets: [2, 3], repRange: [10, 15], restSeconds: 60 }
+    ]
+  },
+  { // index 5
+    label: "Rest",
+    dayOfWeekHint: "Friday",
+    type: "rest"
+  },
+  { // index 6
+    label: "Rest",
+    dayOfWeekHint: "Saturday",
+    type: "rest"
+  }
+];
+const PT_REST_DAY_COPY = "No gym workouts. Enjoy normal daily walking/activities, stay hydrated, and aim for 100g–125g of daily protein.";
+
+const PT_MODE_KEY = "gymtracker:ptMode";
+const PT_PRIMARY_PERSON_KEY = "gymtracker:primaryPersonId";
+const PT_DAY_INDEX_KEY = "gymtracker:ptCurrentDayIndex";
+
+let ptMode = false;
+let primaryPersonId = null;
+let ptCurrentDayIndex = 0;
+
+function loadPtMode(){
+  try{ return localStorage.getItem(PT_MODE_KEY) === "1"; }catch(e){ return false; }
+}
+function savePtMode(){
+  try{ localStorage.setItem(PT_MODE_KEY, ptMode ? "1" : "0"); }catch(e){}
+}
+
+function loadPrimaryPersonId(){
+  try{ return localStorage.getItem(PT_PRIMARY_PERSON_KEY) || null; }catch(e){ return null; }
+}
+function savePrimaryPersonId(){
+  try{
+    if(primaryPersonId) localStorage.setItem(PT_PRIMARY_PERSON_KEY, primaryPersonId);
+    else localStorage.removeItem(PT_PRIMARY_PERSON_KEY);
+  }catch(e){}
+}
+
+function loadPtDayIndex(){
+  try{
+    const raw = parseInt(localStorage.getItem(PT_DAY_INDEX_KEY), 10);
+    return (Number.isInteger(raw) && raw >= 0 && raw < PT_PROGRAM.length) ? raw : 0;
+  }catch(e){ return 0; }
+}
+function savePtDayIndex(){
+  try{ localStorage.setItem(PT_DAY_INDEX_KEY, String(ptCurrentDayIndex)); }catch(e){}
+}
+
+function ptExerciseChoiceKey(dayIndex, blockIndex){
+  return "gymtracker:ptExerciseChoice:" + dayIndex + ":" + blockIndex;
+}
+function loadPtExerciseChoice(dayIndex, blockIndex){
+  try{ return localStorage.getItem(ptExerciseChoiceKey(dayIndex, blockIndex)) || null; }catch(e){ return null; }
+}
+function savePtExerciseChoice(dayIndex, blockIndex, exerciseName){
+  try{ localStorage.setItem(ptExerciseChoiceKey(dayIndex, blockIndex), exerciseName); }catch(e){}
+}
 
 let pickerTabKey = null, pickerIdx = -1;
 let pickerMuscle = "All", pickerSearch = "";
@@ -5082,6 +5267,9 @@ async function init(){
   exerciseSettingsCollapsed = loadExerciseSettingsCollapsed();
   backupSettingsCollapsed = loadBackupSettingsCollapsed();
   timerSettings = loadTimerSettings();
+  ptMode = loadPtMode();
+  primaryPersonId = loadPrimaryPersonId();
+  ptCurrentDayIndex = loadPtDayIndex();
   exSetCounts = loadSetCounts();
   defaultSetCount = loadDefaultSetCount();
   defaultRepsTargets = loadDefaultRepsTargets();

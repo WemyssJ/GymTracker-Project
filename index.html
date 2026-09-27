@@ -28,6 +28,7 @@
     --green-bg:#1c3020;
     --red:#d9534f;
     --red-bg:#331d1c;
+    --rest-color:#ff9a3d;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
   html{height:100%;height:100dvh;overflow-x:hidden;width:100%;overscroll-behavior:none;background:#09131a;}
@@ -80,6 +81,18 @@
   }
   nav.tabs button.active{color:var(--text);border-bottom-color:var(--amber);}
   nav.tabs button.settings-tab{flex:0 0 auto;font-size:17px;padding:10px 10px;}
+  nav.tabs.pt-tabs{align-items:stretch;}
+  nav.tabs.pt-tabs > button{flex:0 0 auto;}
+  .pt-day-tabs-scroll{
+    display:flex;gap:2px;overflow-x:auto;flex:1;min-width:0;scrollbar-width:none;
+  }
+  .pt-day-tabs-scroll::-webkit-scrollbar{display:none;}
+  .pt-day-tabs-scroll button{
+    flex:0 0 auto;white-space:nowrap;padding:10px 10px;background:none;border:none;
+    color:var(--muted);font-size:13px;font-weight:700;letter-spacing:0.02em;cursor:pointer;
+    border-bottom:3px solid transparent;
+  }
+  .pt-day-tabs-scroll button.active{color:var(--text);border-bottom-color:var(--amber);}
   .due-dot{
     display:inline-block;width:6px;height:6px;border-radius:50%;
     background:var(--green);margin-left:3px;vertical-align:middle;
@@ -559,6 +572,7 @@
     transition:opacity 0.2s ease,transform 0.2s ease;
   }
   .timer-bubble.visible{opacity:1;pointer-events:auto;transform:translateY(0);}
+  .timer-bubble.resting{border-color:var(--rest-color);color:var(--rest-color);}
   @media(min-width:500px){
     .timer-bubble{left:calc(50% - 199px);}
   }
@@ -573,6 +587,9 @@
     display:none;flex-direction:column;gap:6px;
   }
   .timer-widget.visible{display:flex;}
+  .timer-widget.resting{border-top-color:var(--rest-color);}
+  .timer-widget.resting .timer-display{color:var(--rest-color);}
+  .timer-widget.resting .timer-mode-btn{color:var(--rest-color);}
   .timer-widget-info{text-align:center;}
   .timer-mode-btn{
     background:none;border:none;color:var(--muted);font-size:10px;font-weight:800;
@@ -647,7 +664,7 @@
 
 <header class="top">
   <div class="top-title-row">
-    <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.10</span></h1>
+    <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.11</span></h1>
     <button type="button" id="ptModeToggleBtn" class="pt-mode-toggle" onclick="togglePtMode()">PT</button>
   </div>
   <nav class="tabs" id="tabs"></nav>
@@ -1854,6 +1871,7 @@ const CARDIO_EXERCISES = new Set(["Cycling","Elliptical","Jump Rope","Rowing Mac
 const PT_PROGRAM = [
   { // index 0
     label: "Upper Body (Back, Chest & Shoulders)",
+    shortLabel: "Upper",
     dayOfWeekHint: "Sunday",
     type: "training",
     warmup: { text: "Rowing Machine, moderate pace", minutes: [5, 7] },
@@ -1869,6 +1887,7 @@ const PT_PROGRAM = [
   },
   { // index 1
     label: "Lower Body & Abs",
+    shortLabel: "Lower",
     dayOfWeekHint: "Monday",
     type: "training",
     warmup: { text: "Treadmill Incline Walk", minutes: [5, 8] },
@@ -1884,6 +1903,7 @@ const PT_PROGRAM = [
   },
   { // index 2
     label: "Active Recovery",
+    shortLabel: "Recovery",
     dayOfWeekHint: "Tuesday",
     type: "activeRecovery", // auto-advances on view, no Finish tap
     activity: { text: "Brisk walking or light cycling", minutes: [30, 45], tab: "cardio", loggable: true },
@@ -1891,6 +1911,7 @@ const PT_PROGRAM = [
   },
   { // index 3
     label: "Full Body / Athletic",
+    shortLabel: "Full Body",
     dayOfWeekHint: "Wednesday",
     type: "training",
     warmup: { text: "Dynamic movements (arm circles, leg swings, bodyweight squats)", minutes: [5, 5] },
@@ -1907,6 +1928,7 @@ const PT_PROGRAM = [
   },
   { // index 4
     label: "Upper Body + Arms & Abs",
+    shortLabel: "Arms & Abs",
     dayOfWeekHint: "Thursday",
     type: "training",
     warmup: { text: "Treadmill brisk walk", minutes: [5, 5] },
@@ -1923,11 +1945,13 @@ const PT_PROGRAM = [
   },
   { // index 5
     label: "Rest",
+    shortLabel: "Rest",
     dayOfWeekHint: "Friday",
     type: "rest"
   },
   { // index 6
     label: "Rest",
+    shortLabel: "Rest",
     dayOfWeekHint: "Saturday",
     type: "rest"
   }
@@ -2745,24 +2769,54 @@ function getNextSessionType(){
   return nextKey;
 }
 
+function isPtDayTab(tabKey){
+  return typeof tabKey === "string" && /^pt\d+$/.test(tabKey);
+}
+
 function renderTabs(){
   const nav = document.getElementById("tabs");
   nav.innerHTML = "";
+  nav.classList.toggle("pt-tabs", ptMode);
   const toggleBtn = document.getElementById("ptModeToggleBtn");
   if(toggleBtn) toggleBtn.classList.toggle("active", ptMode);
-  const keys = ptMode ? ["pt", "progress", "settings"] : [...activeDays, "progress", "settings"];
-  const nextKey = ptMode ? null : getNextSessionType();
-  keys.forEach(key=>{
+
+  if(ptMode){
+    const scroll = document.createElement("div");
+    scroll.className = "pt-day-tabs-scroll";
+    PT_PROGRAM.forEach((day, i) => {
+      const key = "pt" + i;
+      const btn = document.createElement("button");
+      const isDue = i === ptCurrentDayIndex;
+      btn.innerHTML = day.shortLabel + (isDue ? ' <span class="due-dot" title="Programme is here"></span>' : "");
+      btn.className = key === activeTab ? "active" : "";
+      btn.onclick = () => switchTab(key);
+      scroll.appendChild(btn);
+    });
+    nav.appendChild(scroll);
+    ["progress", "settings"].forEach(key => {
+      const btn = document.createElement("button");
+      if(key === "settings"){
+        btn.innerHTML = ICON.gear;
+        btn.setAttribute("aria-label", "Settings");
+        btn.className = "settings-tab" + (key === activeTab ? " active" : "");
+      } else {
+        btn.textContent = "Progress";
+        btn.className = key === activeTab ? "active" : "";
+      }
+      btn.onclick = () => switchTab(key);
+      nav.appendChild(btn);
+    });
+    return;
+  }
+
+  const nextKey = getNextSessionType();
+  [...activeDays, "progress", "settings"].forEach(key=>{
     const btn = document.createElement("button");
     const isNext = key === nextKey && key !== "progress" && key !== "settings";
     if(key === "settings"){
       btn.innerHTML = ICON.gear;
       btn.setAttribute("aria-label", "Settings");
       btn.className = "settings-tab" + (key === activeTab ? " active" : "");
-    } else if(key === "pt"){
-      const day = PT_PROGRAM[ptViewDayIndex ?? ptCurrentDayIndex];
-      btn.innerHTML = day ? day.label : "PT Day";
-      btn.className = key === activeTab ? "active" : "";
     } else {
       const label = key === "progress" ? "Progress" : CONFIG[key].label;
       btn.innerHTML = label + (isNext ? ' <span class="due-dot" title="Next session due"></span>' : "");
@@ -3675,7 +3729,7 @@ function togglePtMode(){
   savePtMode();
   if(ptMode){
     mountPtDay();
-    switchTab("pt");
+    switchTab("pt" + ptViewDayIndex);
   } else {
     ptSummaryResult = null;
     switchTab(lastActiveDayTab || activeDays[0] || "push");
@@ -3686,7 +3740,10 @@ function togglePtMode(){
 // persisted pointer past any rest/active-recovery day (they have no Finish
 // tap) — training days only advance via finishPtDay(). The snapshot means
 // the screen still shows that rest/recovery day's content for this viewing,
-// even though the pointer has already moved on to the next one.
+// even though the pointer has already moved on to the next one. Only called
+// at PT-mode-entry points (toggle-on, app launch, post-Finish "Continue") —
+// freely tapping any other day tab is pure browsing and never advances or
+// auto-advances anything, same as picking a Classic-mode day tab.
 function mountPtDay(){
   ptSummaryResult = null;
   ptViewDayIndex = ptCurrentDayIndex;
@@ -3829,8 +3886,32 @@ function recordPtDraftValue(dayIndex, blockIndex, setIndex, field, value){
 function startPtRestTimerFor(seconds){
   const prevDuration = timerSettings.duration;
   timerSettings.duration = seconds;
+  timerRestActive = true;
+  timerMinimized = false;
   startRestTimer();
   timerSettings.duration = prevDuration;
+}
+
+// Fires on blur of a set's weight/reps input — once BOTH fields for that
+// exact set have been actually typed into (not just sitting on a carried-
+// forward/suggested prefill), treat the set as "logged" and auto-start the
+// rest timer. Bodyweight sets have no weight input at all, so a real reps
+// value alone is enough for those.
+function maybeStartPtRestTimer(input, restSeconds){
+  if(!restSeconds) return;
+  // Switching away from PT mode entirely hides #ptView without clearing it
+  // (switching to a different PT day tab does re-render and destroy these
+  // nodes, so this only guards the "left PT mode" case) — a still-focused
+  // input from that stale view can otherwise fire a native blur/change and
+  // restart the rest timer after the user has moved on to Classic mode.
+  const ptView = document.getElementById("ptView");
+  if(!ptView || ptView.style.display === "none") return;
+  const blockKey = input.dataset.ex, setIndex = input.dataset.set;
+  const wt = document.querySelector(`[data-ex="${blockKey}"][data-set="${setIndex}"][data-field="wt"]`);
+  const reps = document.querySelector(`[data-ex="${blockKey}"][data-set="${setIndex}"][data-field="reps"]`);
+  const wtReal = !wt || (wt.value !== "" && !wt.classList.contains("prefilled"));
+  const repsReal = !!(reps && reps.value !== "" && !reps.classList.contains("prefilled"));
+  if(wtReal && repsReal) startPtRestTimerFor(restSeconds);
 }
 
 function updatePtWeightInputColor(input, dayIndex, blockIndex){
@@ -3910,7 +3991,7 @@ function ptSetBoxHtml(dayIndex, blockIndex, setIndex, set, restSeconds){
   const repsVal = set.reps || "";
   const wtClass = (set.wt !== null && set.wt !== undefined && !set.wtIsDraft) ? "prefilled" : "";
   const repsClass = (set.reps && !set.repsIsDraft) ? "prefilled" : "";
-  const restCall = restSeconds ? `startPtRestTimerFor(${restSeconds});` : "";
+  const restCall = restSeconds ? `maybeStartPtRestTimer(this,${restSeconds});` : "";
   return `
     <div class="set-col">
       <div class="set-label">SET ${setIndex + 1}</div>
@@ -3919,6 +4000,7 @@ function ptSetBoxHtml(dayIndex, blockIndex, setIndex, set, restSeconds){
           class="${wtClass}" value="${wtVal}"
           data-ex="${blockKey}" data-person="${primaryPersonId}" data-set="${setIndex}" data-field="wt"
           oninput="this.classList.remove('prefilled'); updatePtWeightInputColor(this,${dayIndex},${blockIndex}); recordPtDraftValue(${dayIndex},${blockIndex},${setIndex},'wt',this.value);"
+          onchange="${restCall}"
           onfocus="this.select()">
       </div>
       <div class="mini-box reps-box">
@@ -3937,7 +4019,7 @@ function ptRepsOnlyBoxHtml(dayIndex, blockIndex, setIndex, set, restSeconds){
   const { blockKey } = ptBlockContext(dayIndex, blockIndex);
   const repsVal = set.reps || "";
   const repsClass = (set.reps && !set.repsIsDraft) ? "prefilled" : "";
-  const restCall = restSeconds ? `startPtRestTimerFor(${restSeconds});` : "";
+  const restCall = restSeconds ? `maybeStartPtRestTimer(this,${restSeconds});` : "";
   return `
     <div class="set-col">
       <div class="set-label">SET ${setIndex + 1}</div>
@@ -4237,8 +4319,7 @@ function ptDayExerciseListText(day){
 
 function continuePtAfterSummary(){
   mountPtDay();
-  renderPtView();
-  renderTabs();
+  switchTab("pt" + ptViewDayIndex);
 }
 
 function renderPtSettings(){
@@ -4265,7 +4346,7 @@ function selectPrimaryPerson(id){
   primaryPersonId = id;
   savePrimaryPersonId();
   renderPtPrimaryPersonChips();
-  if(activeTab === "pt") renderPtView();
+  if(isPtDayTab(activeTab)) renderPtView();
 }
 
 function handlePtModeSettingsToggle(checked){
@@ -4298,9 +4379,12 @@ async function switchTab(tabKey){
   document.getElementById("settingsView").style.display = "none";
   document.getElementById("ptView").style.display = "none";
 
-  if(tabKey === "pt"){
+  const ptDayMatch = /^pt(\d+)$/.exec(tabKey);
+  if(ptDayMatch){
     document.getElementById("ptView").style.display = "block";
     await ensureAllLoaded();
+    ptViewDayIndex = parseInt(ptDayMatch[1], 10);
+    ptSummaryResult = null; // navigating to a day tab always leaves any prior Finish-day summary behind
     renderPtView();
     return;
   }
@@ -5746,6 +5830,11 @@ function formatStopwatch(ms){
 let timerRunState = "idle"; // "idle" | "running" | "paused" | "done"
 let lapCount = 0;
 let timerMinimized = true;
+// Set when PT mode auto-starts the rest timer (maybeStartPtRestTimer) — tints
+// the widget a distinct "resting" colour, and on natural completion (reaching
+// 0, not a manual stop) auto-minimizes it back down instead of leaving it
+// sitting open like a manually-started timer does.
+let timerRestActive = false;
 
 function toggleTimerMinimize(){
   timerMinimized = !timerMinimized;
@@ -5781,12 +5870,14 @@ function refreshTimerFooter(){
   const w = document.getElementById("timerWidget");
   const bubble = document.getElementById("timerBubble");
   const main = document.querySelector("main");
-  const ptDay = activeTab === "pt" ? PT_PROGRAM[ptViewDayIndex] : null;
+  const ptDay = isPtDayTab(activeTab) ? PT_PROGRAM[ptViewDayIndex] : null;
   const shouldShow = !!CONFIG[activeTab] || (!!ptDay && ptDay.type === "training");
   const showFull = shouldShow && !timerMinimized;
   const showBubble = shouldShow && timerMinimized;
   if(w) w.classList.toggle("visible", showFull);
   if(bubble) bubble.classList.toggle("visible", showBubble);
+  if(w) w.classList.toggle("resting", timerRestActive);
+  if(bubble) bubble.classList.toggle("resting", timerRestActive);
   if(main) main.classList.toggle("has-timer-footer", showFull);
   if(showFull) syncTimerFooterHeight();
   if(!shouldShow) return;
@@ -5907,8 +5998,17 @@ function timerResumeInterval(){
       if(liveRemaining <= 0){
         clearInterval(timerIntervalId); timerIntervalId = null;
         timerRemainingMs = 0;
-        timerRunState = "done";
         if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
+        if(timerRestActive){
+          // A PT-triggered rest completing naturally reverts and tucks itself
+          // away immediately, rather than sitting open like a manual timer.
+          timerRestActive = false;
+          timerRunState = "idle";
+          timerMinimized = true;
+          refreshTimerFooter();
+          return;
+        }
+        timerRunState = "done";
         refreshTimerFooter();
         setTimeout(() => {
           if(timerRunState === "done"){ timerRunState = "idle"; refreshTimerFooter(); }
@@ -5932,7 +6032,7 @@ function startRestTimer(){
 function timerStartOrReset(){
   const display = document.getElementById("timerDisplay");
   if(display && display.dataset.editing === "1") display.dataset.editing = "";
-  if(timerRunState === "idle"){ startRestTimer(); return; }
+  if(timerRunState === "idle"){ timerRestActive = false; startRestTimer(); return; }
   timerStop();
 }
 
@@ -5955,6 +6055,7 @@ function timerStop(){
   timerRunState = "idle";
   timerElapsedMs = 0;
   timerRemainingMs = 0;
+  timerRestActive = false;
   refreshTimerFooter();
 }
 
@@ -6022,7 +6123,7 @@ function exInfoSwipe(dir){
 }
 
 function mainTabSwipe(dir){
-  const tabs = ptMode ? ["pt", "progress", "settings"] : [...activeDays, "progress", "settings"];
+  const tabs = ptMode ? [...PT_PROGRAM.map((_, i) => "pt" + i), "progress", "settings"] : [...activeDays, "progress", "settings"];
   const idx = tabs.indexOf(activeTab);
   const next = idx + dir;
   if(next >= 0 && next < tabs.length){
@@ -6071,8 +6172,8 @@ async function init(){
   applyTheme(currentThemeState.key, currentThemeState.custom);
   await ensureAllLoaded();
   if(ptMode){
-    activeTab = "pt";
     mountPtDay();
+    activeTab = "pt" + ptViewDayIndex;
     document.getElementById("dayView").style.display = "none";
     document.getElementById("ptView").style.display = "block";
     renderTabs();

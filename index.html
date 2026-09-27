@@ -664,7 +664,7 @@
 
 <header class="top">
   <div class="top-title-row">
-    <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.11</span></h1>
+    <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.12</span></h1>
     <button type="button" id="ptModeToggleBtn" class="pt-mode-toggle" onclick="togglePtMode()">PT</button>
   </div>
   <nav class="tabs" id="tabs"></nav>
@@ -732,6 +732,12 @@
         <input type="checkbox" id="advancedModeToggle" onchange="handleAdvancedModeToggle(this.checked)">
         <span class="toggle-slider"></span>
       </label>
+    </div>
+
+    <div style="margin-bottom:22px;padding-bottom:18px;border-bottom:1px solid var(--line);">
+      <div class="settings-row-title">Suggested weight</div>
+      <div class="settings-row-desc" style="margin-bottom:10px;">What each set's weight is pre-filled with, in both the day tabs and PT mode.</div>
+      <nav class="subtabs" id="weightPrefillChips" style="margin-bottom:0;"></nav>
     </div>
 
     <div class="section-label" id="settingsDaysLabel" style="margin-top:0;">Days</div>
@@ -1956,7 +1962,13 @@ const PT_PROGRAM = [
     type: "rest"
   }
 ];
-const PT_REST_DAY_COPY = "No gym workouts. Enjoy normal daily walking/activities, stay hydrated, and aim for 100g–125g of daily protein.";
+const PT_EXERCISES_BY_TAB = {};
+PT_PROGRAM.forEach(day => (day.blocks || []).forEach(b => {
+  (b.exercise ? [b.exercise] : (b.choice || [])).forEach(name => {
+    (PT_EXERCISES_BY_TAB[b.tab] = PT_EXERCISES_BY_TAB[b.tab] || new Set()).add(name);
+  });
+}));
+const PT_REST_DAY_COPY ="No gym workouts. Enjoy normal daily walking/activities, stay hydrated, and aim for 100g–125g of daily protein.";
 
 const PT_MODE_KEY = "gymtracker:ptMode";
 const PT_PRIMARY_PERSON_KEY = "gymtracker:primaryPersonId";
@@ -2497,6 +2509,22 @@ function getExercises(tabKey, includeBlank){
   return includeBlank ? list : list.filter(e => e !== '');
 }
 
+// What Classic's read-only views (history, PBs, Progress) show: the tab's own
+// configured list, plus any PT-programme exercise for that tab that actually
+// has logged data. PT mode logs exercises (Trap-Bar Deadlift, Seated Cable Row…)
+// that needn't be in the Classic log form, and they must still be visible
+// here. Exercises the user removed from their list stay hidden as before.
+function getVisibleExercises(tabKey){
+  const list = [...getExercises(tabKey)];
+  const seen = new Set(list);
+  const ptNames = PT_EXERCISES_BY_TAB[tabKey];
+  if(!ptNames) return list;
+  (cache[tabKey] || []).forEach(s => Object.keys(s.entries || {}).forEach(ex => {
+    if(!seen.has(ex) && ptNames.has(ex)){ seen.add(ex); list.push(ex); }
+  }));
+  return list;
+}
+
 function renameExercise(tabKey, idx, newName){
   newName = newName.trim();
   if(!newName) return;
@@ -2563,9 +2591,11 @@ async function removeExercise(tabKey, idx){
   renderTabs();
 }
 
+// Local calendar date, not UTC — toISOString() would roll a late-evening (or,
+// in UK summer time, just-after-midnight) session onto the wrong day.
 function todayStr(){
   const d = new Date();
-  return d.toISOString().slice(0,10);
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 }
 
 function fmtDate(iso){
@@ -2752,6 +2782,53 @@ function computeStatsFor(tabKey, exercise, personId){
     }
   }
   return { best, last };
+}
+
+// Settings → "Suggested weight": "best" (default — a deload or an off day
+// shouldn't lower the next suggestion) or "recent" (last session's numbers).
+const WEIGHT_PREFILL_KEY = "gymtracker:weightPrefillSource";
+let weightPrefillSource = "best";
+function loadWeightPrefillSource(){
+  try{ return localStorage.getItem(WEIGHT_PREFILL_KEY) === "recent" ? "recent" : "best"; }catch(e){ return "best"; }
+}
+function saveWeightPrefillSource(){
+  try{ localStorage.setItem(WEIGHT_PREFILL_KEY, weightPrefillSource); }catch(e){}
+}
+function setWeightPrefillSource(source){
+  weightPrefillSource = source === "recent" ? "recent" : "best";
+  saveWeightPrefillSource();
+  renderWeightPrefillSetting();
+}
+function renderWeightPrefillSetting(){
+  const nav = document.getElementById("weightPrefillChips");
+  if(!nav) return;
+  nav.innerHTML = [["best", "Personal best"], ["recent", "Most recent"]].map(([key, label]) =>
+    `<button type="button" class="${weightPrefillSource === key ? "active" : ""}" onclick="setWeightPrefillSource('${key}')">${label}</button>`
+  ).join("");
+}
+
+// Sets from the most recent session where this person logged a weight for
+// the exercise, using the same assisted/unassisted filter as computeStatsFor.
+function lastSessionSetsFor(tabKey, exercise, personId){
+  const wantAssisted = !!assistedState[exercise];
+  let lastSets = null;
+  for(const s of (cache[tabKey] || [])){
+    const e = s.entries[exercise];
+    if(!e || !!e.assisted !== wantAssisted) continue;
+    const sets = getPersonSets(e, personId);
+    if(topSetWeight(sets) !== null) lastSets = sets;
+  }
+  return lastSets;
+}
+
+function suggestedWeight(tabKey, exercise, personId, setIndex){
+  const stats = computeStatsFor(tabKey, exercise, personId);
+  if(weightPrefillSource !== "recent") return stats.best;
+  const lastSets = lastSessionSetsFor(tabKey, exercise, personId);
+  const perSet = lastSets && lastSets[setIndex] && lastSets[setIndex].wt;
+  // a set index that didn't exist last time (you've added a set) repeats
+  // last session's top weight
+  return typeof perSet === "number" ? perSet : stats.last;
 }
 
 function getNextSessionType(){
@@ -3041,7 +3118,7 @@ function applyBackupSettingsCollapsedState(){
 function renderStatStrip(){
   const strip = document.getElementById("statStrip");
   strip.innerHTML = "";
-  getExercises(activeTab).forEach(ex=>{
+  getVisibleExercises(activeTab).forEach(ex=>{
     const card = document.createElement("div");
     card.className = "stat-card";
     let rows = `<div class="ex-name">${ex}</div>`;
@@ -3220,17 +3297,14 @@ function renderForm(){
           <span>Assisted</span>
         </label>` : ""}`;
     people.forEach((p, pi) => {
-      const personBest = computeStatsFor(activeTab, ex, p.id).best;
       const sets = Array.from({length: count}, (_, si) => {
         const wtDK = draftKey(ex, p.id, si, "wt");
         const repsDK = draftKey(ex, p.id, si, "reps");
         const wtIsDraft = wtDK in draftValues;
         const repsIsDraft = repsDK in draftValues;
-        // Weight and reps both default to the person's all-time best/target
-        // rather than carrying forward whatever was typed last session — a
-        // deload or an off day shouldn't lower tomorrow's suggested starting
-        // point.
-        const wt = wtIsDraft ? (draftValues[wtDK] === "" ? null : parseFloat(draftValues[wtDK])) : personBest;
+        // Suggested weight follows the Settings choice (all-time best by
+        // default, or last session's numbers); reps default to the target.
+        const wt = wtIsDraft ? (draftValues[wtDK] === "" ? null : parseFloat(draftValues[wtDK])) : suggestedWeight(activeTab, ex, p.id, si);
         const reps = repsIsDraft ? draftValues[repsDK] : (CARDIO_EXERCISES.has(ex) ? "" : String(getPersonRepsTarget(p.id)));
         return { wt, reps, wtIsDraft, repsIsDraft };
       });
@@ -3308,7 +3382,7 @@ function renderHistory(){
   const regFlags = {};
   let prevRow = null;
   chrono.forEach(s=>{
-    getExercises(activeTab).forEach(ex=>{
+    getVisibleExercises(activeTab).forEach(ex=>{
       const e = s.entries[ex];
       const flagKey = s.id + "|" + ex;
       if(!e){ return; }
@@ -3342,7 +3416,7 @@ function renderHistory(){
         </div>
       </div>
     `;
-    getExercises(activeTab).forEach(ex=>{
+    getVisibleExercises(activeTab).forEach(ex=>{
       const e = s.entries[ex];
       if(!e) return;
       const flagKey = s.id + "|" + ex;
@@ -3603,6 +3677,11 @@ async function handleSave(evt){
   // multiple sessions on the same day can each be edited/deleted on their own
   const existingIdx = editingId ? cache[activeTab].findIndex(s => s.id === editingId) : -1;
   if(existingIdx >= 0){
+    // the form only covers this tab's configured exercises — keep anything
+    // else the session holds (e.g. PT-logged exercises) instead of dropping it
+    const formNames = new Set(getExercises(activeTab));
+    const prevEntries = cache[activeTab][existingIdx].entries || {};
+    Object.keys(prevEntries).forEach(ex => { if(!formNames.has(ex)) entries[ex] = prevEntries[ex]; });
     cache[activeTab][existingIdx] = { id: editingId, date, entries };
   } else {
     cache[activeTab].push({ id: nextSessionId(), date, entries });
@@ -3651,7 +3730,9 @@ function exerciseTip(ex, sets, target){
 
 function computePersonVolume(session, tabKey, personId){
   let vol = 0;
-  getExercises(tabKey).forEach(ex => {
+  const names = new Set(getVisibleExercises(tabKey));
+  Object.keys(session.entries || {}).forEach(ex => { if(PT_EXERCISES_BY_TAB[tabKey]?.has(ex)) names.add(ex); });
+  names.forEach(ex => {
     if(CARDIO_EXERCISES.has(ex)) return;
     const e = session.entries[ex];
     if(!e) return;
@@ -3911,8 +3992,15 @@ function maybeStartPtRestTimer(input, restSeconds){
   const reps = document.querySelector(`[data-ex="${blockKey}"][data-set="${setIndex}"][data-field="reps"]`);
   const wtReal = !wt || (wt.value !== "" && !wt.classList.contains("prefilled"));
   const repsReal = !!(reps && reps.value !== "" && !reps.classList.contains("prefilled"));
-  if(wtReal && repsReal) startPtRestTimerFor(restSeconds);
+  if(!(wtReal && repsReal)) return;
+  // once per set — correcting an already-logged set shouldn't restart a rest
+  // you're partway through
+  const setKey = blockKey + "|" + setIndex;
+  if(ptRestStartedSets.has(setKey)) return;
+  ptRestStartedSets.add(setKey);
+  startPtRestTimerFor(restSeconds);
 }
+const ptRestStartedSets = new Set();
 
 function updatePtWeightInputColor(input, dayIndex, blockIndex){
   input.classList.remove("pr-val", "reg-val");
@@ -4064,7 +4152,7 @@ function ptBlockHtml(dayIndex, blockIndex){
     const repsDK = ptDraftValueKey(tabKey, exName, si, "reps");
     const wtIsDraft = wtDK in draftValues;
     const repsIsDraft = repsDK in draftValues;
-    const wt = wtIsDraft ? (draftValues[wtDK] === "" ? null : parseFloat(draftValues[wtDK])) : stats.best;
+    const wt = wtIsDraft ? (draftValues[wtDK] === "" ? null : parseFloat(draftValues[wtDK])) : suggestedWeight(tabKey, exName, primaryPersonId, si);
     const reps = repsIsDraft ? draftValues[repsDK] : (repTarget !== null ? String(repTarget) : "");
     return { wt, reps, wtIsDraft, repsIsDraft };
   });
@@ -4128,8 +4216,12 @@ function renderPtTrainingView(container, day){
 // can recommend a concrete next weight, and requires 2 consecutive sessions
 // below range (not 1) before suggesting a deload.
 function checkGoldenRuleHint(tabKey, exercise, personId, block){
+  const hasPersonData = e => (e && e.sets && e.sets[personId] || [])
+    .some(s => (s.reps !== "" && s.reps !== undefined && s.reps !== null) || typeof s.wt === "number");
+  // only sessions where *this* person logged the exercise — otherwise another
+  // person's more recent session would count as "your last session"
   const sessions = (cache[tabKey] || [])
-    .filter(s => s.entries[exercise])
+    .filter(s => hasPersonData(s.entries[exercise]))
     .slice()
     .sort((a, b) => a.date.localeCompare(b.date) || (a.id || "").localeCompare(b.id || ""));
   if(!sessions.length) return null;
@@ -4178,7 +4270,6 @@ function finishPtDay(){
   day.blocks.forEach((block, bi) => {
     const { tabKey, exName, blockKey } = ptBlockContext(dayIndex, bi);
     if(!exName) return;
-    if(!byTab[tabKey]) byTab[tabKey] = { entries: {}, results: [] };
 
     const count = ptBlockSetCount(dayIndex, bi);
     const isBodyweightPhase = !!block.bodyweightStart && computeStatsFor(tabKey, exName, primaryPersonId).best === null;
@@ -4193,16 +4284,18 @@ function finishPtDay(){
       };
     });
 
-    const hasAnyData = sets.some(s => s.wt !== null || s.reps.trim() !== "");
-    if(!hasAnyData){ skipped.push(exName); return; }
-    const hasRealData = sets.some(s => s.wtReal || s.repsReal);
-    if(hasRealData){
-      sets.forEach(s => {
-        if(s.wt === null && !isBodyweightPhase) s.wt = 0;
-        if(s.reps.trim() === "") s.reps = "0";
-      });
-    }
-    const finalSets = sets.map(({wt, reps}) => ({wt, reps}));
+    // Every input starts pre-filled with a suggestion (target reps, suggested
+    // weight), so "has a value" doesn't mean "was done". Only sets where you
+    // actually typed something count; an exercise with none is skipped rather
+    // than logged as a phantom full session of suggested numbers.
+    const doneSets = sets.filter(s => s.wtReal || s.repsReal);
+    if(!doneSets.length){ skipped.push(exName); return; }
+    doneSets.forEach(s => {
+      if(s.wt === null && !isBodyweightPhase) s.wt = 0;
+      if(s.reps.trim() === "") s.reps = "0";
+    });
+    const finalSets = doneSets.map(({wt, reps}) => ({wt, reps}));
+    if(!byTab[tabKey]) byTab[tabKey] = { entries: {}, results: [] };
 
     // Golden Rule must see the prior logged session, so it's evaluated here —
     // before this exercise's new session data gets pushed into cache below.
@@ -4217,7 +4310,9 @@ function finishPtDay(){
       if(stats.last !== null && top < stats.last) isReg = true;
     }
 
-    byTab[tabKey].entries[exName] = { sets: { [primaryPersonId]: finalSets }, assisted: false, notes: {} };
+    // match Classic: computeStatsFor only compares sessions whose assisted flag
+    // matches the exercise's current mode, so PT must record that same mode
+    byTab[tabKey].entries[exName] = { sets: { [primaryPersonId]: finalSets }, assisted: !!assistedState[exName], notes: {} };
     byTab[tabKey].results.push({
       ex: exName, sets: finalSets, isPR, isReg,
       tip: goldenTip || exerciseTip(exName, finalSets, repFallbackTarget)
@@ -4245,6 +4340,7 @@ function finishPtDay(){
 
   delete ptFormDrafts[dayIndex];
   savePtFormDrafts();
+  ptRestStartedSets.clear();
 
   ptCurrentDayIndex = (dayIndex + 1) % PT_PROGRAM.length;
   savePtDayIndex();
@@ -4404,6 +4500,7 @@ async function switchTab(tabKey){
     renderExerciseSettings();
     renderThemeSettings();
     renderPtSettings();
+    renderWeightPrefillSetting();
     applyBackupSettingsCollapsedState();
     applyCreditsCollapsedState();
     applyPtSettingsCollapsedState();
@@ -4493,10 +4590,7 @@ async function removePerson(idx){
   }
   people.splice(idx, 1);
   savePeople();
-  if(!people.some(pp => pp.id === primaryPersonId)){
-    primaryPersonId = people[0] ? people[0].id : null;
-    savePrimaryPersonId();
-  }
+  ensurePrimaryPersonValid();
   renderPeopleSettings();
   renderPtSettings();
   renderTabs();
@@ -4675,10 +4769,18 @@ function endExerciseDrag(){
   renderTabs();
 }
 
+// In PT mode the programme logs into tabs that may not be enabled as Classic
+// days (Core, Cardio), so Progress also offers those.
+function progressTabKeys(){
+  if(!ptMode) return activeDays;
+  const ptTabs = new Set([...Object.keys(PT_EXERCISES_BY_TAB), "cardio"]);
+  return Object.keys(CONFIG).filter(k => activeDays.includes(k) || ptTabs.has(k));
+}
+
 function renderProgressSubTabs(){
   const nav = document.getElementById("progressSubTabs");
   nav.innerHTML = "";
-  activeDays.forEach(key=>{
+  progressTabKeys().forEach(key=>{
     const btn = document.createElement("button");
     btn.textContent = CONFIG[key].label;
     btn.className = key === progressSubTab ? "active" : "";
@@ -4696,7 +4798,7 @@ function renderProgressSubTabs(){
 function renderProgressExerciseTabs(cfg){
   const nav = document.getElementById("progressExerciseTabs");
   nav.innerHTML = "";
-  getExercises(progressSubTab).forEach(ex=>{
+  getVisibleExercises(progressSubTab).forEach(ex=>{
     const btn = document.createElement("button");
     btn.textContent = ex;
     btn.className = ex === progressExercise ? "active" : "";
@@ -4783,11 +4885,11 @@ function renderChartLegend(showBothModes){
 }
 
 function renderProgressView(){
-  if(!activeDays.includes(progressSubTab)) progressSubTab = activeDays[0];
+  if(!progressTabKeys().includes(progressSubTab)) progressSubTab = progressTabKeys()[0];
   renderProgressSubTabs();
   const cfg = CONFIG[progressSubTab];
-  if(!progressExercise || !getExercises(progressSubTab).includes(progressExercise)){
-    progressExercise = getExercises(progressSubTab)[0];
+  if(!progressExercise || !getVisibleExercises(progressSubTab).includes(progressExercise)){
+    progressExercise = getVisibleExercises(progressSubTab)[0];
   }
   renderProgressExerciseTabs(cfg);
 
@@ -5114,29 +5216,45 @@ function exportExcel(){
     const wb = XLSX.utils.book_new();
     Object.keys(CONFIG).forEach(tabKey => {
       const cfg = CONFIG[tabKey];
+      const sessions = [...(cache[tabKey] || [])].sort((a, b) => a.date.localeCompare(b.date));
+      // Set counts vary (1–6 per exercise), so every person gets as many set
+      // column pairs as the longest set list in this tab, padded with blanks —
+      // a fixed 3 made 2- or 4-set rows shift every later person's columns.
+      let setCols = 3;
+      sessions.forEach(sess => Object.values(sess.entries || {}).forEach(e => {
+        Object.values((e && e.sets) || {}).forEach(ps => { if(Array.isArray(ps)) setCols = Math.max(setCols, ps.length); });
+      }));
       const header = ["Date", "Exercise"];
       people.forEach(p => {
-        for(let si = 1; si <= 3; si++){
+        for(let si = 1; si <= setCols; si++){
           header.push(`${p.name} S${si} Wt`, `${p.name} S${si} Reps`);
         }
       });
       const rows = [header];
-      const sessions = [...(cache[tabKey] || [])].sort((a, b) => a.date.localeCompare(b.date));
+      // a backup must hold everything logged, not just exercises currently in
+      // the tab's list (hidden ones and PT-only ones included)
+      const configured = getExercises(tabKey);
       sessions.forEach(sess => {
-        getExercises(tabKey).forEach(ex => {
+        const names = Object.keys(sess.entries || {}).sort((a, b) => {
+          const ia = configured.indexOf(a), ib = configured.indexOf(b);
+          return (ia === -1 ? Infinity : ia) - (ib === -1 ? Infinity : ib);
+        });
+        names.forEach(ex => {
           const e = sess.entries[ex];
           if(!e) return;
           const row = [sess.date, ex];
           people.forEach(p => {
-            getPersonSets(e, p.id).forEach(s => {
-              row.push(s.wt !== null ? s.wt : "", s.reps || "");
-            });
+            const personSets = (e.sets && e.sets[p.id]) || [];
+            for(let si = 0; si < setCols; si++){
+              const s = personSets[si];
+              row.push(s && s.wt !== null && s.wt !== undefined ? s.wt : "", (s && s.reps) || "");
+            }
           });
           rows.push(row);
         });
       });
       const ws = XLSX.utils.aoa_to_sheet(rows);
-      ws["!cols"] = [{ wch: 12 }, { wch: 30 }].concat(Array(people.length * 6).fill({ wch: 10 }));
+      ws["!cols"] = [{ wch: 12 }, { wch: 30 }].concat(Array(people.length * setCols * 2).fill({ wch: 10 }));
       XLSX.utils.book_append_sheet(wb, ws, cfg.label + " Day");
     });
 
@@ -5219,11 +5337,17 @@ function handleImportFile(event){
         const byDate = new Map((cache[tabKey] || []).map(s => [s.date, s]));
         const numOrNull = v => (v === "" || v === undefined || v === null || isNaN(parseFloat(v))) ? null : parseFloat(v);
 
+        // how many set column pairs this file has per person (older backups: 3)
+        const setColsFor = name => {
+          let n = 0;
+          while(header.includes(`${name} S${n + 1} Wt`)) n++;
+          return n;
+        };
         const peopleColumns = filePeople && filePeople.length
-          ? filePeople.map(fp => ({ filePerson: fp, startIdx: header.indexOf(`${fp.name} S1 Wt`) })).filter(pc => pc.startIdx !== -1)
+          ? filePeople.map(fp => ({ filePerson: fp, startIdx: header.indexOf(`${fp.name} S1 Wt`), setCols: setColsFor(fp.name) })).filter(pc => pc.startIdx !== -1)
           : [
-              { filePerson: { id: "sam", name: "Sam" }, startIdx: 2 },
-              { filePerson: { id: "joe", name: "Joe" }, startIdx: 8 }
+              { filePerson: { id: "sam", name: "Sam" }, startIdx: 2, setCols: 3 },
+              { filePerson: { id: "joe", name: "Joe" }, startIdx: 8, setCols: 3 }
             ];
 
         aoa.slice(1).forEach(row => {
@@ -5233,24 +5357,27 @@ function handleImportFile(event){
             ? rawDate.toISOString().slice(0, 10)
             : String(rawDate).slice(0, 10);
           const exercise = String(row[1]);
-          if(!getExercises(tabKey).includes(exercise)) return;
-
-          if(!byDate.has(date)) byDate.set(date, { date, entries: {} });
-          if(!byDate.get(date).entries[exercise]) byDate.get(date).entries[exercise] = { sets: {} };
-          const entrySets = byDate.get(date).entries[exercise].sets;
 
           peopleColumns.forEach(pc => {
             const targetId = idMap[pc.filePerson.id];
             if(!targetId){ skippedPeople.add(pc.filePerson.name); return; }
-            entrySets[targetId] = [0, 1, 2].map(si => ({
+            const sets = Array.from({ length: pc.setCols }, (_, si) => ({
               wt: numOrNull(row[pc.startIdx + si * 2]),
-              reps: row[pc.startIdx + si * 2 + 1] || ""
+              reps: row[pc.startIdx + si * 2 + 1] !== undefined && row[pc.startIdx + si * 2 + 1] !== null ? String(row[pc.startIdx + si * 2 + 1]) : ""
             }));
+            // columns are padded out to the longest exercise in the tab, so
+            // drop trailing blank sets rather than giving every exercise 6
+            while(sets.length && sets[sets.length - 1].wt === null && sets[sets.length - 1].reps === "") sets.pop();
+            if(!sets.length) return;
+            if(!byDate.has(date)) byDate.set(date, { date, entries: {} });
+            const entries = byDate.get(date).entries;
+            if(!entries[exercise]) entries[exercise] = { sets: {} };
+            entries[exercise].sets[targetId] = sets;
             importedRows++;
           });
         });
 
-        const merged = [...byDate.values()].sort((a, b) => a.date.localeCompare(b.date));
+        const merged = normalizeSessions([...byDate.values()]).sort((a, b) => a.date.localeCompare(b.date) || (a.id || "").localeCompare(b.id || ""));
         cache[tabKey] = merged;
         localStorage.setItem(cfg.key, JSON.stringify(merged));
       });
@@ -5260,10 +5387,9 @@ function handleImportFile(event){
       } else {
         const skippedMsg = skippedPeople.size ? ` (skipped: ${[...skippedPeople].join(", ")})` : "";
         showToast(`Restored ${importedRows} entries${skippedMsg}`);
+        ensurePrimaryPersonValid();
         renderTabs();
-        if(activeTab === "progress"){ renderProgressView(); }
-        else if(activeTab === "settings"){ renderPeopleSettings(); }
-        else { renderStatStrip(); renderForm(); renderHistory(); }
+        rerenderActiveView();
       }
     }catch(err){
       console.error(err);
@@ -6151,10 +6277,7 @@ async function init(){
   timerSettings = loadTimerSettings();
   ptMode = loadPtMode();
   primaryPersonId = loadPrimaryPersonId();
-  if(!primaryPersonId || !people.some(p => p.id === primaryPersonId)){
-    primaryPersonId = people[0] ? people[0].id : null;
-    savePrimaryPersonId();
-  }
+  ensurePrimaryPersonValid();
   ptCurrentDayIndex = loadPtDayIndex();
   ptFormDrafts = loadPtFormDrafts();
   ptIncrements = loadPtIncrements();
@@ -6166,6 +6289,7 @@ async function init(){
   progressAssistedPrefs = loadProgressAssistedPrefs();
   commentsEnabled = loadCommentsEnabled();
   advancedMode = loadAdvancedMode();
+  weightPrefillSource = loadWeightPrefillSource();
   formDrafts = loadFormDrafts();
   creditsSettingsCollapsed = loadCreditsSettingsCollapsed();
   currentThemeState = loadTheme();
@@ -6215,6 +6339,9 @@ function setupBackToTopButton(){
 // If the app closed/crashed mid-session, formDrafts (persisted on every
 // keystroke) still holds the unsaved sets — offer to resume or discard them.
 async function checkResumePrompt(){
+  // PT mode restores its own drafts inline; a leftover Classic draft stays
+  // saved and is offered next time the app opens in Classic mode.
+  if(ptMode) return;
   const draftTabs = Object.keys(formDrafts).filter(k =>
     CONFIG[k] && formDrafts[k] && Object.keys(formDrafts[k].values || {}).length > 0
   );
@@ -6390,6 +6517,16 @@ function handleSaveSettings(){
   }
 }
 
+// Every CONFIG tab, generated rather than hand-listed — a hardcoded list here
+// is how Core/Cardio got left out of the backup (and then wiped on pull).
+function buildSyncPayload(){
+  const payload = {};
+  Object.keys(CONFIG).forEach(k => { payload[k] = cache[k] || []; });
+  payload.people = people;
+  payload.exportedAt = new Date().toISOString();
+  return payload;
+}
+
 async function autoPushToGithub(){
   const cfg = getGithubConfig();
   if(!cfg || !cfg.token || !cfg.repo) return;
@@ -6397,10 +6534,7 @@ async function autoPushToGithub(){
     for(const k of Object.keys(CONFIG)){
       if(!cache[k]) await loadTab(k);
     }
-    const payload = {
-      push: cache.push||[], pull: cache.pull||[], leg: cache.leg||[], core: cache.core||[],
-      people, exportedAt: new Date().toISOString()
-    };
+    const payload = buildSyncPayload();
     const content = utf8ToBase64(JSON.stringify(payload, null, 2));
     const apiUrl = `https://api.github.com/repos/${cfg.repo}/contents/${encodeURIComponent(cfg.path)}`;
     const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(cfg.branch)}`, {
@@ -6448,13 +6582,7 @@ async function pushToGithub(){
       }
     }
 
-    const payload = {
-      push: cache.push || [],
-      pull: cache.pull || [],
-      leg: cache.leg || [],
-      people: people,
-      exportedAt: new Date().toISOString()
-    };
+    const payload = buildSyncPayload();
     const content = utf8ToBase64(JSON.stringify(payload, null, 2));
     const apiUrl = `https://api.github.com/repos/${cfg.repo}/contents/${encodeURIComponent(cfg.path)}`;
 
@@ -6530,7 +6658,11 @@ async function pushToGithub(){
 // check on launch — applies a fetched remote payload to local state/storage.
 function applyRemoteGithubData(remote){
   Object.keys(CONFIG).forEach(tabKey => {
-    const sessions = Array.isArray(remote[tabKey]) ? remote[tabKey] : [];
+    // a backup made before a tab existed (or by an older build that didn't
+    // upload it) simply has no key for it — keep the local copy rather than
+    // treating "missing" as "empty" and wiping it
+    if(!Array.isArray(remote[tabKey])) return;
+    const sessions = remote[tabKey];
     normalizeSessions(sessions);
     migrateExerciseSplits(tabKey, sessions);
     cache[tabKey] = sessions;
@@ -6540,13 +6672,29 @@ function applyRemoteGithubData(remote){
   if(Array.isArray(remote.people) && remote.people.length){
     people = remote.people;
     savePeople();
+    ensurePrimaryPersonValid();
   }
 
   setLastSyncedExportedAt(remote.exportedAt || new Date().toISOString());
   renderTabs();
-  if(activeTab === "progress"){ renderProgressView(); }
-  else if(activeTab === "settings"){ renderPeopleSettings(); renderExerciseSettings(); }
-  else { renderStatStrip(); renderForm(); renderHistory(); }
+  rerenderActiveView();
+}
+
+function ensurePrimaryPersonValid(){
+  if(!people.some(p => p.id === primaryPersonId)){
+    primaryPersonId = people[0] ? people[0].id : null;
+    savePrimaryPersonId();
+  }
+}
+
+// Re-render whatever view is showing after data changed underneath it.
+// activeTab can be a Classic day, "progress", "settings", or a PT day ("pt0"…)
+// — only a Classic day has a log form, so don't assume one exists.
+function rerenderActiveView(){
+  if(activeTab === "progress") renderProgressView();
+  else if(activeTab === "settings"){ renderPeopleSettings(); renderExerciseSettings(); renderPtSettings(); }
+  else if(isPtDayTab(activeTab)) renderPtView();
+  else if(CONFIG[activeTab]){ renderStatStrip(); renderForm(); renderHistory(); }
 }
 
 async function pullFromGithub(){
@@ -6855,7 +7003,7 @@ function renderPlateCalcPersonTabs(){
 
 function prefillPlateCalcWeight(){
   const stats = computeStatsFor(activeTab, plateCalcExName, plateCalcPersonId);
-  const prefill = stats.best ?? stats.last;
+  const prefill = weightPrefillSource === "recent" ? (stats.last ?? stats.best) : (stats.best ?? stats.last);
   document.getElementById("plateCalcWeight").value = prefill !== null && prefill !== undefined ? prefill : "";
   updatePlateCalc();
 }

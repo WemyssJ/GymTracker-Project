@@ -15,7 +15,7 @@ Single-page workout tracker (Capacitor/Cordova app for Android, also runs as pla
 
 ## Data model
 
-- `people`: array of `{id, name, color}`. `COLOR_PALETTE` (index.html:1710) auto-assigns colors via `nextColor()`.
+- `people`: array of `{id, name, color}`. `COLOR_PALETTE` auto-assigns colors via `nextColor()`.
 - `cache[tabKey]`: array of sessions, each `{date, entries}`. `entries[exerciseName] = {sets: {personId: [{wt, reps}, ...]}, assisted: bool, notes: {personId: string}}`.
 - `CONFIG[tabKey]` defines each workout tab (label, storage key, seed history, etc.); `activeTab` is the current tab.
 - `computeStatsFor(tabKey, exercise, personId)` → `{best, last}` (best/last top single-set weight for that person on that exercise).
@@ -37,7 +37,25 @@ Single-page workout tracker (Capacitor/Cordova app for Android, also runs as pla
 - `editSession(tabKey, id)` / `deleteSession(tabKey, id)` are id-keyed now (history row buttons pass `s.id`, not `s.date`). Anywhere sessions are sorted or diffed needs an `id` tiebreaker alongside `date` for correctness on same-day ties: `renderHistory()`'s chrono/display sorts and its `prFlags`/`regFlags` key (`s.id + "|" + ex`, was `s.date + "|" + ex`).
 - **Editing vs. logging fresh**: `editSession()` stores `editingId: sess.id` inside `formDrafts[tabKey]` (alongside the existing `date`/`values`). `handleSave()` reads that back — if set and the session still exists, it updates that entry in place (by `id`); otherwise (no `editingId`, or the ask **wasn't** initiated via the history row's ✎ button) it always `push()`es a new session, then re-sorts `cache[activeTab]` by `(date, id)`. `clearDraft()` (called after a successful save, and by `cancelEditSession()`) deletes the whole draft object, which naturally clears `editingId` too. `deleteSession()` also clears the draft if the session being deleted is the one currently mid-edit.
 - `renderForm()` shows an `.editing-mode` highlighted card + an `.editing-banner` ("✎ Editing the {date} session" + Cancel button calling `cancelEditSession()`) whenever `formDrafts[activeTab].editingId` is set, and the save button reads "Update" instead of "Log" in that state.
-- **Known gap, not yet fixed**: Excel export/import (`exportExcel`, and the `byDate` Map in the Excel-restore handler) and are still one-row-per-date-per-exercise — round-tripping through an Excel backup will still collapse multiple same-day sessions back into one (last one wins). GitHub push/pull just serialize/replace the whole `cache[tabKey]` array directly (no date-keyed transformation), so **that** path is already fully multi-session-safe.
+- **Known gap, not yet fixed**: Excel export/import (`exportExcel`, and the `byDate` Map in the Excel-restore handler) are still one-row-per-date-per-exercise — round-tripping through an Excel backup will still collapse multiple same-day sessions back into one (last one wins). GitHub push/pull just serialize/replace the whole `cache[tabKey]` array directly (no date-keyed transformation), so **that** path is already fully multi-session-safe.
+- Excel export writes as many set-column pairs per person as the longest set list in that tab (padded with blanks); import counts them from the header and trims trailing blank sets. Export includes every logged exercise, not just the tab's current list.
+
+## Backup & sync
+
+- `buildSyncPayload()` generates the GitHub payload from `Object.keys(CONFIG)` — never hand-list tabs (a hardcoded list once left Core/Cardio out of the backup). `applyRemoteGithubData()` only replaces tabs the remote actually has a key for; a missing key keeps the local copy.
+- After data changes underneath the UI, call `rerenderActiveView()` rather than `renderForm()` directly — `activeTab` may be `"progress"`, `"settings"` or a PT day (`"pt0"`…`"pt6"`), none of which have a log form.
+
+## PT mode
+
+- A scheduling/UI layer over `PT_PROGRAM` (7 days: `training` / `activeRecovery` / `rest`). It reads/writes the **same** `cache[tabKey]` stores as Classic — never add a parallel store. Toggle: `#ptModeToggleBtn` → `togglePtMode()`. State: `ptMode`, `primaryPersonId` (PT is single-user), `ptCurrentDayIndex` (the programme pointer), `ptFormDrafts`, `ptIncrements`; `PT_EXERCISES_BY_TAB` is derived from `PT_PROGRAM`.
+- Tabs are `"pt0"`…`"pt6"` (`isPtDayTab()`), labelled with each day's `shortLabel`; a due-dot marks `ptCurrentDayIndex`. Tapping a day tab only sets `ptViewDayIndex` — it never advances the pointer. Only `mountPtDay()` (toggle-on, app launch, post-Finish "Continue") auto-advances past rest/active-recovery days; `finishPtDay()` advances past training days.
+- `finishPtDay()` only saves sets the user actually typed into (inputs without the `prefilled` class) — every input starts pre-filled with a suggestion, so "has a value" ≠ "was done". Exercises with no typed sets are listed as skipped, and a tab with nothing typed gets no session. It creates one session per tab the day touched.
+- PT-only exercises (Trap-Bar Deadlift, Seated Cable Row, …) aren't added to the Classic log form; Classic's read-only views use `getVisibleExercises(tabKey)` (configured list + PT exercises with data) so they still show in history/PBs/Progress. Classic's edit-in-place save preserves session entries that aren't in the form.
+- Golden Rule (`checkGoldenRuleHint`) evaluates the person's own prior session (sessions where *they* have sets) before today's is saved; hints show in the Finish-day summary. Rest timer: `maybeStartPtRestTimer()` starts once per set when both weight and reps are really typed; `timerRestActive` tints the widget `--rest-color` and on natural completion auto-stops and re-minimizes (manual timers unaffected).
+
+## Suggested weight
+
+- Settings → "Suggested weight" (`weightPrefillSource`, `gymtracker:weightPrefillSource`): `"best"` (default, all-time PB) or `"recent"` (last session's per-set weights, via `lastSessionSetsFor()`). `suggestedWeight()` is used by both Classic's `renderForm()` and PT's `ptBlockHtml()`, and the plate calculator prefill follows the same choice.
 
 ## Session summary modal
 
@@ -55,8 +73,8 @@ Single-page workout tracker (Capacitor/Cordova app for Android, also runs as pla
 
 - Toast: `showToast(msg, type)` — `type` is `"pr"` (green border, pulse anim), `"reg"` (red border), or default. Single toast element `#toast`, 3.2s auto-hide.
 - Modals: generic `openModal(id)` / `closeModal(id)` operate on `.modal-overlay` > `.modal-box` pairs (slide up/down anim). Existing overlays: `welcomeOverlay`, `confirmOverlay`, `resumeOverlay`, `settingsOverlay`, `exInfoOverlay`, `plateCalcOverlay`, `exercisePickerOverlay`. `showConfirm(message)` is a promise-based confirm dialog built on `confirmOverlay`.
-- Themes: `THEMES` object (index.html:1749) has `{name, bg, accent}` per theme; `deriveTheme(bg, accent)` derives the full palette (panel/line/text/muted/accentDim/accentInk) via `mixHex`. `applyTheme()` writes CSS custom properties directly onto `document.documentElement.style` (e.g. `--amber` is actually "the accent color", not literally amber — it's theme-dependent, ranges from cyan to gold to red to green depending on selected theme). There's also a "custom" theme option with user-picked bg/accent.
-- Rest timer: `timerSettings` (`{mode: "countdown"|"countup", duration}`) persisted to localStorage. Always on — there is no Settings toggle for it (removed; don't re-add one without an explicit ask) — it just shows/hides based on whether the active tab has a `CONFIG` entry. `timerMinimized` (in-memory only, not persisted) defaults to `true` so every fresh load starts as the small `#timerBubble` icon; tapping it calls `toggleTimerMinimize()` to reveal the full `#timerWidget` footer. `refreshTimerFooter()` re-renders both.
+- Themes: `THEMES` object has `{name, bg, accent}` per theme; `deriveTheme(bg, accent)` derives the full palette (panel/line/text/muted/accentDim/accentInk) via `mixHex`. `applyTheme()` writes CSS custom properties directly onto `document.documentElement.style` (e.g. `--amber` is actually "the accent color", not literally amber — it's theme-dependent, ranges from cyan to gold to red to green depending on selected theme). There's also a "custom" theme option with user-picked bg/accent.
+- Rest timer: `timerSettings` (`{mode: "countdown"|"countup", duration}`) persisted to localStorage. Always on — there is no Settings toggle for it (removed; don't re-add one without an explicit ask) — it just shows/hides based on whether the active tab has a `CONFIG` entry (or is a PT training day). `timerMinimized` (in-memory only, not persisted) defaults to `true` so every fresh load starts as the small `#timerBubble` icon; tapping it calls `toggleTimerMinimize()` to reveal the full `#timerWidget` footer. `refreshTimerFooter()` re-renders both.
 
 ## Conventions
 

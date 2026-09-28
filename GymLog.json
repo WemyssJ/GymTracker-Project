@@ -4310,6 +4310,32 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1790609219800-m3gdh",
+      "date": "2026-09-28",
+      "entries": {
+        "Romanian Deadlift": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "12"
+              },
+              {
+                "wt": 40,
+                "reps": "12"
+              },
+              {
+                "wt": 40,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -6502,9 +6528,86 @@
         }
       },
       "id": "2026-09-09"
+    },
+    {
+      "id": "1790609219800-pi143",
+      "date": "2026-09-28",
+      "entries": {
+        "Leg Press": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Lunges": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 17.5,
+                "reps": "10"
+              },
+              {
+                "wt": 17.5,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Calf Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 35,
+                "reps": "13"
+              },
+              {
+                "wt": 35,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
-  "core": [],
+  "core": [
+    {
+      "id": "1790609219800-zfovm",
+      "date": "2026-09-28",
+      "entries": {
+        "Hanging Knee Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": null,
+                "reps": "10"
+              },
+              {
+                "wt": null,
+                "reps": "10"
+              },
+              {
+                "wt": null,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
+    }
+  ],
   "cardio": [],
   "people": [
     {
@@ -6518,5 +6621,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-09-27T18:12:34.990Z"
+  "exportedAt": "2026-09-28T15:26:59.804Z"
 }

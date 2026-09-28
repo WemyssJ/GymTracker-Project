@@ -4336,6 +4336,32 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1790610156644-3ke0n",
+      "date": "2026-09-28",
+      "entries": {
+        "Romanian Deadlift": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 40,
+                "reps": "12"
+              },
+              {
+                "wt": 30,
+                "reps": "12"
+              },
+              {
+                "wt": 30,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -6578,6 +6604,68 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1790610156644-6cyjk",
+      "date": "2026-09-28",
+      "entries": {
+        "Leg Press": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "12"
+              },
+              {
+                "wt": 50,
+                "reps": "12"
+              },
+              {
+                "wt": 50,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Lunges": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 17.5,
+                "reps": "10"
+              },
+              {
+                "wt": 17.5,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Calf Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 35,
+                "reps": "13"
+              },
+              {
+                "wt": 35,
+                "reps": "12"
+              },
+              {
+                "wt": 35,
+                "reps": "15"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "core": [
@@ -6606,6 +6694,52 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1790610156644-f2bhj",
+      "date": "2026-09-28",
+      "entries": {
+        "Cable Crunch": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Hanging Knee Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": null,
+                "reps": "12"
+              },
+              {
+                "wt": null,
+                "reps": "12"
+              },
+              {
+                "wt": null,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "cardio": [],
@@ -6621,5 +6755,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-09-28T15:26:59.804Z"
+  "exportedAt": "2026-09-28T15:42:36.649Z"
 }

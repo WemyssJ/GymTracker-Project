@@ -388,6 +388,16 @@
     flex:1;background:var(--panel-2);border:1px solid var(--line);color:var(--text);
     border-radius:8px;padding:8px 10px;font-size:13px;
   }
+  .pt-undo-btn{
+    width:100%;margin-top:10px;padding:12px;border:1px solid var(--line);border-radius:10px;
+    background:none;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;
+  }
+  .pt-undo-btn:active{opacity:0.85;}
+  /* While a countdown timer is running, PT's weight/rep inputs flatten to the
+     same orange as the timer widget — overriding both inline PR/gradient
+     colours and the .prefilled grey — so it's obvious at a glance you're
+     resting; they revert the instant the timer stops or finishes. */
+  #ptView.pt-resting .mini-box input{color:var(--rest-color) !important;}
 
   /* ── Collapsible section transitions ─────────────────────────── */
   .collapsible-body{overflow:hidden;max-height:3000px;opacity:1;}
@@ -671,7 +681,7 @@
 
 <header class="top">
   <div class="top-title-row">
-    <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.13</span></h1>
+    <h1>Gym<span>Tracker</span> <span class="version-stamp">v0.8.14</span></h1>
     <button type="button" id="ptModeToggleBtn" class="pt-mode-toggle" onclick="togglePtMode()">PT</button>
   </div>
   <nav class="tabs" id="tabs"></nav>
@@ -1890,13 +1900,13 @@ const PT_PROGRAM = [
     type: "training",
     warmup: { text: "Rowing Machine, moderate pace", minutes: [5, 7] },
     blocks: [
-      { exercise: "Incline Press",  tab: "push", sets: 3, repRange: [8, 12],  restSeconds: 90, startWeight: "8–12 kg dumbbells (per hand)" },
-      { exercise: "Lat Pulldown",   tab: "pull", sets: 3, repRange: [8, 12],  restSeconds: 90, startWeight: "~20–25 kg cable stack" },
-      { exercise: "Seated Cable Row", tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "~20–25 kg cable stack" },
-      { exercise: "Overhead Press", tab: "push", sets: 3, repRange: [8, 12],  restSeconds: 90, startWeight: "6–8 kg dumbbells (per hand)" },
-      { exercise: "Lateral Raise",  tab: "push", sets: 3, repRange: [12, 15], restSeconds: 60, startWeight: "3–5 kg dumbbells (per hand)" },
+      { choice: ["Incline Press", "Bench Press"], tab: "push", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "8–12 kg dumbbells (per hand)", askEachTime: true },
+      { choice: ["Lat Pulldown", "Chin Up"], tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "~20–25 kg cable stack", askEachTime: true },
+      { choice: ["Seated Cable Row", "Weighted Row"], tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "~20–25 kg cable stack", askEachTime: true },
+      { exercise: "Dumbbell Press", tab: "push", sets: 3, repRange: [8, 12],  restSeconds: 90, startWeight: "6–8 kg dumbbells (per hand)" },
+      { choice: ["Lateral Raise", "Upright Row"], tab: "push", sets: 3, repRange: [12, 15], restSeconds: 60, startWeight: "3–5 kg dumbbells (per hand)", askEachTime: true },
       { exercise: "Incline Dumbbell Bicep Curls", tab: "pull", sets: 2, repRange: [10, 15], restSeconds: 60, startWeight: "5–7 kg dumbbells (per hand)", isNew: true },
-      { exercise: "Tricep Push",    tab: "push", sets: 2, repRange: [10, 15], restSeconds: 60, startWeight: "~10–12.5 kg cable stack" }
+      { choice: ["Tricep Push", "Skull Crushers"], tab: "push", sets: 2, repRange: [10, 15], restSeconds: 60, startWeight: "~10–12.5 kg cable stack", askEachTime: true }
     ]
   },
   { // index 1
@@ -1908,12 +1918,12 @@ const PT_PROGRAM = [
     warmup: { text: "Treadmill Incline Walk", minutes: [5, 8] },
     blocks: [
       { choice: ["Squat", "Leg Press"], tab: "leg", sets: 3, repRange: [8, 12], restSeconds: 120, startWeight: "Empty barbell 20 kg (Squat) / ~40–50 kg (Leg Press)", askEachTime: true },
-      { exercise: "Romanian Deadlift", tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 120, startWeight: "8–10 kg dumbbells (per hand) OR 25 kg barbell" },
-      { exercise: "Lunges", tab: "leg", sets: 2, repsPerSide: 10, restSeconds: 90, startWeight: "Bodyweight", bodyweightStart: true },
+      { choice: ["Romanian Deadlift", "Deadlift"], tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 120, startWeight: "8–10 kg dumbbells (per hand) OR 25 kg barbell", askEachTime: true },
+      { choice: ["Lunges", "Bulgarian Split Squat"], tab: "leg", sets: 2, repsPerSide: 10, restSeconds: 90, startWeight: "Bodyweight", bodyweightStart: true, askEachTime: true },
       { exercise: "Prone Leg Curl", tab: "leg", sets: 3, repRange: [10, 15], restSeconds: [60, 90] },
       { exercise: "Calf Raises", tab: "leg", sets: 3, repRange: [12, 15], restSeconds: 60 },
-      { exercise: "Cable Crunch", tab: "core", sets: 3, repRange: [10, 15], restSeconds: 60, startWeight: "~15–20 kg cable stack" },
-      { exercise: "Hanging Knee Raises", tab: "core", sets: 3, repRange: [8, 15], restSeconds: 60, startWeight: "Bodyweight", bodyweightStart: true, isNew: true }
+      { choice: ["Bicycle Crunch", "Cable Crunch"], tab: "core", sets: 3, repRange: [10, 15], restSeconds: 60, startWeight: "Bodyweight (Bicycle Crunch), or ~15–20 kg cable stack (Cable Crunch)", askEachTime: true },
+      { choice: ["Hanging Knee Raises", "Leg Raise"], tab: "core", sets: 3, repRange: [8, 15], restSeconds: 60, startWeight: "Bodyweight", bodyweightStart: true, isNew: true, askEachTime: true }
     ]
   },
   { // index 2
@@ -1933,13 +1943,13 @@ const PT_PROGRAM = [
     type: "training",
     warmup: { text: "Dynamic movements (arm circles, leg swings, bodyweight squats)", minutes: [5, 5] },
     blocks: [
-      { exercise: "Trap-Bar Deadlift", tab: "pull", sets: 3, repRange: [5, 8], restSeconds: [120, 180], startWeight: "Empty trap bar ~20–25 kg + 5 kg plates/side (~30–35 kg total)", isNew: true },
-      { exercise: "Dumbbell Press", tab: "push", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "10–12 kg dumbbells (per hand)" },
+      { choice: ["Trap-Bar Deadlift", "Deadlift"], tab: "pull", sets: 3, repRange: [5, 8], restSeconds: [120, 180], startWeight: "Empty trap bar ~20–25 kg + 5 kg plates/side (~30–35 kg total)", isNew: true, askEachTime: true },
+      { choice: ["Dumbbell Press", "Bench Press"], tab: "push", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "10–12 kg dumbbells (per hand)", askEachTime: true },
       { choice: ["Lat Pulldown", "Pull ups"], tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90, askEachTime: true },
-      { exercise: "Bulgarian Split Squat", tab: "leg", sets: 2, repsPerSide: [8, 10], restSeconds: 90, startWeight: "Bodyweight", bodyweightStart: true },
-      { exercise: "Lateral Raise", tab: "push", sets: 3, repRange: [12, 15], restSeconds: 60 },
+      { choice: ["Bulgarian Split Squat", "Lunges"], tab: "leg", sets: 2, repsPerSide: [8, 10], restSeconds: 90, startWeight: "Bodyweight", bodyweightStart: true, askEachTime: true },
+      { choice: ["Lateral Raise", "Front Raise"], tab: "push", sets: 3, repRange: [12, 15], restSeconds: 60, askEachTime: true },
       { exercise: "Face Pull", tab: "push", sets: 2, repRange: [12, 15], restSeconds: 60, startWeight: "~7.5–10 kg cable stack" },
-      { exercise: "Ab Wheel Rollouts", tab: "core", sets: 3, repRange: [8, 12], restSeconds: 60, startWeight: "Bodyweight", bodyweightStart: true, isNew: true }
+      { choice: ["Ab Wheel Rollouts", "Captain's Chair Leg Raise"], tab: "core", sets: 3, repRange: [8, 12], restSeconds: 60, startWeight: "Bodyweight", bodyweightStart: true, isNew: true, askEachTime: true }
     ],
     finisher: { text: "Treadmill walk (optional)", minutes: [10, 10], loggable: false }
   },
@@ -1952,13 +1962,13 @@ const PT_PROGRAM = [
     warmup: { text: "Treadmill brisk walk", minutes: [5, 5] },
     blocks: [
       { choice: ["Pull ups", "Lat Pulldown"], tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90, askEachTime: true },
-      { exercise: "Dumbbell Press", tab: "push", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "10–12 kg dumbbells (per hand)" },
-      { exercise: "Seated Cable Row", tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90 },
-      { exercise: "Lateral Raise", tab: "push", sets: 3, repRange: [12, 15], restSeconds: 60 },
-      { exercise: "Bicep Curl", tab: "pull", sets: 3, repRange: [10, 15], restSeconds: 60, startWeight: "5–7 kg dumbbells (per hand)" },
-      { exercise: "Tricep Push", tab: "push", sets: 3, repRange: [10, 15], restSeconds: 60 },
-      { exercise: "Cable Crunch", tab: "core", sets: 3, repRange: [10, 15], restSeconds: 60 },
-      { exercise: "Hanging Knee Raises", tab: "core", sets: [2, 3], repRange: [10, 15], restSeconds: 60 }
+      { choice: ["Dumbbell Press", "Incline Press"], tab: "push", sets: 3, repRange: [8, 12], restSeconds: 90, startWeight: "10–12 kg dumbbells (per hand)", askEachTime: true },
+      { choice: ["Seated Cable Row", "Weighted Row"], tab: "pull", sets: 3, repRange: [8, 12], restSeconds: 90, askEachTime: true },
+      { choice: ["Lateral Raise", "Upright Row"], tab: "push", sets: 3, repRange: [12, 15], restSeconds: 60, askEachTime: true },
+      { choice: ["Bicep Curl", "Hammer Curl"], tab: "pull", sets: 3, repRange: [10, 15], restSeconds: 60, startWeight: "5–7 kg dumbbells (per hand)", askEachTime: true },
+      { choice: ["Tricep Push", "Skull Crushers"], tab: "push", sets: 3, repRange: [10, 15], restSeconds: 60, askEachTime: true },
+      { choice: ["Bicycle Crunch", "Cable Crunch"], tab: "core", sets: 3, repRange: [10, 15], restSeconds: 60, askEachTime: true },
+      { choice: ["Hanging Knee Raises", "Leg Raise"], tab: "core", sets: [2, 3], repRange: [10, 15], restSeconds: 60, askEachTime: true }
     ]
   },
   { // index 5
@@ -3832,7 +3842,15 @@ function showSessionSummary(date, personSummaries, prevVolumes){
 
 let ptViewDayIndex = null;
 let ptSummaryResult = null;
+let ptLastFinish = null; // undo snapshot for finishPtDay(), cleared once the summary screen is left
 const ptSetCountOverrides = {}; // "{dayIndex}:{blockIndex}" -> count, in-memory only (resets on reload)
+let ptCollapsedBlocks = {}; // "{dayIndex}:{blockIndex}" -> bool, in-memory only, mirrors Classic's collapsedExercises
+
+function togglePtBlockCollapse(dayIndex, blockIndex){
+  const key = dayIndex + ":" + blockIndex;
+  ptCollapsedBlocks[key] = !ptCollapsedBlocks[key];
+  renderPtView();
+}
 
 function togglePtMode(){
   ptMode = !ptMode;
@@ -3842,6 +3860,7 @@ function togglePtMode(){
     switchTab("pt" + ptViewDayIndex);
   } else {
     ptSummaryResult = null;
+    ptLastFinish = null;
     switchTab(lastActiveDayTab || activeDays[0] || "push");
   }
 }
@@ -3856,6 +3875,7 @@ function togglePtMode(){
 // auto-advances anything, same as picking a Classic-mode day tab.
 function mountPtDay(){
   ptSummaryResult = null;
+  ptLastFinish = null;
   ptViewDayIndex = ptCurrentDayIndex;
   const day = PT_PROGRAM[ptViewDayIndex];
   if(day && (day.type === "rest" || day.type === "activeRecovery")){
@@ -3869,9 +3889,6 @@ function minutesRangeText(range){
 }
 function repRangeText(range){
   return Array.isArray(range) ? `${range[0]}–${range[1]}` : String(range);
-}
-function midOfRange(v){
-  return Array.isArray(v) ? Math.round((v[0] + v[1]) / 2) : v;
 }
 
 function renderPtView(){
@@ -3993,44 +4010,6 @@ function recordPtDraftValue(dayIndex, blockIndex, setIndex, field, value){
   savePtFormDrafts();
 }
 
-function startPtRestTimerFor(seconds){
-  const prevDuration = timerSettings.duration;
-  timerSettings.duration = seconds;
-  timerRestActive = true;
-  timerMinimized = false;
-  startRestTimer();
-  timerSettings.duration = prevDuration;
-}
-
-// Fires on blur of a set's weight/reps input — once BOTH fields for that
-// exact set have been actually typed into (not just sitting on a carried-
-// forward/suggested prefill), treat the set as "logged" and auto-start the
-// rest timer. Bodyweight sets have no weight input at all, so a real reps
-// value alone is enough for those.
-function maybeStartPtRestTimer(input, restSeconds){
-  if(!restSeconds) return;
-  // Switching away from PT mode entirely hides #ptView without clearing it
-  // (switching to a different PT day tab does re-render and destroy these
-  // nodes, so this only guards the "left PT mode" case) — a still-focused
-  // input from that stale view can otherwise fire a native blur/change and
-  // restart the rest timer after the user has moved on to Classic mode.
-  const ptView = document.getElementById("ptView");
-  if(!ptView || ptView.style.display === "none") return;
-  const blockKey = input.dataset.ex, setIndex = input.dataset.set;
-  const wt = document.querySelector(`[data-ex="${blockKey}"][data-set="${setIndex}"][data-field="wt"]`);
-  const reps = document.querySelector(`[data-ex="${blockKey}"][data-set="${setIndex}"][data-field="reps"]`);
-  const wtReal = !wt || (wt.value !== "" && !wt.classList.contains("prefilled"));
-  const repsReal = !!(reps && reps.value !== "" && !reps.classList.contains("prefilled"));
-  if(!(wtReal && repsReal)) return;
-  // once per set — correcting an already-logged set shouldn't restart a rest
-  // you're partway through
-  const setKey = blockKey + "|" + setIndex;
-  if(ptRestStartedSets.has(setKey)) return;
-  ptRestStartedSets.add(setKey);
-  startPtRestTimerFor(restSeconds);
-}
-const ptRestStartedSets = new Set();
-
 function updatePtWeightInputColor(input, dayIndex, blockIndex){
   input.classList.remove("pr-val", "reg-val");
   input.style.color = ""; input.style.fontWeight = "";
@@ -4102,13 +4081,22 @@ function ptCopySetOneToAll(dayIndex, blockIndex){
   checkPtOverloadHint(dayIndex, blockIndex);
 }
 
-function ptSetBoxHtml(dayIndex, blockIndex, setIndex, set, restSeconds){
+// Shared by oninput (value actually typed) and onfocus (tapping into a
+// prefilled/suggested value counts as confirming it, even without retyping —
+// so a correct carried-forward suggestion doesn't need to be retyped to count).
+function ptInputChanged(input, dayIndex, blockIndex, field){
+  input.classList.remove("prefilled");
+  if(field === "wt") updatePtWeightInputColor(input, dayIndex, blockIndex);
+  else { updatePtRepsInputColor(input, dayIndex, blockIndex); checkPtOverloadHint(dayIndex, blockIndex); }
+  recordPtDraftValue(dayIndex, blockIndex, input.dataset.set, field, input.value);
+}
+
+function ptSetBoxHtml(dayIndex, blockIndex, setIndex, set){
   const { blockKey } = ptBlockContext(dayIndex, blockIndex);
   const wtVal = set.wt !== null && set.wt !== undefined ? set.wt : "";
   const repsVal = set.reps || "";
   const wtClass = (set.wt !== null && set.wt !== undefined && !set.wtIsDraft) ? "prefilled" : "";
   const repsClass = (set.reps && !set.repsIsDraft) ? "prefilled" : "";
-  const restCall = restSeconds ? `maybeStartPtRestTimer(this,${restSeconds});` : "";
   return `
     <div class="set-col">
       <div class="set-label">SET ${setIndex + 1}</div>
@@ -4116,27 +4104,24 @@ function ptSetBoxHtml(dayIndex, blockIndex, setIndex, set, restSeconds){
         <input type="number" step="0.1" inputmode="decimal" placeholder="kg"
           class="${wtClass}" value="${wtVal}"
           data-ex="${blockKey}" data-person="${primaryPersonId}" data-set="${setIndex}" data-field="wt"
-          oninput="this.classList.remove('prefilled'); updatePtWeightInputColor(this,${dayIndex},${blockIndex}); recordPtDraftValue(${dayIndex},${blockIndex},${setIndex},'wt',this.value);"
-          onchange="${restCall}"
-          onfocus="this.select()">
+          oninput="ptInputChanged(this,${dayIndex},${blockIndex},'wt')"
+          onfocus="this.select(); ptInputChanged(this,${dayIndex},${blockIndex},'wt')">
       </div>
       <div class="mini-box reps-box">
         <input type="text" inputmode="numeric" placeholder="reps"
           class="${repsClass}" value="${repsVal}"
           data-ex="${blockKey}" data-person="${primaryPersonId}" data-set="${setIndex}" data-field="reps"
-          oninput="this.classList.remove('prefilled'); updatePtRepsInputColor(this,${dayIndex},${blockIndex}); checkPtOverloadHint(${dayIndex},${blockIndex}); recordPtDraftValue(${dayIndex},${blockIndex},${setIndex},'reps',this.value);"
-          onchange="${restCall}"
-          onfocus="this.select()">
+          oninput="ptInputChanged(this,${dayIndex},${blockIndex},'reps')"
+          onfocus="this.select(); ptInputChanged(this,${dayIndex},${blockIndex},'reps')">
       </div>
     </div>
   `;
 }
 
-function ptRepsOnlyBoxHtml(dayIndex, blockIndex, setIndex, set, restSeconds){
+function ptRepsOnlyBoxHtml(dayIndex, blockIndex, setIndex, set){
   const { blockKey } = ptBlockContext(dayIndex, blockIndex);
   const repsVal = set.reps || "";
   const repsClass = (set.reps && !set.repsIsDraft) ? "prefilled" : "";
-  const restCall = restSeconds ? `maybeStartPtRestTimer(this,${restSeconds});` : "";
   return `
     <div class="set-col">
       <div class="set-label">SET ${setIndex + 1}</div>
@@ -4144,9 +4129,8 @@ function ptRepsOnlyBoxHtml(dayIndex, blockIndex, setIndex, set, restSeconds){
         <input type="text" inputmode="numeric" placeholder="reps"
           class="${repsClass}" value="${repsVal}"
           data-ex="${blockKey}" data-person="${primaryPersonId}" data-set="${setIndex}" data-field="reps"
-          oninput="this.classList.remove('prefilled'); updatePtRepsInputColor(this,${dayIndex},${blockIndex}); checkPtOverloadHint(${dayIndex},${blockIndex}); recordPtDraftValue(${dayIndex},${blockIndex},${setIndex},'reps',this.value);"
-          onchange="${restCall}"
-          onfocus="this.select()">
+          oninput="ptInputChanged(this,${dayIndex},${blockIndex},'reps')"
+          onfocus="this.select(); ptInputChanged(this,${dayIndex},${blockIndex},'reps')">
       </div>
     </div>
   `;
@@ -4167,7 +4151,6 @@ function ptBlockHtml(dayIndex, blockIndex){
   const stats = computeStatsFor(tabKey, exName, primaryPersonId);
   const isBodyweightPhase = !!block.bodyweightStart && stats.best === null;
   const repTarget = Array.isArray(block.repRange) ? block.repRange[1] : (block.repRange || null);
-  const restSeconds = block.restSeconds ? midOfRange(block.restSeconds) : null;
 
   const suggestedHtml = (stats.best === null && block.startWeight)
     ? `<p class="pt-suggested">Suggested starting point: ${block.startWeight}</p>` : "";
@@ -4187,9 +4170,9 @@ function ptBlockHtml(dayIndex, blockIndex){
   });
 
   const setRowHtml = isBodyweightPhase
-    ? `<div class="set-row">${sets.map((set, si) => ptRepsOnlyBoxHtml(dayIndex, blockIndex, si, set, restSeconds)).join("")}</div>`
+    ? `<div class="set-row">${sets.map((set, si) => ptRepsOnlyBoxHtml(dayIndex, blockIndex, si, set)).join("")}</div>`
     : `<div class="set-row">
-        ${sets.map((set, si) => ptSetBoxHtml(dayIndex, blockIndex, si, set, restSeconds)).join("")}
+        ${sets.map((set, si) => ptSetBoxHtml(dayIndex, blockIndex, si, set)).join("")}
         ${count > 1 ? `<div class="set-col copy-set-col"><div class="set-label">&nbsp;</div><button type="button" class="copy-set-btn" onclick="ptCopySetOneToAll(${dayIndex},${blockIndex})" aria-label="Copy set 1 into all sets">⧉</button></div>` : ""}
       </div>`;
 
@@ -4197,22 +4180,25 @@ function ptBlockHtml(dayIndex, blockIndex){
   const infoBtn = EXERCISE_INFO[exName]
     ? `<button type="button" class="ex-info-btn" onclick="showExerciseInfo('${exName.replace(/'/g,"\\'")}')" aria-label="Exercise info">i</button>` : "";
 
+  const isCollapsed = !!ptCollapsedBlocks[dayIndex + ":" + blockIndex];
   return `
-    <div class="exercise-block" data-ex-name="${exName.replace(/"/g,"&quot;")}">
+    <div class="exercise-block${isCollapsed?" ex-collapsed":""}" data-ex-name="${exName.replace(/"/g,"&quot;")}">
       <div class="exercise-title-row">
-        <div class="exercise-title">${exName}</div>
+        <div class="exercise-title${isCollapsed?" ex-title-collapsed":""}" onclick="togglePtBlockCollapse(${dayIndex},${blockIndex})">${exName}</div>
         ${infoBtn}
       </div>
-      ${choiceHtml}
-      <div class="p-label" style="color:${getPersonColor(primaryPersonId)};">${personName.toUpperCase()}${block.repRange ? ` · target ${repRangeText(block.repRange)} reps` : ""}</div>
-      ${setRowHtml}
-      ${suggestedHtml}
-      ${perSideNote}
-      <div class="overload-hint" id="overloadHint-${blockKey}-${primaryPersonId}" style="display:none;"></div>
-      <div class="set-count-row">
-        ${count > 1 ? `<button type="button" class="set-count-btn" onclick="adjustPtSetCount(${dayIndex},${blockIndex},-1)" aria-label="Remove set">−</button>` : ""}
-        <span class="set-count-label">${count} set${count!==1?"s":""}</span>
-        ${count < 6 ? `<button type="button" class="set-count-btn" onclick="adjustPtSetCount(${dayIndex},${blockIndex},1)" aria-label="Add set">+</button>` : ""}
+      <div class="exercise-collapsible">
+        ${choiceHtml}
+        <div class="p-label" style="color:${getPersonColor(primaryPersonId)};">${personName.toUpperCase()}${block.repRange ? ` · target ${repRangeText(block.repRange)} reps` : ""}</div>
+        ${setRowHtml}
+        ${suggestedHtml}
+        ${perSideNote}
+        <div class="overload-hint" id="overloadHint-${blockKey}-${primaryPersonId}" style="display:none;"></div>
+        <div class="set-count-row">
+          ${count > 1 ? `<button type="button" class="set-count-btn" onclick="adjustPtSetCount(${dayIndex},${blockIndex},-1)" aria-label="Remove set">−</button>` : ""}
+          <span class="set-count-label">${count} set${count!==1?"s":""}</span>
+          ${count < 6 ? `<button type="button" class="set-count-btn" onclick="adjustPtSetCount(${dayIndex},${blockIndex},1)" aria-label="Add set">+</button>` : ""}
+        </div>
       </div>
     </div>
   `;
@@ -4228,7 +4214,7 @@ function renderPtTrainingView(container, day){
     ${warmupHtml}
     <div class="log-form-card">${blocksHtml}</div>
     ${finisherHtml}
-    <button type="button" class="pt-finish-btn" id="ptFinishBtn" onclick="finishPtDay()">Finish day</button>
+    <button type="button" class="pt-finish-btn" id="ptFinishBtn" onclick="confirmFinishPtDay()">Finish day</button>
   `;
   day.blocks.forEach((block, bi) => {
     const { exName } = ptBlockContext(dayIndex, bi);
@@ -4287,11 +4273,22 @@ function checkGoldenRuleHint(tabKey, exercise, personId, block){
   return null;
 }
 
+async function confirmFinishPtDay(){
+  const ok = await showConfirm("Finish this day and save your sets?");
+  if(ok) finishPtDay();
+}
+
 function finishPtDay(){
   const dayIndex = ptViewDayIndex;
   const day = PT_PROGRAM[dayIndex];
   const date = todayStr();
   if(!people.some(p => p.id === primaryPersonId)) return;
+
+  // Snapshotted before anything is mutated, so an accidental Finish can be
+  // undone from the summary screen (undoFinishPtDay()) — restores the draft
+  // inputs, the programme pointer, and removes the sessions just pushed.
+  const prevPtCurrentDayIndex = ptCurrentDayIndex;
+  const draftSnapshot = ptFormDrafts[dayIndex] ? JSON.parse(JSON.stringify(ptFormDrafts[dayIndex])) : null;
 
   const byTab = {};
   const skipped = [];
@@ -4354,14 +4351,17 @@ function finishPtDay(){
   }
 
   const tabSummaries = {};
+  const pushedIds = {};
   Object.keys(byTab).forEach(tabKey => {
     const priorSessions = cache[tabKey].filter(s => s.date < date);
     const prevSession = priorSessions.length ? priorSessions.reduce((a, b) => (a.date > b.date ? a : b)) : null;
     const prevVolume = prevSession ? computePersonVolume(prevSession, tabKey, primaryPersonId) : null;
 
-    cache[tabKey].push({ id: nextSessionId(), date, entries: byTab[tabKey].entries });
+    const sessionId = nextSessionId();
+    cache[tabKey].push({ id: sessionId, date, entries: byTab[tabKey].entries });
     cache[tabKey].sort((a, b) => a.date.localeCompare(b.date) || (a.id || "").localeCompare(b.id || ""));
     saveTab(tabKey);
+    pushedIds[tabKey] = sessionId;
 
     const volume = computePersonVolume({ date, entries: byTab[tabKey].entries }, tabKey, primaryPersonId);
     tabSummaries[tabKey] = { exercises: byTab[tabKey].results, volume, prevVolume };
@@ -4369,7 +4369,6 @@ function finishPtDay(){
 
   delete ptFormDrafts[dayIndex];
   savePtFormDrafts();
-  ptRestStartedSets.clear();
 
   ptCurrentDayIndex = (dayIndex + 1) % PT_PROGRAM.length;
   savePtDayIndex();
@@ -4384,8 +4383,40 @@ function finishPtDay(){
   showToast(hasGithub ? "Saved" : "Saved locally", prCount > 0 ? "pr" : (regCount > 0 ? "reg" : undefined));
   if(hasGithub) autoPushToGithub();
 
+  ptLastFinish = { dayIndex, prevPtCurrentDayIndex, draftSnapshot, pushedIds };
   ptSummaryResult = { dayLabel: day.titleLabel, date, tabSummaries, skipped, nextDayIndex: ptCurrentDayIndex };
   renderPtView();
+}
+
+// Reverses a Finish that was tapped by accident: removes the sessions it just
+// pushed, restores the programme pointer and the day's in-progress draft
+// inputs, and drops the summary screen back into the (still-filled-in) day
+// view. Only available while that summary screen is still showing — leaving
+// it (Continue, switching tabs, turning PT off) clears ptLastFinish.
+async function undoFinishPtDay(){
+  if(!ptLastFinish) return;
+  const { dayIndex, prevPtCurrentDayIndex, draftSnapshot, pushedIds } = ptLastFinish;
+
+  Object.keys(pushedIds).forEach(tabKey => {
+    cache[tabKey] = cache[tabKey].filter(s => s.id !== pushedIds[tabKey]);
+    saveTab(tabKey);
+  });
+
+  ptCurrentDayIndex = prevPtCurrentDayIndex;
+  savePtDayIndex();
+
+  if(draftSnapshot) ptFormDrafts[dayIndex] = draftSnapshot;
+  else delete ptFormDrafts[dayIndex];
+  savePtFormDrafts();
+
+  ptLastFinish = null;
+  ptSummaryResult = null;
+
+  const ghCfg = getGithubConfig();
+  if(ghCfg && ghCfg.token && ghCfg.repo) autoPushToGithub();
+
+  await switchTab("pt" + dayIndex);
+  showToast("Undone — day resumed");
 }
 
 function renderPtSummary(container){
@@ -4435,6 +4466,7 @@ function renderPtSummary(container){
     ${skippedHtml}
     ${nextDayHtml}
     <button type="button" class="pt-continue-btn" onclick="continuePtAfterSummary()">Continue</button>
+    ${ptLastFinish ? `<button type="button" class="pt-undo-btn" onclick="undoFinishPtDay()">Undo — I finished by accident</button>` : ""}
   `;
 }
 
@@ -4490,6 +4522,7 @@ async function switchTab(tabKey){
   if(CONFIG[tabKey]) lastActiveDayTab = tabKey; // remembered for Settings' "expand the day you came from" default
   historyShowAll = false;
   collapsedExercises = {};
+  ptCollapsedBlocks = {};
   renderTabs();
   refreshTimerFooter();
 
@@ -4510,6 +4543,7 @@ async function switchTab(tabKey){
     await ensureAllLoaded();
     ptViewDayIndex = parseInt(ptDayMatch[1], 10);
     ptSummaryResult = null; // navigating to a day tab always leaves any prior Finish-day summary behind
+    ptLastFinish = null;
     renderPtView();
     return;
   }
@@ -5985,11 +6019,14 @@ function formatStopwatch(ms){
 let timerRunState = "idle"; // "idle" | "running" | "paused" | "done"
 let lapCount = 0;
 let timerMinimized = true;
-// Set when PT mode auto-starts the rest timer (maybeStartPtRestTimer) — tints
-// the widget a distinct "resting" colour, and on natural completion (reaching
-// 0, not a manual stop) auto-minimizes it back down instead of leaving it
-// sitting open like a manually-started timer does.
-let timerRestActive = false;
+
+// "Resting" is just "a countdown is actively running" — not a separate flag —
+// so it's true for any manually-started countdown (PT's old auto-start-on-
+// confirm behaviour was removed; the timer only ever starts manually now) and
+// automatically reverts the instant the countdown reaches 0 or is stopped.
+function isTimerResting(){
+  return timerRunState === "running" && timerSettings.mode === "countdown";
+}
 
 function toggleTimerMinimize(){
   timerMinimized = !timerMinimized;
@@ -6029,10 +6066,13 @@ function refreshTimerFooter(){
   const shouldShow = !!CONFIG[activeTab] || (!!ptDay && ptDay.type === "training");
   const showFull = shouldShow && !timerMinimized;
   const showBubble = shouldShow && timerMinimized;
+  const resting = isTimerResting();
   if(w) w.classList.toggle("visible", showFull);
   if(bubble) bubble.classList.toggle("visible", showBubble);
-  if(w) w.classList.toggle("resting", timerRestActive);
-  if(bubble) bubble.classList.toggle("resting", timerRestActive);
+  if(w) w.classList.toggle("resting", resting);
+  if(bubble) bubble.classList.toggle("resting", resting);
+  const ptViewEl = document.getElementById("ptView");
+  if(ptViewEl) ptViewEl.classList.toggle("pt-resting", resting);
   if(main) main.classList.toggle("has-timer-footer", showFull);
   if(showFull) syncTimerFooterHeight();
   if(!shouldShow) return;
@@ -6154,15 +6194,6 @@ function timerResumeInterval(){
         clearInterval(timerIntervalId); timerIntervalId = null;
         timerRemainingMs = 0;
         if(navigator.vibrate) navigator.vibrate([200, 100, 200]);
-        if(timerRestActive){
-          // A PT-triggered rest completing naturally reverts and tucks itself
-          // away immediately, rather than sitting open like a manual timer.
-          timerRestActive = false;
-          timerRunState = "idle";
-          timerMinimized = true;
-          refreshTimerFooter();
-          return;
-        }
         timerRunState = "done";
         refreshTimerFooter();
         setTimeout(() => {
@@ -6187,7 +6218,7 @@ function startRestTimer(){
 function timerStartOrReset(){
   const display = document.getElementById("timerDisplay");
   if(display && display.dataset.editing === "1") display.dataset.editing = "";
-  if(timerRunState === "idle"){ timerRestActive = false; startRestTimer(); return; }
+  if(timerRunState === "idle"){ startRestTimer(); return; }
   timerStop();
 }
 
@@ -6210,7 +6241,6 @@ function timerStop(){
   timerRunState = "idle";
   timerElapsedMs = 0;
   timerRemainingMs = 0;
-  timerRestActive = false;
   refreshTimerFooter();
 }
 

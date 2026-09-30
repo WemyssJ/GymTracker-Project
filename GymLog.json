@@ -1915,6 +1915,68 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1790783182316-gu2ic",
+      "date": "2026-09-30",
+      "entries": {
+        "Dumbbell Press": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "12"
+              },
+              {
+                "wt": 14,
+                "reps": "12"
+              },
+              {
+                "wt": 16,
+                "reps": "11"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Lateral Raise": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 6,
+                "reps": "12"
+              },
+              {
+                "wt": 6,
+                "reps": "12"
+              },
+              {
+                "wt": 6,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Face Pull": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 27,
+                "reps": "15"
+              },
+              {
+                "wt": 32,
+                "reps": "15"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "pull": [
@@ -4362,6 +4424,32 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1790783182316-9ixtn",
+      "date": "2026-09-30",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 40,
+                "reps": "12"
+              },
+              {
+                "wt": 40,
+                "reps": "8"
+              },
+              {
+                "wt": 40,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -6666,6 +6754,28 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1790783182317-aig9o",
+      "date": "2026-09-30",
+      "entries": {
+        "Lunges": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 17.5,
+                "reps": "8"
+              },
+              {
+                "wt": 17.5,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "core": [
@@ -6742,7 +6852,34 @@
       }
     }
   ],
-  "cardio": [],
+  "cardio": [
+    {
+      "id": "1790782640072-hygoo",
+      "date": "2026-09-30",
+      "entries": {
+        "Treadmill Run": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 30,
+                "reps": "3"
+              },
+              {
+                "wt": null,
+                "reps": ""
+              },
+              {
+                "wt": null,
+                "reps": ""
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
+    }
+  ],
   "people": [
     {
       "id": "sam",
@@ -6755,5 +6892,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-09-28T15:42:36.649Z"
+  "exportedAt": "2026-09-30T15:46:22.321Z"
 }

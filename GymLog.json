@@ -1977,6 +1977,72 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1790871616526-h5hhr",
+      "date": "2026-10-01",
+      "entries": {
+        "Dumbbell Press": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 16,
+                "reps": "12"
+              },
+              {
+                "wt": 16,
+                "reps": "9"
+              },
+              {
+                "wt": 16,
+                "reps": "9"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Lateral Raise": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 8,
+                "reps": "10"
+              },
+              {
+                "wt": 8,
+                "reps": "10"
+              },
+              {
+                "wt": 8,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Tricep Push": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 45,
+                "reps": "12"
+              },
+              {
+                "wt": 45,
+                "reps": "12"
+              },
+              {
+                "wt": 45,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "pull": [
@@ -4450,6 +4516,72 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1790871616526-66p8t",
+      "date": "2026-10-01",
+      "entries": {
+        "Lat Pulldown": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 45,
+                "reps": "12"
+              },
+              {
+                "wt": 52,
+                "reps": "10"
+              },
+              {
+                "wt": 52,
+                "reps": "7"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Weighted Row": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 40,
+                "reps": "10"
+              },
+              {
+                "wt": 30,
+                "reps": "12"
+              },
+              {
+                "wt": 30,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "5"
+              },
+              {
+                "wt": 12,
+                "reps": "5"
+              },
+              {
+                "wt": 12,
+                "reps": "5"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -6850,6 +6982,48 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1790871616526-tgd5l",
+      "date": "2026-10-01",
+      "entries": {
+        "Bicycle Crunch": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "12"
+              },
+              {
+                "wt": 0,
+                "reps": "15"
+              },
+              {
+                "wt": 0,
+                "reps": "15"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Hanging Knee Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "10"
+              },
+              {
+                "wt": 0,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "cardio": [
@@ -6892,5 +7066,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-09-30T15:46:22.321Z"
+  "exportedAt": "2026-10-01T16:20:16.532Z"
 }

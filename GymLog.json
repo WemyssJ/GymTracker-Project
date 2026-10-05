@@ -4710,6 +4710,32 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1791214484319-tn2u5",
+      "date": "2026-10-05",
+      "entries": {
+        "Romanian Deadlift": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 30,
+                "reps": "0"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -7036,6 +7062,84 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1791214484318-nzizj",
+      "date": "2026-10-05",
+      "entries": {
+        "Squat": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "12"
+              },
+              {
+                "wt": 60,
+                "reps": "12"
+              },
+              {
+                "wt": 60,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Lunges": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 40,
+                "reps": "12"
+              },
+              {
+                "wt": 40,
+                "reps": "10"
+              },
+              {
+                "wt": 40,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Prone Leg Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 45,
+                "reps": "6"
+              },
+              {
+                "wt": 36,
+                "reps": "15"
+              },
+              {
+                "wt": 36,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Calf Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 40,
+                "reps": "15"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "core": [
@@ -7152,6 +7256,32 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1791214484319-zz1e1",
+      "date": "2026-10-05",
+      "entries": {
+        "Hanging Knee Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "12"
+              },
+              {
+                "wt": 0,
+                "reps": "12"
+              },
+              {
+                "wt": 0,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "cardio": [
@@ -7194,5 +7324,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-10-04T18:56:30.993Z"
+  "exportedAt": "2026-10-05T15:34:44.323Z"
 }

@@ -2167,6 +2167,60 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1791473387216-q8yny",
+      "date": "2026-10-08",
+      "entries": {
+        "Dumbbell Press": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 18,
+                "reps": "12"
+              },
+              {
+                "wt": 18,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Upright Row": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 30,
+                "reps": "12"
+              },
+              {
+                "wt": 30,
+                "reps": "8"
+              },
+              {
+                "wt": 30,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Tricep Push": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "pull": [
@@ -4832,6 +4886,72 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1791473387215-4ciwe",
+      "date": "2026-10-08",
+      "entries": {
+        "Lat Pulldown": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 45,
+                "reps": "12"
+              },
+              {
+                "wt": 45,
+                "reps": "10"
+              },
+              {
+                "wt": 45,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Weighted Row": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 35,
+                "reps": "12"
+              },
+              {
+                "wt": 35,
+                "reps": "12"
+              },
+              {
+                "wt": 40,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 14,
+                "reps": "6"
+              },
+              {
+                "wt": 14,
+                "reps": "6"
+              },
+              {
+                "wt": 14,
+                "reps": "6"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -7426,6 +7546,48 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1791473387216-mtkaq",
+      "date": "2026-10-08",
+      "entries": {
+        "Bicycle Crunch": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Hanging Knee Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "7"
+              },
+              {
+                "wt": 0,
+                "reps": "7"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "cardio": [
@@ -7468,5 +7630,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-10-07T15:25:25.152Z"
+  "exportedAt": "2026-10-08T15:29:47.220Z"
 }

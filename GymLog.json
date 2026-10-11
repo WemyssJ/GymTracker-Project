@@ -2221,6 +2221,72 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1791744266273-c89ww",
+      "date": "2026-10-11",
+      "entries": {
+        "Incline Press": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 35,
+                "reps": "12"
+              },
+              {
+                "wt": 35,
+                "reps": "7"
+              },
+              {
+                "wt": 30,
+                "reps": "7"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Upright Row": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              },
+              {
+                "wt": 0,
+                "reps": "0"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Tricep Push": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "12"
+              },
+              {
+                "wt": 54,
+                "reps": "12"
+              },
+              {
+                "wt": 54,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "pull": [
@@ -4952,6 +5018,60 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1791744266273-rnzm7",
+      "date": "2026-10-11",
+      "entries": {
+        "Lat Pulldown": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 45,
+                "reps": "8"
+              },
+              {
+                "wt": 45,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Weighted Row": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 40,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Incline Dumbbell Bicep Curls": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 10,
+                "reps": "12"
+              },
+              {
+                "wt": 10,
+                "reps": "12"
+              },
+              {
+                "wt": 10,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -7630,5 +7750,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-10-08T15:29:47.220Z"
+  "exportedAt": "2026-10-11T18:44:26.277Z"
 }

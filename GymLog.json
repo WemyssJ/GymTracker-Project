@@ -2287,6 +2287,24 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1791990961362-2gcxn",
+      "date": "2026-10-14",
+      "entries": {
+        "Tricep Push": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 54,
+                "reps": "15"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "pull": [
@@ -7750,5 +7768,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-10-11T18:44:26.277Z"
+  "exportedAt": "2026-10-14T15:16:01.366Z"
 }

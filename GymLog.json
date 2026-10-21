@@ -2379,6 +2379,44 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1792596076812-4c89q",
+      "date": "2026-10-21",
+      "entries": {
+        "Dumbbell Press": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 20,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Face Pull": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 32,
+                "reps": "12"
+              },
+              {
+                "wt": 32,
+                "reps": "12"
+              },
+              {
+                "wt": 32,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "pull": [
@@ -5252,6 +5290,32 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1792596076812-9y666",
+      "date": "2026-10-21",
+      "entries": {
+        "Pull ups": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "12"
+              },
+              {
+                "wt": 0,
+                "reps": "10"
+              },
+              {
+                "wt": 0,
+                "reps": "9"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -7700,6 +7764,32 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1792596076812-icj9b",
+      "date": "2026-10-21",
+      "entries": {
+        "Lunges": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 40,
+                "reps": "8"
+              },
+              {
+                "wt": 40,
+                "reps": "8"
+              },
+              {
+                "wt": 40,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "core": [
@@ -7910,6 +8000,28 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1792596076812-4b57b",
+      "date": "2026-10-21",
+      "entries": {
+        "Captain's Chair Leg Raise": {
+          "sets": {
+            "joe": [
+              {
+                "wt": null,
+                "reps": "12"
+              },
+              {
+                "wt": null,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "cardio": [
@@ -7952,5 +8064,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-10-18T18:21:44.956Z"
+  "exportedAt": "2026-10-21T15:21:16.821Z"
 }

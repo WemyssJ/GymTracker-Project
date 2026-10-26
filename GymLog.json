@@ -5444,6 +5444,24 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1793032482147-xi0oa",
+      "date": "2026-10-26",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 40,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -7918,6 +7936,48 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1793032482147-il2ez",
+      "date": "2026-10-26",
+      "entries": {
+        "Leg Press": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "8"
+              },
+              {
+                "wt": 60,
+                "reps": "8"
+              },
+              {
+                "wt": 60,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Lunges": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 40,
+                "reps": "8"
+              },
+              {
+                "wt": 40,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "core": [
@@ -8150,6 +8210,36 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1793032482148-eqkxe",
+      "date": "2026-10-26",
+      "entries": {
+        "Bicycle Crunch": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "15"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Hanging Knee Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "cardio": [
@@ -8192,5 +8282,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-10-25T17:25:29.036Z"
+  "exportedAt": "2026-10-26T16:34:42.152Z"
 }

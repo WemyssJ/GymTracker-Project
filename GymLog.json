@@ -2525,6 +2525,52 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1793291057294-toeyw",
+      "date": "2026-10-29",
+      "entries": {
+        "Upright Row": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 30,
+                "reps": "10"
+              },
+              {
+                "wt": 30,
+                "reps": "10"
+              },
+              {
+                "wt": 30,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Tricep Push": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 59,
+                "reps": "10"
+              },
+              {
+                "wt": 54,
+                "reps": "10"
+              },
+              {
+                "wt": 54,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "pull": [
@@ -5488,6 +5534,52 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1793291057293-gh1q9",
+      "date": "2026-10-29",
+      "entries": {
+        "Weighted Row": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "10"
+              },
+              {
+                "wt": 50,
+                "reps": "10"
+              },
+              {
+                "wt": 50,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 12,
+                "reps": "10"
+              },
+              {
+                "wt": 12,
+                "reps": "10"
+              },
+              {
+                "wt": 12,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -8266,6 +8358,24 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1793291057294-cvnpf",
+      "date": "2026-10-29",
+      "entries": {
+        "Hanging Knee Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 0,
+                "reps": "15"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "cardio": [
@@ -8308,5 +8418,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-10-28T16:27:18.226Z"
+  "exportedAt": "2026-10-29T16:24:17.301Z"
 }

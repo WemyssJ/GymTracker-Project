@@ -8096,6 +8096,48 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1793637878090-emm45",
+      "date": "2026-11-02",
+      "entries": {
+        "Lunges": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 45,
+                "reps": "8"
+              },
+              {
+                "wt": 45,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Calf Raises": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 45,
+                "reps": "15"
+              },
+              {
+                "wt": 45,
+                "reps": "15"
+              },
+              {
+                "wt": 45,
+                "reps": "15"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "core": [
@@ -8418,5 +8460,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-10-29T16:24:17.301Z"
+  "exportedAt": "2026-11-02T16:44:38.096Z"
 }

@@ -2633,6 +2633,52 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1794414468453-wgivr",
+      "date": "2026-11-11",
+      "entries": {
+        "Dumbbell Press": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 22,
+                "reps": "10"
+              },
+              {
+                "wt": 22,
+                "reps": "8"
+              },
+              {
+                "wt": 22,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Face Pull": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 41,
+                "reps": "12"
+              },
+              {
+                "wt": 41,
+                "reps": "10"
+              },
+              {
+                "wt": 41,
+                "reps": "10"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "pull": [
@@ -5704,6 +5750,32 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1794414468453-qsizj",
+      "date": "2026-11-11",
+      "entries": {
+        "Deadlift": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 50,
+                "reps": "6"
+              },
+              {
+                "wt": 50,
+                "reps": "8"
+              },
+              {
+                "wt": 50,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -8584,5 +8656,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-11-09T16:46:38.680Z"
+  "exportedAt": "2026-11-11T16:27:48.459Z"
 }

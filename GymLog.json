@@ -2679,6 +2679,48 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1794503439908-cw7y9",
+      "date": "2026-11-12",
+      "entries": {
+        "Dumbbell Press": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 22,
+                "reps": "10"
+              },
+              {
+                "wt": 22,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Upright Row": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 35,
+                "reps": "12"
+              },
+              {
+                "wt": 35,
+                "reps": "10"
+              },
+              {
+                "wt": 35,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "pull": [
@@ -5776,6 +5818,52 @@
           "notes": {}
         }
       }
+    },
+    {
+      "id": "1794503439908-hohka",
+      "date": "2026-11-12",
+      "entries": {
+        "Weighted Row": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 60,
+                "reps": "12"
+              },
+              {
+                "wt": 60,
+                "reps": "12"
+              },
+              {
+                "wt": 60,
+                "reps": "12"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        },
+        "Hammer Curl": {
+          "sets": {
+            "joe": [
+              {
+                "wt": 12,
+                "reps": "10"
+              },
+              {
+                "wt": 12,
+                "reps": "10"
+              },
+              {
+                "wt": 12,
+                "reps": "8"
+              }
+            ]
+          },
+          "assisted": false,
+          "notes": {}
+        }
+      }
     }
   ],
   "leg": [
@@ -8656,5 +8744,5 @@
       "color": "#4fa8e0"
     }
   ],
-  "exportedAt": "2026-11-11T16:27:48.459Z"
+  "exportedAt": "2026-11-12T17:10:39.913Z"
 }
